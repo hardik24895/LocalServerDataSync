@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.ms-square:etsyblur:0.2.1@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/transforms-2/files-2.1/fa63bc8a6a4c8acf1378fa7c35a77a81/jetified-etsyblur-0.2.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/transforms-2/files-2.1/fa63bc8a6a4c8acf1378fa7c35a77a81/jetified-etsyblur-0.2.1/res" />
+      <root url="file://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/transforms-2/files-2.1/fa63bc8a6a4c8acf1378fa7c35a77a81/jetified-etsyblur-0.2.1/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/3284f8a2389b4f71021595d1bfb49dbd20223cdf/etsyblur-0.2.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/81ea6989221863945c04eedc491042151388361a/etsyblur-0.2.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
