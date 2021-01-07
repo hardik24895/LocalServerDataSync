@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--Finish-->
+    <color name="seemore_color">#3F51B5</color>
+    <color name="greyish">#b1b1b1</color>
+    <color name="black_six">#262626</color>
+    <color name="black_four">#333333</color>
+    <color name="light_grey">#e4e4e4</color>
+    <color name="black_seven">#111111</color>
+    <color name="black_two">#282828</color>
+    <color name="icon_color">#BCBCBC</color>
 </resources>
