@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_8sdp"
+    android:layout_marginVertical="@dimen/_4sdp"
+    android:elevation="10dp"
+    app:cardCornerRadius="8dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_8sdp">
+
+        <TextView
+            android:id="@+id/txtNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/clan_ot_medium"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_8sdp"
+            android:text="1)."
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtSurveyTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/clan_ot_medium"
+            android:lineSpacingExtra="@dimen/_4sdp"
+            android:padding="@dimen/_8sdp"
+            android:text="What are return types of startActivityForResult() in android?"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/txtNum"
+            app:layout_constraintTop_toTopOf="@+id/txtNum" />
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/txtNum"
+            app:layout_constraintTop_toBottomOf="@+id/txtSurveyTitle">
+
+
+            <RadioButton
+                android:id="@+id/txtAnswer1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/clan_ot_book"
+                android:text="RESULT_OK"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp" />
+
+            <RadioButton
+                android:id="@+id/txtAnswer2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/clan_ot_book"
+                android:text="RESULT_CANCEL"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp" />
+
+
+            <RadioButton
+                android:id="@+id/txtAnswer3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/clan_ot_book"
+                android:text="RESULT_CRASH"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp" />
+
+
+            <RadioButton
+                android:id="@+id/txtAnswer4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/clan_ot_book"
+                android:text="Option A &amp; B Both"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_10ssp" />
+
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

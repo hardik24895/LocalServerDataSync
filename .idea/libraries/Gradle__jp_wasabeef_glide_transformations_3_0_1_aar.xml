@@ -4,12 +4,17 @@
       <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/transforms-2/files-2.1/2a7f9573462f7f2985c546f3898580c7/jetified-glide-transformations-3.0.1/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/transforms-2/files-2.1/2a7f9573462f7f2985c546f3898580c7/jetified-glide-transformations-3.0.1/res" />
       <root url="file://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/transforms-2/files-2.1/2a7f9573462f7f2985c546f3898580c7/jetified-glide-transformations-3.0.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d06d3f7fbf67413b5e6cf599eb6fa2d6/jetified-glide-transformations-3.0.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d06d3f7fbf67413b5e6cf599eb6fa2d6/jetified-glide-transformations-3.0.1/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/d06d3f7fbf67413b5e6cf599eb6fa2d6/jetified-glide-transformations-3.0.1/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/modules-2/files-2.1/jp.wasabeef/glide-transformations/3.0.1/3d2f972565a4a4e5d45a73932ecddb0ba2b50b37/glide-transformations-3.0.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/jp.wasabeef/glide-transformations/3.0.1/3d2f972565a4a4e5d45a73932ecddb0ba2b50b37/glide-transformations-3.0.1-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/modules-2/files-2.1/jp.wasabeef/glide-transformations/3.0.1/2250143d4a26e54cf694e4cdbe037308f72b4e52/glide-transformations-3.0.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/jp.wasabeef/glide-transformations/3.0.1/2250143d4a26e54cf694e4cdbe037308f72b4e52/glide-transformations-3.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

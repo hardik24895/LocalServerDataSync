@@ -12,7 +12,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         txtLogin.setOnClickListener {
-            goToActivity<HomeActivity>()
+          //  goToActivity<HomeActivity>()
+            goToActivity<QuestionAnswerActivity>()
         }
     }
 }

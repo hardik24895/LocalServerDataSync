@@ -24,4 +24,10 @@
     <style name="ProgressBarColor">
         <item name="colorAccent">@color/purple_200</item>
     </style>
+
+    <style name="Widget.BottomNavigationView"
+        parent="Widget.Design.BottomNavigationView">
+        <item name="fontFamily">@font/clan_ot_medium</item>
+    </style>
+
 </resources>
