@@ -85,6 +85,7 @@ class LoginActivity : AppCompatActivity() {
         override fun onPostExecute(bool: Boolean?) {
             if (bool!!) {
                 Toast.makeText(context, "Added to Database", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Added to Database", Toast.LENGTH_LONG).show()
             }
         }
 
