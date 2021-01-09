@@ -1,10 +1,15 @@
 package com.kpl.activity
 
+import android.os.AsyncTask
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kpl.R
 import com.kpl.adapter.QuestionAnswerAdapter
+import com.kpl.database.AppDatabase
+import com.kpl.database.Question
 import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 
@@ -12,8 +17,9 @@ import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 class QuestionAnswerActivity : AppCompatActivity() {
 
     private var adapter: QuestionAnswerAdapter? = null
-    lateinit var queAnsArray: ArrayList<String>
-
+    var queAnsArray: ArrayList<Question>? = null
+    var appDatabase: AppDatabase? = null
+    var list: List<Question>? =null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,34 +30,47 @@ class QuestionAnswerActivity : AppCompatActivity() {
         imgBack.setOnClickListener {
             finish()
         }
+        appDatabase = AppDatabase.getDatabase(this)!!
         queAnsArray = ArrayList()
-        setData()
+
+
 
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-       //val snapHelper: SnapHelper = PagerSnapHelper()
-       rvQueAns.setLayoutManager(layoutManager)
-       //snapHelper.attachToRecyclerView(rvQueAns)
+        rvQueAns.setLayoutManager(layoutManager)
         rvQueAns.layoutManager = layoutManager
-        adapter = QuestionAnswerAdapter(this, queAnsArray)
+        adapter = QuestionAnswerAdapter(this, queAnsArray!!)
         rvQueAns.adapter = adapter
 
+        GetDataFromDB(this).execute()
+
     }
 
+    class GetDataFromDB(var context: QuestionAnswerActivity) :
+        AsyncTask<Void, Void, List<Question>>() {
+        override fun doInBackground(vararg params: Void?): List<Question>? {
 
-    private fun setData() {
-        queAnsArray.clear()
-        queAnsArray.add("")
-        queAnsArray.add("")
-        queAnsArray.add("")
-        queAnsArray.add("")
-        queAnsArray.add("")
-        queAnsArray.add("")
-        queAnsArray.add("")
-        queAnsArray.add("")
-        queAnsArray.add("")
+            return context.appDatabase?.questionDao()?.getAllQuestion()
+
+        }
+
+
+        override fun onPostExecute(bool: List<Question>) {
+
+            context.list =bool
+            context.queAnsArray?.addAll(context.list!!)
+
+            context.adapter?.notifyDataSetChanged()
+//            Toast.makeText(
+//                context,
+//                "Hello Javatpoint  " + bool,
+//                Toast.LENGTH_LONG
+//            ).show()
+
+
+        }
+
     }
-
-
 
 
 }
+

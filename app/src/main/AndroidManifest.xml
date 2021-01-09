@@ -11,7 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KPL">
-        <activity android:name=".activity.QuestionAnswerActivity"></activity>
+        <activity android:name=".activity.InformationActivity"></activity>
+        <activity android:name=".activity.NotificationActivity" />
+        <activity android:name=".activity.SiteDetailActivity" />
+        <activity android:name=".activity.QuestionAnswerActivity" />
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

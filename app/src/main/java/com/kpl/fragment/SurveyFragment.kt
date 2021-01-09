@@ -10,9 +10,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kpl.R
+import com.kpl.activity.SiteDetailActivity
 import com.kpl.adapter.SurveyAdapter
 import com.kpl.extention.invisible
 import com.kpl.extention.visible
+import com.kpl.interfaces.goToActivity
 import kotlinx.android.synthetic.main.fragment_servey.*
 import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 
@@ -37,6 +39,9 @@ class SurveyFragment : BaseFragment() {
         txtTitle.text = "Survey"
         imgAdd.visible()
         surveyArray = ArrayList()
+        imgAdd.setOnClickListener {
+            goToActivity<SiteDetailActivity>()
+        }
 
         setData()
 
