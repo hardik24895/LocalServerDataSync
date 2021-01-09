@@ -60,11 +60,6 @@ class QuestionAnswerActivity : AppCompatActivity() {
             context.queAnsArray?.addAll(context.list!!)
 
             context.adapter?.notifyDataSetChanged()
-//            Toast.makeText(
-//                context,
-//                "Hello Javatpoint  " + bool,
-//                Toast.LENGTH_LONG
-//            ).show()
 
 
         }

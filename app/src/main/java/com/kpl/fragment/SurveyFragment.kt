@@ -1,17 +1,18 @@
 package com.kpl.fragment
 
+import android.content.Context
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kpl.R
 import com.kpl.activity.SiteDetailActivity
 import com.kpl.adapter.SurveyAdapter
+import com.kpl.database.AppDatabase
+import com.kpl.database.Question
+import com.kpl.database.Survey
 import com.kpl.extention.invisible
 import com.kpl.extention.visible
 import com.kpl.interfaces.goToActivity
@@ -22,7 +23,8 @@ import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 class SurveyFragment : BaseFragment() {
 
     private var adapter: SurveyAdapter? = null
-    lateinit var surveyArray: ArrayList<String>
+    lateinit var surveyArray: ArrayList<Survey>
+    var appDatabase: AppDatabase? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,25 +45,37 @@ class SurveyFragment : BaseFragment() {
             goToActivity<SiteDetailActivity>()
         }
 
-        setData()
-
+        appDatabase = AppDatabase.getDatabase(requireContext())!!
         var layoutmanger = LinearLayoutManager(requireContext())
         rvSurvey.layoutManager = layoutmanger
 
         adapter = SurveyAdapter(requireContext(), surveyArray)
         rvSurvey.adapter = adapter
-
+      //  GetDataFromDB(requireContext()).execute();
     }
 
-    private fun setData() {
-        surveyArray.clear()
-        surveyArray.add("Survey 1")
-        surveyArray.add("Survey 1")
-        surveyArray.add("Survey 1")
-        surveyArray.add("Survey 1")
-        surveyArray.add("Survey 1")
-        surveyArray.add("Survey 1")
-        surveyArray.add("Survey 1")
 
-    }
+//    class GetDataFromDB(var context: Context) :
+//        AsyncTask<Void, Void, List<Survey>>() {
+//        override fun doInBackground(vararg params: Void?): List<Survey>? {
+//
+//
+//            return context.appDatabase.questionDao()?.getAllQuestion()
+//
+//        }
+//
+//
+//        override fun onPostExecute(bool: List<Survey>) {
+//
+//            context.list = bool
+//            context.queAnsArray?.addAll(context.list!!)
+//
+//            context.adapter?.notifyDataSetChanged()
+//
+//
+//        }
+//
+//    }
+
+
 }

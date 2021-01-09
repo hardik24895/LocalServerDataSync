@@ -6,11 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kpl.R
+import com.kpl.database.Survey
 import kotlinx.android.extensions.LayoutContainer
 
 class SurveyAdapter (
     private val mContext: Context,
-    var list: MutableList<String> = mutableListOf()
+    var list: MutableList<Survey> = mutableListOf()
 ) : RecyclerView.Adapter<SurveyAdapter.ItemHolder>() {
 
     override fun getItemCount(): Int {
@@ -31,7 +32,7 @@ class SurveyAdapter (
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val data = list[position]
 
-        holder.bindData(mContext, data)
+        holder.bindData(mContext)
     }
 
     /* interface OnItemSelected {
@@ -45,7 +46,6 @@ class SurveyAdapter (
 
         fun bindData(
             context: Context,
-            data: String
         ) {
            /* var txtName = containerView.findViewById<TextView>(R.id.txtName)
             txtName.text= data*/
