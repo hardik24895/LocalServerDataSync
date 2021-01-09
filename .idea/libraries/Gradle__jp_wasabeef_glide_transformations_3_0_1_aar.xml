@@ -10,11 +10,9 @@
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/modules-2/files-2.1/jp.wasabeef/glide-transformations/3.0.1/3d2f972565a4a4e5d45a73932ecddb0ba2b50b37/glide-transformations-3.0.1-javadoc.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/jp.wasabeef/glide-transformations/3.0.1/3d2f972565a4a4e5d45a73932ecddb0ba2b50b37/glide-transformations-3.0.1-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/modules-2/files-2.1/jp.wasabeef/glide-transformations/3.0.1/2250143d4a26e54cf694e4cdbe037308f72b4e52/glide-transformations-3.0.1-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/jp.wasabeef/glide-transformations/3.0.1/2250143d4a26e54cf694e4cdbe037308f72b4e52/glide-transformations-3.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

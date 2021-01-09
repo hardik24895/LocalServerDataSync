@@ -10,11 +10,9 @@
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/3284f8a2389b4f71021595d1bfb49dbd20223cdf/etsyblur-0.2.1-javadoc.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/3284f8a2389b4f71021595d1bfb49dbd20223cdf/etsyblur-0.2.1-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
       <root url="jar://$USER_HOME$/.gradle/wrapper/dists/gradle-6.1.1-all/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/81ea6989221863945c04eedc491042151388361a/etsyblur-0.2.1-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/81ea6989221863945c04eedc491042151388361a/etsyblur-0.2.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

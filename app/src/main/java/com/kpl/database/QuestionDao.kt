@@ -8,11 +8,8 @@ import androidx.room.Query
 @Dao
 interface QuestionDao {
 
-
-
     @Query("SELECT * FROM Question")
     fun getAllQuestion(): List<Question>
-
 
     @Insert
     fun insertQuestion(question: Question)
