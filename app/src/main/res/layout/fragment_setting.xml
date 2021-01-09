@@ -107,6 +107,81 @@
                 android:background="@color/light_grey" />
 
             <RelativeLayout
+                android:id="@+id/relayGetData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="8dp"
+                    android:drawableLeft="@drawable/ic_getdata"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:fontFamily="@font/clan_ot_book"
+                    android:text="Get Data From Server"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_large" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    app:srcCompat="@drawable/ic_forword" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:background="@color/light_grey" />
+            <RelativeLayout
+                android:id="@+id/relaySendData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="8dp"
+                    android:drawableLeft="@drawable/ic_senddata"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:fontFamily="@font/clan_ot_book"
+                    android:text="Send Data To Server"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_large" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    app:srcCompat="@drawable/ic_forword" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:background="@color/light_grey" />
+
+
+
+            <RelativeLayout
                 android:id="@+id/relayAboutus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -144,12 +219,7 @@
                 android:background="@color/light_grey" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
-                android:background="@color/light_grey" />
+
 
 
             <RelativeLayout
@@ -229,12 +299,7 @@
                 android:background="@color/light_grey" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
-                android:background="@color/light_grey" />
+
 
             <RelativeLayout
                 android:id="@+id/relayLogout"

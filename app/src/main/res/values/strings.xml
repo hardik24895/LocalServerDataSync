@@ -10,4 +10,8 @@
     <string name="title_survey">Survey</string>
     <string name="title_profile">Profile</string>
     <string name="title_setting">Setting</string>
+    <string name="no">NO</string>
+    <string name="yes">Yes</string>
+
+    <string name="msg_logout">Do you really want to logout?</string>
 </resources>

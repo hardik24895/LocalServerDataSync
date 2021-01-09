@@ -51,8 +51,8 @@ class LoginActivity : AppCompatActivity() {
             surveyList!!.add(Survey(6,"6","Servey 6","09/01/2021 10:55:00"))
 
 
-            InsertTaskQuestion(this, quesitionList!!).execute()
-            InsertTaskSurvey(this, surveyList!!).execute()
+           // InsertTaskQuestion(this, quesitionList!!).execute()
+          //  InsertTaskSurvey(this, surveyList!!).execute()
             goToActivity<HomeActivity>()
           //goToActivity<QuestionAnswerActivity>()
         }
@@ -84,7 +84,6 @@ class LoginActivity : AppCompatActivity() {
 
         override fun onPostExecute(bool: Boolean?) {
             if (bool!!) {
-                Toast.makeText(context, "Added to Database", Toast.LENGTH_LONG).show()
                 Toast.makeText(context, "Added to Database", Toast.LENGTH_LONG).show()
             }
         }
