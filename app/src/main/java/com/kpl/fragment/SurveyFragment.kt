@@ -51,7 +51,7 @@ class SurveyFragment : BaseFragment() {
 
         adapter = SurveyAdapter(requireContext(), surveyArray)
         rvSurvey.adapter = adapter
-      //  GetDataFromDB(requireContext()).execute();
+     //   GetDataFromDB(requireContext(),appDatabase).execute();
     }
 
 
@@ -60,7 +60,7 @@ class SurveyFragment : BaseFragment() {
 //        override fun doInBackground(vararg params: Void?): List<Survey>? {
 //
 //
-//            return context.appDatabase.questionDao()?.getAllQuestion()
+//            return appDatabase.questionDao()?.getAllQuestion()
 //
 //        }
 //
