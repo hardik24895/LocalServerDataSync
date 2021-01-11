@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 
 class QuestionAnswerActivity : AppCompatActivity() {
 
-    private var adapter: QuestionAnswerAdapter? = null
+    var adapter: QuestionAnswerAdapter? = null
     var queAnsArray: ArrayList<Question>? = null
     var appDatabase: AppDatabase? = null
     var list: List<Question>? =null

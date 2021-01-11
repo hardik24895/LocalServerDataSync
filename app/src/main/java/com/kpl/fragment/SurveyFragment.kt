@@ -22,9 +22,10 @@ import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 
 class SurveyFragment : BaseFragment() {
 
-    private var adapter: SurveyAdapter? = null
-    lateinit var surveyArray: ArrayList<Survey>
-    var appDatabase: AppDatabase? = null
+    var adapter: SurveyAdapter? = null
+    var surveyArray: ArrayList<Survey>? = null
+    var list: List<Survey>? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,37 +46,28 @@ class SurveyFragment : BaseFragment() {
             goToActivity<SiteDetailActivity>()
         }
 
-        appDatabase = AppDatabase.getDatabase(requireContext())!!
         var layoutmanger = LinearLayoutManager(requireContext())
         rvSurvey.layoutManager = layoutmanger
 
-        adapter = SurveyAdapter(requireContext(), surveyArray)
+        adapter = SurveyAdapter(requireContext(), surveyArray!!)
         rvSurvey.adapter = adapter
-     //   GetDataFromDB(requireContext(),appDatabase).execute();
+        GetDataFromDB().execute();
     }
 
+    inner class GetDataFromDB : AsyncTask<Context, Void, List<Survey>>() {
+        override fun doInBackground(vararg params: Context?): List<Survey> {
 
-//    class GetDataFromDB(var context: Context) :
-//        AsyncTask<Void, Void, List<Survey>>() {
-//        override fun doInBackground(vararg params: Void?): List<Survey>? {
-//
-//
-//            return appDatabase.questionDao()?.getAllQuestion()
-//
-//        }
-//
-//
-//        override fun onPostExecute(bool: List<Survey>) {
-//
-//            context.list = bool
-//            context.queAnsArray?.addAll(context.list!!)
-//
-//            context.adapter?.notifyDataSetChanged()
-//
-//
-//        }
-//
-//    }
+            return appDatabase?.surveyDao()?.getAllSurvey()!!
+        }
 
+        override fun onPostExecute(result: List<Survey>?) {
+            list = result
+            surveyArray?.addAll(list!!)
+            adapter?.notifyDataSetChanged()
+        }
+
+    }
 
 }
+
+

@@ -40,11 +40,11 @@ class QuestionAnswerAdapter(
         holder.txtNum?.setText("" + (position + 1) + ".")
         holder.txtSurveyTitle?.setText(data.Question)
 
-        var stringArray = data.Answer?.split(",")
+        var stringArray = data.Questionoption?.split(",")
 
         val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         holder.rvAns?.layoutManager = layoutManager
-        var adapter = AnswerAdapter(mContext, stringArray, data.Type.toString())
+        var adapter = AnswerAdapter(mContext, stringArray, data.Type.toString(),data.QuestionID.toString())
         holder.rvAns?.adapter = adapter
 
     }

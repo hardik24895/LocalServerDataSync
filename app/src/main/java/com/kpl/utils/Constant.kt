@@ -3,7 +3,63 @@ package com.kpl.utils
 object Constant {
 
 
-    const val IS_REFREESH="is_refresh"
+    // Database Name
+    const val DATABASE_NAME = "survey.db"
+
+    // User Table
+    const val TABLE_USER = "User"
+    const val TABLE_SURVEY = "Survey"
+    const val TABLE_QUESTION = "Question"
+    const val TABLE_SURVEY_ANSWER = "SurveyAnswer"
+    const val TABLE_PROJECT = "Project"
+
+    // Table Name
+    const val UserID = "UserID"
+    const val RoleID = "RoleID"
+    const val EmailID = "EmailID"
+    const val Password = "Password"
+    const val FirstName = "FirstName"
+    const val LastName = "LastName"
+    const val MobileNo = "MobileNo"
+    const val Address = "Address"
+    const val UserType = "UserType"
+
+    // Table Comman Fields
+    const val CreatedBy = "CreatedBy"
+    const val CreatedDate = "CreatedDate"
+    const val ModifiedBy = "ModifiedBy"
+    const val ModifiedDate = "ModifiedDate"
+    const val Status = "Status"
+    const val IsDeleted = "IsDeleted"
+
+
+    //Table Survey
+    const val SurveyID = "SurveyID"
+    const val ProjectId = "ProjectId"
+    const val Title = "Title"
+    const val Date = "Date"
+
+    //Table Question
+    const val QuestionID = "QuestionID"
+    const val Question = "Question"
+    const val Type = "Type"
+    const val Questionoption = "Questionoption"
+
+    //Table Project
+    const val ProjectID = "ProjectID"
+
+    //Table SurveyAnswer
+    const val SurveyAnswerID = "SurveyAnswerID"
+
+    //QuesionType
+    const val typeEdit ="Edittext"
+    const val typeSigleSelection ="Radiobutton"
+    const val typeMutliSelection ="Checkbox"
+
+
+
+
+    const val IS_REFREESH = "is_refresh"
     const val LATITUDE = "latitude"
     const val LONGITUDE = "longitude"
     const val LAST_LATITUDE = "last_latitude"
@@ -12,11 +68,11 @@ object Constant {
     const val DISTANCE = "distance"
     const val STEPS = "steps"
     const val CAT_ID = "catID"
-    const val BUSNESSNAME="busnessname"
-    const val SORTNAME= "sortname"
-    const val ADDRESS1="address1"
-    const val ADDRESS2="address2"
-    const val ZIPCODE="zipcode"
+    const val BUSNESSNAME = "busnessname"
+    const val SORTNAME = "sortname"
+    const val ADDRESS1 = "address1"
+    const val ADDRESS2 = "address2"
+    const val ZIPCODE = "zipcode"
     const val EVENT_END_TIME = "event_end_time"
     const val BROADCAST_CODES = "code"
     const val TOTAL_KM = "total_km"

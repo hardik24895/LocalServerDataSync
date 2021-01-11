@@ -1,16 +1,15 @@
 package com.kpl.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.kpl.utils.Constant
 
 @Dao
 interface QuestionDao {
 
 
-
-    @Query("SELECT * FROM Question")
+    @Query("SELECT * FROM " + Constant.TABLE_QUESTION)
     fun getAllQuestion(): List<Question>
 
 
