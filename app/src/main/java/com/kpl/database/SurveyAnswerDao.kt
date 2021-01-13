@@ -1,9 +1,7 @@
 package com.kpl.database
 
 import android.provider.SyncStateContract
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.kpl.utils.Constant
 import org.jetbrains.annotations.NotNull
 
@@ -13,14 +11,17 @@ interface SurveyAnswerDao {
     @Query("SELECT * FROM " + Constant.TABLE_SURVEY_ANSWER)
     fun getAll(): List<SurveyAnswer>
 
-    @Insert
+
+    @Query("SELECT * FROM  ${Constant.TABLE_SURVEY_ANSWER} Where ${Constant.SurveyID} = :surveyID and ${Constant.QuestionID} = :questionID ")
+    fun checkRecordExist(surveyID: String, questionID: String): SurveyAnswer
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(surveyAnswer: SurveyAnswer)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(surveyAnswer: ArrayList<SurveyAnswer>)
-//
-//    @Query("UPDATE ${Constant.TABLE_SURVEY_ANSWER} SET ${Constant.QuestionID} = :isFavorite WHERE name = :name")
-//    fun setFavourite(name: String, isFavorite: Int)
 
+    @Query("Update ${Constant.TABLE_SURVEY_ANSWER} set Answer = :answer  Where ${Constant.SurveyID} = :surveyID and ${Constant.QuestionID} = :questionID")
+    fun updaterecord(surveyID: String, questionID: String, answer: String)
 
 }

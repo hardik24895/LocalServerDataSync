@@ -100,6 +100,7 @@
         android:layout_marginHorizontal="@dimen/_24sdp"
         android:layout_marginTop="@dimen/_32sdp"
         android:background="@drawable/bg_btn"
+        android:textAllCaps="true"
         android:fontFamily="@font/clan_ot_medium"
         android:gravity="center"
         android:text="Submit"

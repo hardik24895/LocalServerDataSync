@@ -10,7 +10,7 @@ data class SurveyAnswer(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "SurveyAnswerID") val SurveyAnswerID: Long? = null,
-    @ColumnInfo(name = "SurveyID") val SurveyID: Int,
+    @ColumnInfo(name = "SurveyID") var SurveyID: Int,
     @ColumnInfo(name = "QuestionID") val QuestionID: String?,
     @ColumnInfo(name = "Answer") val Answer: String?,
     @ColumnInfo(name = "CreatedBy") val CreatedBy: String?,

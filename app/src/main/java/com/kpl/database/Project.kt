@@ -10,6 +10,7 @@ data class Project(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = Constant.ProjectID) val ProjectID: Int?,
+    @ColumnInfo(name = Constant.CompanyName) val CompanyName: String?,
     @ColumnInfo(name = Constant.Title) val Title: String?,
     @ColumnInfo(name = Constant.Address) val Address: String?,
     @ColumnInfo(name = Constant.MobileNo) val MobileNo: String?,

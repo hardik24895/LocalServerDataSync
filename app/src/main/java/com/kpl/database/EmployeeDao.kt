@@ -17,8 +17,8 @@ interface EmployeeDao {
 
     // @Query("SELECT * FROM " + Constant.TABLE_USER + " WHERE " + Constant.MobileNo + " = "+:contact+"")
     @NotNull
-    @Query("SELECT * FROM " + Constant.TABLE_USER + " WHERE " + Constant.MobileNo + " = :contact")
-    fun checkUser(contact: String): Employee
+    @Query("SELECT * FROM " + Constant.TABLE_USER + " WHERE " + Constant.MobileNo + " = :contact AND " + Constant.Password + " = :password")
+    fun checkUser(contact: String, password: String): Employee
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -29,7 +29,6 @@ interface EmployeeDao {
 
 //    @Delete
 //    suspend fun delete(user: User)
-
 
 
 }

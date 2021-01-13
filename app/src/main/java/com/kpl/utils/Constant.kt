@@ -1,6 +1,12 @@
 package com.kpl.utils
 
+import java.util.prefs.Preferences
+
 object Constant {
+
+    // SharedPresfrence
+    const val PreferencesName = "KPL_Pref"
+
 
 
     // Database Name
@@ -47,13 +53,14 @@ object Constant {
 
     //Table Project
     const val ProjectID = "ProjectID"
+    const val CompanyName = "CompanyName"
 
     //Table SurveyAnswer
     const val SurveyAnswerID = "SurveyAnswerID"
 
     //QuesionType
     const val typeEdit ="Edittext"
-    const val typeSigleSelection ="Radiobutton"
+    const val typeSigleSelection ="Radio"
     const val typeMutliSelection ="Checkbox"
 
 

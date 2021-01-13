@@ -14,11 +14,11 @@ import kotlinx.android.extensions.LayoutContainer
 
 class SurveyAdapter(
     private val mContext: Context,
-    var list: MutableList<Survey> = mutableListOf()
+  //  var list: MutableList<Survey> = mutableListOf()
 ) : RecyclerView.Adapter<SurveyAdapter.ItemHolder>() {
 
     override fun getItemCount(): Int {
-        return list.size
+        return 8
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
@@ -32,9 +32,9 @@ class SurveyAdapter(
 
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        val data = list[position]
-        holder.bindData(mContext)
-        holder.txtSurveyTitle?.setText(data.Title.toString())
+     //   val data = list[position]
+      //  holder.bindData(mContext)
+      //  holder.txtSurveyTitle?.setText(data.Title.toString())
     }
 
 
@@ -43,16 +43,16 @@ class SurveyAdapter(
         RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        var txtSurveyTitle: TextView? = null
+    //    var txtSurveyTitle: TextView? = null
 
 
-        fun bindData(context: Context ) {
-            txtSurveyTitle = containerView?.findViewById(R.id.txtSurveyTitle)
-            //  txtName.text= data
+     //  fun bindData(context: Context ) {
+     //      txtSurveyTitle = containerView?.findViewById(R.id.txtSurveyTitle)
+     //      //  txtName.text= data
 
-            //chips.text= data
+     //      //chips.text= data
 
-        }
+     //  }
 
     }
 }

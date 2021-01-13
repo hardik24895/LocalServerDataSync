@@ -40,7 +40,13 @@ class Splashctivity : BaseActivity() {
         surveyArray = ArrayList()
         projectArray = ArrayList()
 
-        getMasterDataFromServer()
+
+        if (session.isLoggedIn) {
+            goToActivity<HomeActivity>()
+            finish()
+        } else {
+            getMasterDataFromServer()
+        }
     }
 
     fun getMasterDataFromServer() {
@@ -103,6 +109,7 @@ class Splashctivity : BaseActivity() {
                             projectArray?.add(
                                 Project(
                                     project.projectID?.toInt(),
+                                    project.CompanyName?.toString(),
                                     project.title.toString(),
                                     project.address.toString(),
                                     project.mobileNo.toString(),
@@ -146,6 +153,7 @@ class Splashctivity : BaseActivity() {
                         //projectArray?.let { InsertTaskUser(this@Splashctivity, it).execute() }
 
                         goToActivity<LoginActivity>()
+                        finish()
                     } else {
                         showAlert(getString(R.string.something_went_wrong))
                     }
@@ -175,7 +183,7 @@ class Splashctivity : BaseActivity() {
 
         override fun onPostExecute(bool: Boolean?) {
             if (bool!!) {
-                Toast.makeText(context, "Added to Database", Toast.LENGTH_LONG).show()
+                //Toast.makeText(context, "Added to Database", Toast.LENGTH_LONG).show()
             }
         }
 

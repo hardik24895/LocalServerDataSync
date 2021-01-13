@@ -40,6 +40,9 @@ data class ProjectItem(
 	@field:SerializedName("ProjectID")
 	val projectID: String? = null,
 
+	@field:SerializedName("CompanyName")
+	val CompanyName: String? = null,
+
 	@field:SerializedName("CreatedDate")
 	val createdDate: String? = null,
 

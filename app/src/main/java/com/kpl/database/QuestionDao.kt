@@ -2,6 +2,7 @@ package com.kpl.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.kpl.utils.Constant
 
@@ -13,10 +14,10 @@ interface QuestionDao {
     fun getAllQuestion(): List<Question>
 
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertQuestion(question: Question)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllQuestion(question: ArrayList<Question>)
 
 //    @Delete

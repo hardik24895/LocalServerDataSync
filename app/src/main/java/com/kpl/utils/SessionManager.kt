@@ -11,17 +11,16 @@ import java.lang.reflect.Type
 
 
 class SessionManager(val context: Context) {
-    val pref =
-        context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+    val pref = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
 
 
     var isLoggedIn: Boolean
         get() = pref.contains(KEY_IS_LOGIN) && pref.getBoolean(KEY_IS_LOGIN, false)
         set(isLoggedIn) = storeDataByKey(KEY_IS_LOGIN, isLoggedIn)
 
-    var isRegester: Boolean
-        get() = pref.contains(KEY_IS_REGISTER) && pref.getBoolean(KEY_IS_REGISTER, false)
-        set(isRegester) = storeDataByKey(KEY_IS_REGISTER, isRegester)
+//    var isRegester: Boolean
+//        get() = pref.contains(KEY_IS_REGISTER) && pref.getBoolean(KEY_IS_REGISTER, false)
+//        set(isRegester) = storeDataByKey(KEY_IS_REGISTER, isRegester)
 
    /* var user: UserModal
         get() {
@@ -96,14 +95,19 @@ class SessionManager(val context: Context) {
         pref.edit().clear().apply()
     }
 
+
+
     companion object {
         const val KEY_IS_LOGIN = "isLogin"
-        const val KEY_IS_REGISTER = "isRegister"
-        const val KEY_USER_INFO = "user"
-        const val KEY_EVENT_STATICS = "eventStatics"
-        const val HOME_DATA = "homeData"
-        const val BANNER_DATA = "bannerData"
-        const val EVENT_DETAIL_BANNER = "eventDetailBanner"
-        const val EVENT_LIST = "eventList"
+      //  const val KEY_IS_REGISTER = "isRegister"
+        const val SPUserID = "SPUserID"
+        const val SPRoleID = "SPRoleID"
+        const val SPEmailID = "SPEmailID"
+        const val SPPassword = "SPPassword"
+        const val SPFirstName = "SPFirstName"
+        const val SPLastName = "SPLastName"
+        const val SPMobileNo = "SPMobileNo"
+        const val SPAddress = "SPAddress"
+        const val SPUserType = "SPUserType"
     }
 }

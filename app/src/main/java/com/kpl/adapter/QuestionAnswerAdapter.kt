@@ -44,7 +44,7 @@ class QuestionAnswerAdapter(
 
         val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         holder.rvAns?.layoutManager = layoutManager
-        var adapter = AnswerAdapter(mContext, stringArray, data.Type.toString(),data.QuestionID.toString())
+        var adapter = AnswerAdapter(mContext, stringArray, data.Type.toString(),data.QuestionID.toString(),data)
         holder.rvAns?.adapter = adapter
 
     }
