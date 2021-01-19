@@ -11,7 +11,7 @@
         layout="@layout/toolbar_with_back_arrow" />
 
 
-    <AutoCompleteTextView
+    <!--<AutoCompleteTextView
         android:id="@+id/autoSiteName"
         android:layout_width="0dp"
         android:layout_height="@dimen/_36sdp"
@@ -19,7 +19,6 @@
         android:layout_marginTop="@dimen/_32sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         android:background="@drawable/bg_spinner"
-        android:entries="@array/site_name"
         android:fontFamily="@font/sf_pro_display_regular"
         android:gravity="center_vertical"
         android:hint="Project Name"
@@ -42,7 +41,6 @@
         android:layout_marginEnd="@dimen/_16sdp"
         android:background="@drawable/bg_spinner"
         android:ellipsize="marquee"
-        android:entries="@array/com_name"
         android:fontFamily="@font/sf_pro_display_regular"
         android:gravity="center_vertical"
         android:inputType="text"
@@ -65,7 +63,6 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_16sdp"
         android:background="@drawable/bg_spinner"
-        android:entries="@array/com_address"
         android:fontFamily="@font/sf_pro_display_regular"
         android:gravity="center_vertical"
         android:inputType="text"
@@ -95,5 +92,5 @@
         app:layout_constraintEnd_toEndOf="@id/txtDate"
         app:layout_constraintStart_toStartOf="@id/txtDate"
         app:layout_constraintTop_toBottomOf="@id/txtDate" />
-
+-->
 </androidx.constraintlayout.widget.ConstraintLayout>

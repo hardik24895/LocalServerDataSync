@@ -6,24 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.Nullable
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kpl.R
-import com.kpl.activity.SiteDetailActivity
 import com.kpl.adapter.SurveyAdapter
 import com.kpl.database.Survey
-import com.kpl.extention.invisible
-import com.kpl.extention.visible
-import com.kpl.interfaces.goToActivity
-import kotlinx.android.synthetic.main.fragment_local_servey.*
-import kotlinx.android.synthetic.main.fragment_servey.*
-import kotlinx.android.synthetic.main.fragment_servey.rvSurvey
-import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
+import kotlinx.android.synthetic.main.reclerview_swipelayout.*
 
 
 class LocalSurveyFragment : BaseFragment() {
@@ -38,7 +26,7 @@ class LocalSurveyFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_local_servey, container, false)
+        val root = inflater.inflate(R.layout.reclerview_swipelayout, container, false)
 
 
         return root
@@ -46,15 +34,23 @@ class LocalSurveyFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
+        swipeRefreshLayout.isRefreshing = true
+        surveyArray = ArrayList()
         var layoutmanger = LinearLayoutManager(requireContext())
-        rvSurvey.layoutManager = layoutmanger
+        recyclerView.layoutManager = layoutmanger
 
-        adapter = SurveyAdapter(requireContext())
-        rvSurvey.adapter =adapter
+        adapter = SurveyAdapter(requireContext(),surveyArray!!)
+        recyclerView.adapter =adapter
+
+        GetDataFromDB().execute()
 
 
+        swipeRefreshLayout.setOnRefreshListener {
+
+            surveyArray!!.clear()
+            GetDataFromDB().execute()
+
+        }
 
     }
 
@@ -65,15 +61,18 @@ class LocalSurveyFragment : BaseFragment() {
         }
 
         override fun onPostExecute(result: List<Survey>?) {
+            surveyArray?.clear()
             list = result
             surveyArray?.addAll(list!!)
             adapter?.notifyDataSetChanged()
+            swipeRefreshLayout.isRefreshing = false
         }
 
     }
-    private fun setData() {
 
-
+    override fun onResume() {
+        super.onResume()
+        GetDataFromDB().execute()
     }
 
 }

@@ -9,16 +9,14 @@ import com.kpl.utils.Constant
 data class Survey(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = Constant.SurveyID) val SurveyID: Int?,
-    @ColumnInfo(name = Constant.ProjectId) val ProjectId: Int?,
-    @ColumnInfo(name = Constant.Title) val Title: String?,
-    @ColumnInfo(name = Constant.Date) val Date: String?,
-    @ColumnInfo(name = Constant.UserID) val UserID: Int?,
-    @ColumnInfo(name = Constant.CreatedBy) val CreatedBy: String?,
-    @ColumnInfo(name = Constant.CreatedDate) val CreatedDate: String?,
-    @ColumnInfo(name = Constant.ModifiedBy) val ModifiedBy: String?,
-    @ColumnInfo(name = Constant.ModifiedDate) val ModifiedDate: String?,
-    @ColumnInfo(name = Constant.Status) val Status: String?
-
-
+    @ColumnInfo(name = Constant.SurveyID) var SurveyID: Int?,
+    @ColumnInfo(name = Constant.ProjectId) var ProjectID: Int,
+    @ColumnInfo(name = Constant.Title) var Title: String?,
+    @ColumnInfo(name = Constant.SurveyDate) var SurveyDate: String?,
+    @ColumnInfo(name = Constant.UserID) var UserID: String?,
+    @ColumnInfo(name = Constant.CreatedBy) var CreatedBy: String?,
+    @ColumnInfo(name = Constant.CreatedDate) var CreatedDate: String?,
+    @ColumnInfo(name = Constant.ModifiedBy) var ModifiedBy: String?,
+    @ColumnInfo(name = Constant.ModifiedDate) var ModifiedDate: String?,
+    @ColumnInfo(name = Constant.Status) var Status: String?
 )

@@ -10,33 +10,9 @@
     <string name="title_survey">Survey</string>
     <string name="title_profile">Profile</string>
     <string name="title_setting">Setting</string>
+    <string name="no">NO</string>
+    <string name="yes">YES</string>
+    <string name="msg_logout">Are you Sure to Logout?</string>
+    <string name="no_result_found">No Data Found</string>
 
-
-    <array name="com_name">
-        <item>Shopify</item>
-        <item>WebHostingGeeks</item>
-        <item>Name Mesh</item>
-        <item>Wordlab</item>
-        <item>Freshbooks</item>
-
-    </array>
-
-    <array name="site_name">
-        <item>www.Shopify.com</item>
-        <item>www.WebHostingGeeks.com</item>
-        <item>www.NameMesh.com</item>
-        <item>www.Wordlab.com</item>
-        <item>www.Freshbooks.com</item>
-
-    </array>
-
-    <array name="com_address">
-        <item>Ahmedadbad</item>
-        <item>Gandhinagar</item>
-        <item>Baroda</item>
-        <item>Rajkot</item>
-        <item>Bhavnagar</item>
-        <item>Surat</item>
-
-    </array>
 </resources>

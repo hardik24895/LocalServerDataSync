@@ -32,6 +32,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    defaultConfig {
+        renderscriptTargetApi 25
+        renderscriptSupportModeEnabled true
+    }
 }
 
 dependencies {
@@ -85,6 +89,9 @@ dependencies {
     implementation 'bouncycastle:bcprov-jdk16:136'
     implementation 'androidx.room:room-runtime:2.2.6'
     kapt 'androidx.room:room-compiler:2.2.6'
+
+
+   // implementation 'com.facebook.stetho:stetho:1.5.1'
 
 
 }

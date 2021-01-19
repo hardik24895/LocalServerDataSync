@@ -20,6 +20,7 @@ class QuestionAnswerAdapter(
 
 
     override fun getItemCount(): Int {
+        Log.d("TAG", "getItemCount: "+list.size)
         return list.size
     }
 
@@ -38,7 +39,7 @@ class QuestionAnswerAdapter(
         val data = list[position]
         holder.bindData(mContext)
         holder.txtNum?.setText("" + (position + 1) + ".")
-        holder.txtSurveyTitle?.setText(data.Question)
+        holder.txtQuestion?.setText(data.Question)
 
         var stringArray = data.Questionoption?.split(",")
 
@@ -53,13 +54,13 @@ class QuestionAnswerAdapter(
     class ItemHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
         var txtNum: TextView? = null
-        var txtSurveyTitle: TextView? = null
+        var txtQuestion: TextView? = null
         var rvAns: RecyclerView? = null
 
 
         fun bindData(context: Context) {
             txtNum = containerView.findViewById(R.id.txtNum)
-            txtSurveyTitle = containerView.findViewById(R.id.txtSurveyTitle)
+            txtQuestion = containerView.findViewById(R.id.txtQuestion)
             rvAns = containerView.findViewById(R.id.rvAns)
 
 

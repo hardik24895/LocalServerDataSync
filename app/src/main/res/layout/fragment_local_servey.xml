@@ -6,16 +6,15 @@
     android:layout_height="match_parent">
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSurvey"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/row_survey"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        tools:listitem="@layout/row_survey" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

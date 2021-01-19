@@ -13,7 +13,7 @@ interface SurveyAnswerDao {
 
 
     @Query("SELECT * FROM  ${Constant.TABLE_SURVEY_ANSWER} Where ${Constant.SurveyID} = :surveyID and ${Constant.QuestionID} = :questionID ")
-    fun checkRecordExist(surveyID: String, questionID: String): SurveyAnswer
+    fun checkRecordExist(surveyID: Int, questionID: String): SurveyAnswer
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(surveyAnswer: SurveyAnswer)
@@ -22,6 +22,9 @@ interface SurveyAnswerDao {
     fun insertAll(surveyAnswer: ArrayList<SurveyAnswer>)
 
     @Query("Update ${Constant.TABLE_SURVEY_ANSWER} set Answer = :answer  Where ${Constant.SurveyID} = :surveyID and ${Constant.QuestionID} = :questionID")
-    fun updaterecord(surveyID: String, questionID: String, answer: String)
+    fun updaterecord(surveyID: Int, questionID: String, answer: String)
+
+    @Query("Update ${Constant.TABLE_SURVEY_ANSWER} set ${Constant.SurveyID} = :surveyId  Where ${Constant.SurveyID} = -1 ")
+    fun updaterecord( surveyId: Int)
 
 }

@@ -1,19 +1,16 @@
 package com.kpl.fragment
 
-import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.Nullable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.kpl.R
-import com.kpl.activity.SiteDetailActivity
+import com.kpl.activity.QuestionAnswerActivity
 import com.kpl.adapter.SurveyAdapter
 import com.kpl.database.Survey
 import com.kpl.extention.invisible
@@ -48,25 +45,25 @@ class SurveyFragment : BaseFragment() {
         imgAdd.visible()
         surveyArray = ArrayList()
         imgAdd.setOnClickListener {
-            goToActivity<SiteDetailActivity>()
+            goToActivity<QuestionAnswerActivity>()
         }
 
         setupViewPager(viewPager)
     }
 
-    inner class GetDataFromDB : AsyncTask<Context, Void, List<Survey>>() {
-        override fun doInBackground(vararg params: Context?): List<Survey> {
-
-            return appDatabase?.surveyDao()?.getAllSurvey()!!
-        }
-
-        override fun onPostExecute(result: List<Survey>?) {
-            list = result
-            surveyArray?.addAll(list!!)
-            adapter?.notifyDataSetChanged()
-        }
-
-    }
+//    inner class GetDataFromDB : AsyncTask<Context, Void, List<Survey>>() {
+//        override fun doInBackground(vararg params: Context?): List<Survey> {
+//
+//            return appDatabase?.surveyDao()?.getAllSurvey()!!
+//        }
+//
+//        override fun onPostExecute(result: List<Survey>?) {
+//            list = result
+//            surveyArray?.addAll(list!!)
+//            adapter?.notifyDataSetChanged()
+//        }
+//
+//    }
 
     private fun setupViewPager(viewpager: ViewPager) {
         var adapter = ViewPagerAdapter(getChildFragmentManager())

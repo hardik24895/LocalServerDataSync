@@ -1,30 +1,53 @@
 package com.kpl.fragment
 
+import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import android.widget.Toast
 import com.kpl.R
 import com.kpl.activity.InformationActivity
 import com.kpl.activity.LoginActivity
 import com.kpl.activity.NotificationActivity
+import com.kpl.database.*
 import com.kpl.dialog.YesNoActionDailog
 import com.kpl.extention.invisible
+import com.kpl.extention.showAlert
 import com.kpl.interfaces.goToActivity
 import com.kpl.interfaces.goToActivityAndClearTask
+import com.kpl.model.*
+import com.kpl.network.CallbackObserver
+import com.kpl.network.Networking
+import com.kpl.network.addTo
 import com.kpl.utils.Constant
+import com.kpl.utils.SessionManager
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
-
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class SettingFragment : BaseFragment() {
 
     lateinit var intent: Intent
+
+    var ansArray: ArrayList<SurveyAnswer>? = null
+    var surveyArray: ArrayList<Survey>? = null
+
+    var employeeArray: ArrayList<Employee>? = null
+    var quesitionArray: ArrayList<Question>? = null
+
+    var projectArray: ArrayList<Project>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,7 +64,45 @@ class SettingFragment : BaseFragment() {
         imgBack.invisible()
         txtTitle.text = "Setting"
         clickEvent()
+        employeeArray = ArrayList()
+        projectArray = ArrayList()
+        quesitionArray = ArrayList()
+        ansArray = ArrayList()
+        surveyArray = ArrayList()
+
+        relaySendData.setOnClickListener {
+
+            requireContext()?.let { GetDataFromDB(it).execute() }
+        }
+        relayGetData.setOnClickListener {
+
+            getMasterDataFromServer()
+
+
+        }
+
+
     }
+
+    inner class GetDataFromDB(var context: Context) :
+        AsyncTask<Void, Void, Boolean>() {
+        override fun doInBackground(vararg params: Void?): Boolean? {
+            ansArray?.addAll(appDatabase!!.surveyAnswerDao().getAll())
+            surveyArray?.addAll(appDatabase!!.surveyDao().getAllPendingSurvey())
+
+            return true
+        }
+
+        override fun onPostExecute(result: Boolean?) {
+
+            if (ansArray?.size!! > 0)
+                Log.d("TAG", "onPostExecute: " + ansArray?.get(1)?.Answer)
+
+
+            SendDatatoServer()
+        }
+    }
+
 
     fun clickEvent() {
         relayNotification.setOnClickListener {
@@ -84,4 +145,252 @@ class SettingFragment : BaseFragment() {
             dialog.show(childFragmentManager, "YesNO")
         }
     }
+
+
+    fun SendDatatoServer() {
+
+        var result = ""
+        showProgressbar()
+
+        try {
+
+            val jsonBody = JSONObject()
+            val jsonObject = JSONObject()
+            val jsonSurveyArray: JSONArray? = JSONArray()
+            val jsonAnswerArray: JSONArray? = JSONArray()
+
+
+            for (i in 0 until ansArray?.size!!) {
+                val jGroup = JSONObject() // /sub Object
+                try {
+//                    jGroup.put("SurveyAnswerID", ansArray?.get(i)?.SurveyAnswerID)
+//                    jGroup.put("SurveyID", ansArray?.get(i)?.SurveyID)
+                    jGroup.put("QuestionID", ansArray?.get(i)?.QuestionID)
+                    jGroup.put("Answer", ansArray?.get(i)?.Answer)
+                    jGroup.put("UserID", session.getDataByKey(SessionManager.SPUserID))
+//                    jGroup.put("CreatedBy", ansArray?.get(i)?.CreatedBy)
+//                    jGroup.put("CreatedDate", ansArray?.get(i)?.CreatedDate)
+//                    jGroup.put("ModifiedBy", ansArray?.get(i)?.ModifiedBy)
+//                    jGroup.put("ModifiedDate", ansArray?.get(i)?.ModifiedDate)
+//                    jGroup.put("Status", ansArray?.get(i)?.Status)
+                    jsonAnswerArray?.put(jGroup)
+
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+
+
+            for (i in 0 until surveyArray?.size!!) {
+                val jGroup = JSONObject() // /sub Object
+                try {
+                    jGroup.put("ProjectID", surveyArray?.get(i)?.ProjectID)
+                    jGroup.put("Title", surveyArray?.get(i)?.Title)
+                    jGroup.put("SurveyDate", convertDateFormate(surveyArray?.get(i)?.SurveyDate))
+                    jGroup.put("UserID", session.getDataByKey(SessionManager.SPUserID))
+
+                    jsonSurveyArray?.put(jGroup)
+
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+            jsonObject.put("survey", jsonSurveyArray)
+            jsonObject.put("surveyanswer", jsonAnswerArray)
+
+            // jsonBody.put("body", jsonObject)
+
+            result = Networking.setParentJsonData("addSurvey", jsonObject)
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        Networking
+            .with(requireContext())
+            .getServices()
+            .SendServeyToServer(Networking.wrapParams(result))//wrapParams Wraps parameters in to Request body Json format
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : CallbackObserver<SendSurverDataToServer>() {
+                override fun onSuccess(response: SendSurverDataToServer) {
+                    val data = response.data
+                    hideProgressbar()
+                    if (data != null) {
+                        UpdateSurveyStatus(requireContext()).execute()
+
+                    } else {
+                        showAlert(getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailed(code: Int, message: String) {
+                    showAlert(message)
+                    hideProgressbar()
+                }
+
+            }).addTo(autoDisposable)
+    }
+
+    private fun convertDateFormate(surveyDate: String?): String {
+
+
+        val input = SimpleDateFormat("dd/MM/yyyy")
+        val output = SimpleDateFormat("yyyy-MM-dd")
+        try {
+            val getAbbreviate = input.parse(surveyDate)    // parse input
+            return output.format(getAbbreviate)    // format output
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+
+        return ""
+    }
+
+    inner class UpdateSurveyStatus(var context: Context) :
+        AsyncTask<Void, Void, Boolean>() {
+        override fun doInBackground(vararg params: Void?): Boolean? {
+
+            appDatabase!!.surveyDao().uploadDataDone()
+            appDatabase!!.questionDao().deleteAllReocord();
+
+            return true
+        }
+
+        override fun onPostExecute(result: Boolean?) {
+
+
+        }
+    }
+
+    fun getMasterDataFromServer() {
+        var result = ""
+        showProgressbar()
+        try {
+
+            val jsonBody = JSONObject()
+            val jsonObject = JSONObject()
+            jsonObject.put(
+                "Synctime",
+                "2021-01-01 10:00:00"
+            )
+
+            // jsonBody.put("body", jsonObject)
+
+            result = Networking.setParentJsonData("getInsertMaster", jsonObject)
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        Networking
+            .with(requireContext())
+            .getServices()
+            .getMasterData(Networking.wrapParams(result))//wrapParams Wraps parameters in to Request body Json format
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : CallbackObserver<GetMasterDataModel>() {
+                override fun onSuccess(response: GetMasterDataModel) {
+                    val data = response.data
+                    hideProgressbar()
+                    if (data != null) {
+                        Log.d("TAG", "onSuccess: " + data.toString())
+
+                        for (iteam in data.employee.indices) {
+                            val emp: EmployeeItem = data.employee.get(iteam)
+                            employeeArray?.add(
+                                Employee(
+                                    emp.userID?.toInt(),
+                                    emp.roleID?.toInt(),
+                                    emp.emailID.toString(),
+                                    emp.password.toString(),
+                                    emp.firstName.toString(),
+                                    emp.lastName.toString(),
+                                    emp.mobileNo.toString(),
+                                    emp.address.toString(),
+                                    emp.userType.toString(),
+                                    emp.isDeleted.toString(),
+                                    emp.createdBy.toString(),
+                                    emp.createdDate.toString(),
+                                    emp.modifiedBy.toString(),
+                                    emp.modifiedDate.toString(),
+                                    emp.status.toString()
+                                )
+                            )
+                        }
+
+                        for (iteam in data.project.indices) {
+                            val project: ProjectItem = data.project.get(iteam)
+                            projectArray?.add(
+                                Project(
+                                    project.projectID?.toInt(),
+                                    project.CompanyName?.toString(),
+                                    project.title.toString(),
+                                    project.address.toString(),
+                                    project.mobileNo.toString(),
+                                    project.type.toString(),
+                                    project.status.toString(),
+                                    project.createdBy.toString(),
+                                    project.createdDate.toString(),
+                                    project.modifiedBy.toString(),
+                                    project.modifiedDate.toString()
+                                )
+                            )
+                        }
+
+                        for (iteam in data.question.indices) {
+                            val question: QuestionItem = data.question.get(iteam)
+                            quesitionArray?.add(
+                                Question(
+                                    question.questionID?.toInt(),
+                                    question.question.toString(),
+                                    question.questionoption.toString(),
+                                    question.type.toString(),
+                                    question.createdBy.toString(),
+                                    question.createdDate.toString(),
+                                    question.modifiedBy.toString(),
+                                    question.modifiedDate.toString(),
+                                    question.status.toString()
+                                )
+                            )
+                        }
+
+
+                        InsertTaskUser(
+                            requireContext(), employeeArray!!, projectArray!!, quesitionArray!!
+                        ).execute()
+
+
+                    } else {
+                        showAlert(getString(R.string.something_went_wrong))
+                    }
+                }
+
+                override fun onFailed(code: Int, message: String) {
+                    showAlert(message)
+                    hideProgressbar()
+                }
+
+            }).addTo(autoDisposable)
+    }
+
+    inner class InsertTaskUser(
+        var context: Context,
+        var employeeList: ArrayList<Employee>,
+        var projectList: ArrayList<Project>,
+        var questionList: ArrayList<Question>
+    ) :
+        AsyncTask<Void, Void, Boolean>() {
+        override fun doInBackground(vararg params: Void?): Boolean {
+            appDatabase!!.employeeDao().insertAllUser(employeeList)
+            appDatabase!!.projectDao().insertAllProject(projectList)
+            appDatabase!!.questionDao().insertAllQuestion(questionList)
+            return true
+        }
+
+        override fun onPostExecute(bool: Boolean?) {
+
+            Toast.makeText(context, "Data sync successfully", Toast.LENGTH_LONG).show()
+        }
+
+    }
+
 }

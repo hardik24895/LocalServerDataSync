@@ -95,8 +95,9 @@ class AnswerAdapter(
         } else if (type.equals(Constant.typeMutliSelection)) {
             holder.cbOption?.setText(data.toString())
             holder.cbOption?.setOnClickListener {
+                Log.e("TAG", "onBindViewHolder: 123    "+holder.cbOption!!.isChecked )
 
-                AddData(holder.cbOption!!.getText().toString(), true, false)
+                AddData(holder.cbOption!!.getText().toString(), holder.cbOption!!.isChecked, false)
             }
         } else if (type.equals(Constant.typeEdit)) {
             holder.edtOption?.setText(filledAns)
@@ -127,7 +128,7 @@ class AnswerAdapter(
         //Set Ans
         GlobalScope.launch(Dispatchers.Main) {
             val result = withContext(Dispatchers.Default) {
-                appDatabase!!.surveyAnswerDao().checkRecordExist("1", QueId)
+                appDatabase!!.surveyAnswerDao().checkRecordExist(-1, QueId)
             }
 
             if (result != null)
@@ -164,7 +165,7 @@ class AnswerAdapter(
             mContext,
             isadded,
             isReplace,
-            SurveyAnswer(null, 1, QueId, answer, "", currentDate, "", currentDate, "1")
+            SurveyAnswer(null, -1, QueId, answer, "", currentDate, "", currentDate, "1")
         ).execute()
     }
 
@@ -181,7 +182,7 @@ class AnswerAdapter(
 
             var existAns: SurveyAnswer? = null
             existAns = appDatabase!!.surveyAnswerDao().checkRecordExist(
-                surveyAnswer.SurveyID.toString(),
+                surveyAnswer.SurveyID,
                 surveyAnswer.QuestionID.toString()
             )
 
@@ -192,7 +193,7 @@ class AnswerAdapter(
             } else {
                 if (isReplace) {
                     appDatabase!!.surveyAnswerDao().updaterecord(
-                        surveyAnswer.SurveyID.toString(),
+                        surveyAnswer.SurveyID,
                         surveyAnswer.QuestionID.toString(),
                         surveyAnswer.Answer.toString()
                     )
@@ -207,13 +208,13 @@ class AnswerAdapter(
                         }
 
                         appDatabase!!.surveyAnswerDao().updaterecord(
-                            surveyAnswer.SurveyID.toString(),
+                            surveyAnswer.SurveyID,
                             surveyAnswer.QuestionID.toString(),
                             addedStr + surveyAnswer.Answer.toString().replace(",,", ",")
                         )
                     } else {
                         appDatabase!!.surveyAnswerDao().updaterecord(
-                            surveyAnswer.SurveyID.toString(),
+                            surveyAnswer.SurveyID,
                             surveyAnswer.QuestionID.toString(),
                             existAns.Answer.toString()
                                 .replace("," + surveyAnswer.Answer.toString(), "")

@@ -20,6 +20,8 @@ interface QuestionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllQuestion(question: ArrayList<Question>)
 
+    @Query("DELETE FROM " + Constant.TABLE_QUESTION)
+    fun deleteAllReocord()
 //    @Delete
 //    suspend fun delete(user: Question)
 

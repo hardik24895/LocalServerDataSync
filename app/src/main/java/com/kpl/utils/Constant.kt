@@ -41,9 +41,9 @@ object Constant {
 
     //Table Survey
     const val SurveyID = "SurveyID"
-    const val ProjectId = "ProjectId"
+    const val ProjectId = "ProjectID"
     const val Title = "Title"
-    const val Date = "Date"
+    const val SurveyDate = "SurveyDate"
 
     //Table Question
     const val QuestionID = "QuestionID"

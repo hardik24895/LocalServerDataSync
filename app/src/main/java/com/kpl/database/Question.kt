@@ -21,12 +21,4 @@ data class Question(
     @ColumnInfo(name = Constant.ModifiedDate) val ModifiedDate: String?,
     @ColumnInfo(name = Constant.Status) val Status: String?
 
-
-
-
-
-
-
-
-
 )
