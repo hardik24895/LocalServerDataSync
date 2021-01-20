@@ -17,6 +17,7 @@
         <TextView
             android:id="@+id/txtSurveyTitle"
             android:layout_width="0dp"
+            android:layout_marginEnd="@dimen/_8sdp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/clan_ot_medium"
             android:text="Survey Title"
@@ -36,7 +37,6 @@
             app:layout_constraintTop_toTopOf="@+id/txtSurveyTitle" />
 
         <TextView
-
             android:id="@+id/txtSurveyDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

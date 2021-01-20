@@ -13,6 +13,7 @@
     <string name="no">NO</string>
     <string name="yes">YES</string>
     <string name="msg_logout">Are you Sure to Logout?</string>
+    <string name="msg_get_data_from_server">Your local survey pending, so you want to remove and SYNC Data?</string>
     <string name="no_result_found">No Data Found</string>
 
 </resources>

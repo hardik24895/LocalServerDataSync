@@ -36,6 +36,8 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SettingFragment : BaseFragment() {
 
@@ -43,10 +45,8 @@ class SettingFragment : BaseFragment() {
 
     var ansArray: ArrayList<SurveyAnswer>? = null
     var surveyArray: ArrayList<Survey>? = null
-
     var employeeArray: ArrayList<Employee>? = null
     var quesitionArray: ArrayList<Question>? = null
-
     var projectArray: ArrayList<Project>? = null
 
     override fun onCreateView(
@@ -73,15 +73,44 @@ class SettingFragment : BaseFragment() {
         relaySendData.setOnClickListener {
 
             requireContext()?.let { GetDataFromDB(it).execute() }
+
         }
         relayGetData.setOnClickListener {
 
-            getMasterDataFromServer()
 
+            requireContext()?.let { CheckLocalServerExist(it).execute() }
 
         }
 
 
+    }
+
+    inner class CheckLocalServerExist(var context: Context) :
+        AsyncTask<Void, Void, Boolean>() {
+        override fun doInBackground(vararg params: Void?): Boolean? {
+            surveyArray?.addAll(appDatabase!!.surveyDao().getAllPendingSurvey())
+
+            return true
+        }
+
+        override fun onPostExecute(result: Boolean?) {
+
+            if (surveyArray?.size!! > 0) {
+                val dialog = YesNoActionDailog.newInstance(requireContext(),
+                    object : YesNoActionDailog.onItemClick {
+                        override fun onItemCLicked() {
+                            getMasterDataFromServer()
+                        }
+                    })
+                val bundle = Bundle()
+                bundle.putString(Constant.TITLE, this@SettingFragment.getString(R.string.app_name))
+                bundle.putString(Constant.TEXT, this@SettingFragment.getString(R.string.msg_get_data_from_server))
+                dialog.arguments = bundle
+                dialog.show(childFragmentManager, "YesNO")
+            }else
+                getMasterDataFromServer()
+
+        }
     }
 
     inner class GetDataFromDB(var context: Context) :
@@ -97,7 +126,6 @@ class SettingFragment : BaseFragment() {
 
             if (ansArray?.size!! > 0)
                 Log.d("TAG", "onPostExecute: " + ansArray?.get(1)?.Answer)
-
 
             SendDatatoServer()
         }
@@ -266,13 +294,10 @@ class SettingFragment : BaseFragment() {
         var result = ""
         showProgressbar()
         try {
-
-            val jsonBody = JSONObject()
+            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+            val currentDate = sdf.format(Date())
             val jsonObject = JSONObject()
-            jsonObject.put(
-                "Synctime",
-                "2021-01-01 10:00:00"
-            )
+            jsonObject.put("Synctime", currentDate)
 
             // jsonBody.put("body", jsonObject)
 
@@ -294,6 +319,7 @@ class SettingFragment : BaseFragment() {
                     if (data != null) {
                         Log.d("TAG", "onSuccess: " + data.toString())
 
+                        if(!data.employee.isEmpty())
                         for (iteam in data.employee.indices) {
                             val emp: EmployeeItem = data.employee.get(iteam)
                             employeeArray?.add(
@@ -316,7 +342,7 @@ class SettingFragment : BaseFragment() {
                                 )
                             )
                         }
-
+                        if(!data.project.isEmpty())
                         for (iteam in data.project.indices) {
                             val project: ProjectItem = data.project.get(iteam)
                             projectArray?.add(
@@ -335,7 +361,7 @@ class SettingFragment : BaseFragment() {
                                 )
                             )
                         }
-
+                        if(!data.question.isEmpty())
                         for (iteam in data.question.indices) {
                             val question: QuestionItem = data.question.get(iteam)
                             quesitionArray?.add(
@@ -352,7 +378,6 @@ class SettingFragment : BaseFragment() {
                                 )
                             )
                         }
-
 
                         InsertTaskUser(
                             requireContext(), employeeArray!!, projectArray!!, quesitionArray!!
@@ -390,7 +415,5 @@ class SettingFragment : BaseFragment() {
 
             Toast.makeText(context, "Data sync successfully", Toast.LENGTH_LONG).show()
         }
-
     }
-
 }

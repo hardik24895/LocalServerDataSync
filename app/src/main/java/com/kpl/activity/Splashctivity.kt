@@ -3,7 +3,6 @@ package com.kpl.activity
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import com.kpl.R
 import com.kpl.database.Employee
 import com.kpl.database.Project
@@ -54,12 +53,9 @@ class Splashctivity : BaseActivity() {
         showProgressbar()
         try {
 
-            val jsonBody = JSONObject()
+
             val jsonObject = JSONObject()
-            jsonObject.put(
-                "Synctime",
-                "2021-01-01 10:00:00"
-            )
+            jsonObject.put("Synctime", "2001-01-01 10:00:00")
 
             // jsonBody.put("body", jsonObject)
 
@@ -81,6 +77,7 @@ class Splashctivity : BaseActivity() {
                     if (data != null) {
                         Log.d("TAG", "onSuccess: " + data.toString())
 
+                        if(!data.employee.isEmpty())
                         for (iteam in data.employee.indices) {
                             val emp: EmployeeItem = data.employee.get(iteam)
                             employeeArray?.add(
@@ -103,7 +100,7 @@ class Splashctivity : BaseActivity() {
                                 )
                             )
                         }
-
+                        if(!data.project.isEmpty())
                         for (iteam in data.project.indices) {
                             val project: ProjectItem = data.project.get(iteam)
                             projectArray?.add(
@@ -122,7 +119,7 @@ class Splashctivity : BaseActivity() {
                                 )
                             )
                         }
-
+                        if(!data.question.isEmpty())
                         for (iteam in data.question.indices) {
                             val question: QuestionItem = data.question.get(iteam)
                             quesitionArray?.add(

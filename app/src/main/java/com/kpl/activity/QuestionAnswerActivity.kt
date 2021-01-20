@@ -120,7 +120,6 @@ class QuestionAnswerActivity : BaseActivity() {
         GetDataFromDB(this).execute()
 
 
-
         projectArray = ArrayList()
         AddressArray = ArrayList()
         txtAddress.isSelected = true

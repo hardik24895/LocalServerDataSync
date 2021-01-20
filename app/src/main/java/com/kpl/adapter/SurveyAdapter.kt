@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kpl.R
 import com.kpl.database.Survey
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.row_survey.*
 
 class SurveyAdapter(
     private val mContext: Context,
@@ -24,24 +25,13 @@ class SurveyAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
-        return ItemHolder(
-            LayoutInflater.from(mContext).inflate(
-                R.layout.row_survey,
-                parent, false
-            )
-        )
+        return ItemHolder(LayoutInflater.from(mContext).inflate(R.layout.row_survey, parent, false))
     }
 
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         val data = list[position]
         holder.bindData(mContext, data)
-        holder.txtSurveyTitle?.setText(data.Title.toString())
-        if (data.Status.equals("0"))
-            holder.ivStatus?.setImageResource(R.drawable.ic_timer)
-        else
-            holder.ivStatus?.setImageResource(R.drawable.ic_done)
-
     }
 
 
@@ -49,16 +39,16 @@ class SurveyAdapter(
         RecyclerView.ViewHolder(containerView),
         LayoutContainer {
 
-        var txtSurveyTitle: TextView? = null
-        var ivStatus: ImageView? = null
-
-
         fun bindData(context: Context, data: Survey) {
-            txtSurveyTitle = containerView?.findViewById(R.id.txtSurveyTitle)
-            ivStatus = containerView?.findViewById(R.id.ivStatus)
-            //  txtName.text= data
+           // txtSurveyTitle = containerView?.findViewById(R.id.txtSurveyTitle)
 
-            //chips.text= data
+            txtSurveyDate.text =data.CreatedDate
+            txtSurveyTitle.text =data.Title.toString()
+            if (data.Status.equals("0"))
+             ivStatus.setImageResource(R.drawable.ic_timer)
+            else
+                ivStatus.setImageResource(R.drawable.ic_done)
+
 
         }
 
