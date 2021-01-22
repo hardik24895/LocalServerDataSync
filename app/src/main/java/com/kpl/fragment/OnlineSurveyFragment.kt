@@ -78,7 +78,7 @@ class OnlineSurveyFragment : BaseFragment() {
     private fun setupRecyclerView() {
         var layoutmanger = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutmanger
-        adapter = SurveyAdapter(requireContext(), surveyArray!!)
+        adapter = SurveyAdapter(requireContext(), surveyArray!!, false)
         recyclerView.adapter = adapter
     }
 

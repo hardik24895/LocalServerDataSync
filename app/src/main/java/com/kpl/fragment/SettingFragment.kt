@@ -4,11 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.kpl.R
 import com.kpl.activity.InformationActivity
 import com.kpl.activity.LoginActivity
@@ -34,8 +35,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -48,6 +47,7 @@ class SettingFragment : BaseFragment() {
     var employeeArray: ArrayList<Employee>? = null
     var quesitionArray: ArrayList<Question>? = null
     var projectArray: ArrayList<Project>? = null
+    var categoryArray: ArrayList<Category>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +69,7 @@ class SettingFragment : BaseFragment() {
         quesitionArray = ArrayList()
         ansArray = ArrayList()
         surveyArray = ArrayList()
+        categoryArray = ArrayList()
 
         relaySendData.setOnClickListener {
 
@@ -104,10 +105,13 @@ class SettingFragment : BaseFragment() {
                     })
                 val bundle = Bundle()
                 bundle.putString(Constant.TITLE, this@SettingFragment.getString(R.string.app_name))
-                bundle.putString(Constant.TEXT, this@SettingFragment.getString(R.string.msg_get_data_from_server))
+                bundle.putString(
+                    Constant.TEXT,
+                    this@SettingFragment.getString(R.string.msg_get_data_from_server)
+                )
                 dialog.arguments = bundle
                 dialog.show(childFragmentManager, "YesNO")
-            }else
+            } else
                 getMasterDataFromServer()
 
         }
@@ -124,10 +128,8 @@ class SettingFragment : BaseFragment() {
 
         override fun onPostExecute(result: Boolean?) {
 
-            if (ansArray?.size!! > 0)
-                Log.d("TAG", "onPostExecute: " + ansArray?.get(1)?.Answer)
-
-            SendDatatoServer()
+            if (surveyArray?.size!! > 0)
+                SendDatatoServer()
         }
     }
 
@@ -191,16 +193,11 @@ class SettingFragment : BaseFragment() {
             for (i in 0 until ansArray?.size!!) {
                 val jGroup = JSONObject() // /sub Object
                 try {
-//                    jGroup.put("SurveyAnswerID", ansArray?.get(i)?.SurveyAnswerID)
-//                    jGroup.put("SurveyID", ansArray?.get(i)?.SurveyID)
+
                     jGroup.put("QuestionID", ansArray?.get(i)?.QuestionID)
                     jGroup.put("Answer", ansArray?.get(i)?.Answer)
                     jGroup.put("UserID", session.getDataByKey(SessionManager.SPUserID))
-//                    jGroup.put("CreatedBy", ansArray?.get(i)?.CreatedBy)
-//                    jGroup.put("CreatedDate", ansArray?.get(i)?.CreatedDate)
-//                    jGroup.put("ModifiedBy", ansArray?.get(i)?.ModifiedBy)
-//                    jGroup.put("ModifiedDate", ansArray?.get(i)?.ModifiedDate)
-//                    jGroup.put("Status", ansArray?.get(i)?.Status)
+//
                     jsonAnswerArray?.put(jGroup)
 
                 } catch (e: JSONException) {
@@ -279,7 +276,7 @@ class SettingFragment : BaseFragment() {
         override fun doInBackground(vararg params: Void?): Boolean? {
 
             appDatabase!!.surveyDao().uploadDataDone()
-            appDatabase!!.questionDao().deleteAllReocord();
+            appDatabase!!.surveyAnswerDao().deleteAllReocord();
 
             return true
         }
@@ -294,10 +291,9 @@ class SettingFragment : BaseFragment() {
         var result = ""
         showProgressbar()
         try {
-            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-            val currentDate = sdf.format(Date())
+
             val jsonObject = JSONObject()
-            jsonObject.put("Synctime", currentDate)
+            jsonObject.put("Synctime", session.getDataByKey(SessionManager.SPSyncData))
 
             // jsonBody.put("body", jsonObject)
 
@@ -319,69 +315,103 @@ class SettingFragment : BaseFragment() {
                     if (data != null) {
                         Log.d("TAG", "onSuccess: " + data.toString())
 
-                        if(!data.employee.isEmpty())
-                        for (iteam in data.employee.indices) {
-                            val emp: EmployeeItem = data.employee.get(iteam)
-                            employeeArray?.add(
-                                Employee(
-                                    emp.userID?.toInt(),
-                                    emp.roleID?.toInt(),
-                                    emp.emailID.toString(),
-                                    emp.password.toString(),
-                                    emp.firstName.toString(),
-                                    emp.lastName.toString(),
-                                    emp.mobileNo.toString(),
-                                    emp.address.toString(),
-                                    emp.userType.toString(),
-                                    emp.isDeleted.toString(),
-                                    emp.createdBy.toString(),
-                                    emp.createdDate.toString(),
-                                    emp.modifiedBy.toString(),
-                                    emp.modifiedDate.toString(),
-                                    emp.status.toString()
+                        if (!data.employee.isEmpty())
+                            for (iteam in data.employee.indices) {
+                                val emp: EmployeeItem = data.employee.get(iteam)
+                                employeeArray?.add(
+                                    Employee(
+                                        emp.userID?.toInt(),
+                                        emp.roleID?.toInt(),
+                                        emp.emailID.toString(),
+                                        emp.password.toString(),
+                                        emp.firstName.toString(),
+                                        emp.lastName.toString(),
+                                        emp.mobileNo.toString(),
+                                        emp.address.toString(),
+                                        emp.userType.toString(),
+                                        emp.isDeleted.toString(),
+                                        emp.createdBy.toString(),
+                                        emp.createdDate.toString(),
+                                        emp.modifiedBy.toString(),
+                                        emp.modifiedDate.toString(),
+                                        emp.status.toString()
+                                    )
                                 )
-                            )
-                        }
-                        if(!data.project.isEmpty())
-                        for (iteam in data.project.indices) {
-                            val project: ProjectItem = data.project.get(iteam)
-                            projectArray?.add(
-                                Project(
-                                    project.projectID?.toInt(),
-                                    project.CompanyName?.toString(),
-                                    project.title.toString(),
-                                    project.address.toString(),
-                                    project.mobileNo.toString(),
-                                    project.type.toString(),
-                                    project.status.toString(),
-                                    project.createdBy.toString(),
-                                    project.createdDate.toString(),
-                                    project.modifiedBy.toString(),
-                                    project.modifiedDate.toString()
+                            }
+                        if (!data.project.isEmpty())
+                            for (iteam in data.project.indices) {
+                                val project: ProjectItem = data.project.get(iteam)
+                                projectArray?.add(
+                                    Project(
+                                        project.projectID?.toInt(),
+                                        project.companyName.toString(),
+                                        project.title.toString(),
+                                        project.address.toString(),
+                                        project.mobileNo.toString(),
+                                        project.type.toString(),
+                                        project.status.toString(),
+                                        project.createdBy.toString(),
+                                        project.createdDate.toString(),
+                                        project.modifiedBy.toString(),
+                                        project.modifiedDate.toString()
+                                    )
                                 )
-                            )
-                        }
-                        if(!data.question.isEmpty())
-                        for (iteam in data.question.indices) {
-                            val question: QuestionItem = data.question.get(iteam)
-                            quesitionArray?.add(
-                                Question(
-                                    question.questionID?.toInt(),
-                                    question.question.toString(),
-                                    question.questionoption.toString(),
-                                    question.type.toString(),
-                                    question.createdBy.toString(),
-                                    question.createdDate.toString(),
-                                    question.modifiedBy.toString(),
-                                    question.modifiedDate.toString(),
-                                    question.status.toString()
+                            }
+                        if (!data.question.isEmpty())
+                            for (iteam in data.question.indices) {
+                                val question: QuestionItem = data.question.get(iteam)
+                                quesitionArray?.add(
+                                    Question(
+                                        question.questionID?.toInt(),
+                                        question.question.toString(),
+                                        question.categoryID.toString(),
+                                        question.questionoption.toString(),
+                                        question.type.toString(),
+                                        question.createdBy.toString(),
+                                        question.createdDate.toString(),
+                                        question.modifiedBy.toString(),
+                                        question.modifiedDate.toString(),
+                                        question.status.toString()
+                                    )
                                 )
-                            )
-                        }
+                            }
 
-                        InsertTaskUser(
-                            requireContext(), employeeArray!!, projectArray!!, quesitionArray!!
-                        ).execute()
+                        if (!data.category.isEmpty())
+                            for (iteam in data.category.indices) {
+                                val category: CategoryItem = data.category.get(iteam)
+                                categoryArray?.add(
+                                    Category(
+                                        category.categoryID?.toInt(),
+                                        category.category.toString(),
+                                        category.createdBy.toString(),
+                                        category.createdDate.toString(),
+                                        category.modifiedBy.toString(),
+                                        category.modifiedDate.toString(),
+                                        category.status.toString()
+                                    )
+                                )
+                            }
+
+
+                        val mainLooper = Looper.getMainLooper()
+                        Thread(Runnable {
+                            employeeArray?.let { appDatabase!!.employeeDao().insertAllUser(it) }
+                            projectArray?.let { appDatabase!!.projectDao().insertAllProject(it) }
+                            quesitionArray?.let {
+                                appDatabase!!.questionDao().insertAllQuestion(it)
+                            }
+                            categoryArray?.let { appDatabase!!.categoryDao().insertAllCategory(it) }
+
+
+                            Handler(mainLooper).post {
+
+
+                                val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                                val currentDate = sdf.format(Date())
+                                session.storeDataByKey(SessionManager.SPSyncData, currentDate)
+
+                            }
+                        }).start()
 
 
                     } else {
@@ -397,23 +427,5 @@ class SettingFragment : BaseFragment() {
             }).addTo(autoDisposable)
     }
 
-    inner class InsertTaskUser(
-        var context: Context,
-        var employeeList: ArrayList<Employee>,
-        var projectList: ArrayList<Project>,
-        var questionList: ArrayList<Question>
-    ) :
-        AsyncTask<Void, Void, Boolean>() {
-        override fun doInBackground(vararg params: Void?): Boolean {
-            appDatabase!!.employeeDao().insertAllUser(employeeList)
-            appDatabase!!.projectDao().insertAllProject(projectList)
-            appDatabase!!.questionDao().insertAllQuestion(questionList)
-            return true
-        }
 
-        override fun onPostExecute(bool: Boolean?) {
-
-            Toast.makeText(context, "Data sync successfully", Toast.LENGTH_LONG).show()
-        }
-    }
 }

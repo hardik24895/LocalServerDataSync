@@ -1,5 +1,6 @@
 package com.kpl.utils
 
+import com.kpl.database.Category
 import java.util.prefs.Preferences
 
 object Constant {
@@ -18,6 +19,7 @@ object Constant {
     const val TABLE_QUESTION = "Question"
     const val TABLE_SURVEY_ANSWER = "SurveyAnswer"
     const val TABLE_PROJECT = "Project"
+    const val TABLE_CATEGORY = "Category"
 
     // Table Name
     const val UserID = "UserID"
@@ -41,7 +43,6 @@ object Constant {
 
     //Table Survey
     const val SurveyID = "SurveyID"
-    const val ProjectId = "ProjectID"
     const val Title = "Title"
     const val SurveyDate = "SurveyDate"
 
@@ -64,6 +65,9 @@ object Constant {
     const val typeMutliSelection ="Checkbox"
 
 
+    //Table Category
+    const val CategoryID = "CategoryID"
+    const val Category = "Category"
 
 
     const val IS_REFREESH = "is_refresh"

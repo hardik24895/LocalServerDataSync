@@ -10,18 +10,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kpl.R
 import com.kpl.database.Question
+import com.kpl.model.SurveyAnswerData
 import kotlinx.android.extensions.LayoutContainer
 
 
-class QuestionAnswerAdapter(
+class OnlineQuestionAnswerAdapter(
     private val mContext: Context,
     var list: MutableList<Question> = mutableListOf(),
-    var SurveyId: Int,
-) : RecyclerView.Adapter<QuestionAnswerAdapter.ItemHolder>() {
+    var surveyAnswerArray: ArrayList<SurveyAnswerData>,
+) : RecyclerView.Adapter<OnlineQuestionAnswerAdapter.ItemHolder>() {
 
 
     override fun getItemCount(): Int {
-        Log.d("TAG", "getItemCount: "+list.size)
+        Log.d("TAG", "getItemCount: " + list.size)
         return list.size
     }
 
@@ -46,7 +47,7 @@ class QuestionAnswerAdapter(
 
         val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         holder.rvAns?.layoutManager = layoutManager
-        var adapter = AnswerAdapter(mContext, stringArray, data.Type.toString(),data.QuestionID.toString(),data,SurveyId, holder.rvAns!!)
+        var adapter = OnlineAnswerAdapter(mContext, stringArray, data.Type.toString(), data.QuestionID.toString(), data, surveyAnswerArray!!)
         holder.rvAns?.adapter = adapter
 
     }

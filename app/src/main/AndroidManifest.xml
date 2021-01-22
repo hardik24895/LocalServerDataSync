@@ -26,6 +26,7 @@
         <activity android:name=".activity.SiteDetailActivity">
 
         </activity>
+        <activity android:name=".activity.SurveyPreviewActivity" />
         <activity android:name=".activity.QuestionAnswerActivity" />
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.HomeActivity" />

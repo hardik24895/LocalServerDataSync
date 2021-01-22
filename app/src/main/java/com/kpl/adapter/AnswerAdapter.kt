@@ -3,6 +3,7 @@ package com.kpl.adapter
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -33,6 +34,8 @@ class AnswerAdapter(
     var type: String,
     var QueId: String,
     var data: Question,
+    var SurveyId: Int,
+    var recview: RecyclerView,
     var appDatabase: AppDatabase? = null,
     var surveyAnswer: SurveyAnswer? = null,
     var filledAns: String? = "",
@@ -41,7 +44,6 @@ class AnswerAdapter(
     private var lastRadioPosition: Int = -1
 
     override fun getItemCount(): Int {
-        Log.e("TAG", "getItemCount: " + list?.size!!)
         return list?.size!!
     }
 
@@ -67,35 +69,42 @@ class AnswerAdapter(
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
 
-        Log.e("TAG", "getItemCount: postion " + position)
-
         val data = list?.get(position)
         holder.bindData(mContext)
 
         if (type.equals(Constant.typeSigleSelection)) {
             holder.rbOption?.setText(data.toString())
-            // holder.rbOption?.setChecked(position == lastRadioPosition)
+            holder.rbOption?.isChecked = position == lastRadioPosition
 
-            holder.rbOption?.setOnCheckedChangeListener { buttonView, isChecked ->
+            holder.rbOption?.setOnClickListener {
                 AddData(holder.rbOption!!.getText().toString(), true, true)
-
-                val copyOfLastCheckedPosition: Int = lastRadioPosition
-                lastRadioPosition = position
-
-                Handler().postDelayed({
-
-                    notifyItemChanged(copyOfLastCheckedPosition)
+                recview.post(Runnable {
                     notifyItemChanged(lastRadioPosition)
+                    notifyItemChanged(position)
+                    lastRadioPosition = position
 
-                }, 0)
+                })
 
 
             }
 
+//
+//            holder.rbOption?.setOnClickListener {
+//
+//                val copyOfLastCheckedPosition: Int = lastRadioPosition
+//                lastRadioPosition = position
+//
+//                Handler().postDelayed({
+//                    notifyDataSetChanged()
+//                    //   notifyItemChanged(copyOfLastCheckedPosition)
+//                    //   notifyItemChanged(lastRadioPosition)
+//                }, 100)
+//            }
+
         } else if (type.equals(Constant.typeMutliSelection)) {
             holder.cbOption?.setText(data.toString())
             holder.cbOption?.setOnClickListener {
-                Log.e("TAG", "onBindViewHolder: 123    "+holder.cbOption!!.isChecked )
+                Log.e("TAG", "onBindViewHolder: 123    " + holder.cbOption!!.isChecked)
 
                 AddData(holder.cbOption!!.getText().toString(), holder.cbOption!!.isChecked, false)
             }
@@ -125,36 +134,34 @@ class AnswerAdapter(
             })
         }
 
-        //Set Ans
-        GlobalScope.launch(Dispatchers.Main) {
-            val result = withContext(Dispatchers.Default) {
-                appDatabase!!.surveyAnswerDao().checkRecordExist(-1, QueId)
-            }
+        //Set Answer
+        val mainLooper = Looper.getMainLooper()
+        Thread(Runnable {
+            val result = appDatabase!!.surveyAnswerDao().checkRecordExist(SurveyId, QueId)
+            Handler(mainLooper).post {
+                if (result != null)
+                    if (type.equals(Constant.typeSigleSelection)) {
 
-            if (result != null)
-                if (type.equals(Constant.typeSigleSelection)) {
+                        if (result.Answer.toString().equals(holder.rbOption?.text.toString())) {
+                              lastRadioPosition = position
+                            holder.rbOption?.setChecked(true)
+                        } else
+                            holder.rbOption?.setChecked(false)
+                    } else if (type.equals(Constant.typeMutliSelection)) {
 
-                    if (result.Answer.toString().equals(data.toString())) {
-                        lastRadioPosition == position
-                        holder.rbOption?.setChecked(true)
-                    } else
-                        holder.rbOption?.setChecked(false)
-                } else if (type.equals(Constant.typeMutliSelection)) {
+                        val strs = result.Answer.toString().split(",").toTypedArray()
+                        for (iteam in strs) {
 
-                    val strs = result.Answer.toString().split(",").toTypedArray()
-                    for (iteam in strs) {
-
-                        if (iteam.equals(data.toString())) {
-                            holder.cbOption?.setChecked(true)
+                            if (iteam.equals(data.toString())) {
+                                holder.cbOption?.setChecked(true)
+                            }
                         }
+
+                    } else if (type.equals(Constant.typeEdit)) {
+                        holder.edtOption?.setText(result.Answer?.toString())
                     }
-
-                } else if (type.equals(Constant.typeEdit)) {
-                    holder.edtOption?.setText(result.Answer?.toString())
-                }
-
-        }
-
+            }
+        }).start()
     }
 
 
@@ -165,7 +172,7 @@ class AnswerAdapter(
             mContext,
             isadded,
             isReplace,
-            SurveyAnswer(null, -1, QueId, answer, "", currentDate, "", currentDate, "1")
+            SurveyAnswer(null, SurveyId, QueId, answer, "", currentDate, "", currentDate, "1")
         ).execute()
     }
 
@@ -233,7 +240,6 @@ class AnswerAdapter(
                 return false
             }
 
-
         }
 
         override fun onPostExecute(result: Boolean?) {
@@ -242,10 +248,7 @@ class AnswerAdapter(
             else
                 Log.d("TAG", "onPostExecute: DATA Exist")
         }
-
     }
-
-
 
     inner class ItemHolder(override val containerView: View?) :
         RecyclerView.ViewHolder(containerView!!),

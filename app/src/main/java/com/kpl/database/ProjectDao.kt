@@ -13,13 +13,15 @@ interface ProjectDao {
     @Query("SELECT * FROM " + Constant.TABLE_PROJECT)
     fun getAllProject(): List<Project>
 
+    @Query("SELECT * FROM  ${Constant.TABLE_PROJECT} WHERE ${Constant.ProjectID}  = :ProjectId")
+    fun getProjectData(ProjectId: Int): Project
 
-//    @Insert
+
+    //    @Insert
 //    fun insertProject(project: Project)
 //
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllProject(project: ArrayList<Project>)
-
 
 
 }

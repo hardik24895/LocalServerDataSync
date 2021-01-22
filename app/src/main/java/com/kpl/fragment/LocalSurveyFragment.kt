@@ -28,7 +28,6 @@ class LocalSurveyFragment : BaseFragment() {
     ): View? {
         val root = inflater.inflate(R.layout.reclerview_swipelayout, container, false)
 
-
         return root
     }
 
@@ -39,7 +38,7 @@ class LocalSurveyFragment : BaseFragment() {
         var layoutmanger = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutmanger
 
-        adapter = SurveyAdapter(requireContext(),surveyArray!!)
+        adapter = SurveyAdapter(requireContext(),surveyArray!!, true)
         recyclerView.adapter =adapter
 
         GetDataFromDB().execute()
@@ -57,7 +56,7 @@ class LocalSurveyFragment : BaseFragment() {
     inner class GetDataFromDB : AsyncTask<Context, Void, List<Survey>>() {
         override fun doInBackground(vararg params: Context?): List<Survey> {
 
-            return appDatabase?.surveyDao()?.getAllSurvey()!!
+            return appDatabase?.surveyDao()?.getAllPendingSurvey()!!
         }
 
         override fun onPostExecute(result: List<Survey>?) {

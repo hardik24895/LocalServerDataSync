@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.kpl.utils.Constant.DATABASE_NAME
 
 @Database(
-    entities = arrayOf(Question::class, Survey::class, SurveyAnswer::class, Employee::class, Project::class),
+    entities = arrayOf(Question::class, Survey::class, SurveyAnswer::class, Employee::class, Project::class, Category::class),
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -21,6 +21,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun employeeDao(): EmployeeDao
 
     abstract fun projectDao(): ProjectDao
+
+    abstract fun categoryDao(): CategoryDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

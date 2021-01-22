@@ -98,7 +98,7 @@ dependencies {
     kapt 'androidx.room:room-compiler:2.2.6'
 
 
-   // implementation 'com.facebook.stetho:stetho:1.5.1'
+    implementation 'com.facebook.stetho:stetho:1.5.1'
 
 
 }

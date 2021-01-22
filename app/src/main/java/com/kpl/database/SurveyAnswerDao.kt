@@ -1,9 +1,10 @@
 package com.kpl.database
 
-import android.provider.SyncStateContract
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.kpl.utils.Constant
-import org.jetbrains.annotations.NotNull
 
 @Dao
 interface SurveyAnswerDao {
@@ -26,5 +27,8 @@ interface SurveyAnswerDao {
 
     @Query("Update ${Constant.TABLE_SURVEY_ANSWER} set ${Constant.SurveyID} = :surveyId  Where ${Constant.SurveyID} = -1 ")
     fun updaterecord( surveyId: Int)
+
+    @Query("DELETE FROM " + Constant.TABLE_SURVEY_ANSWER)
+    fun deleteAllReocord()
 
 }

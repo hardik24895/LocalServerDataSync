@@ -109,5 +109,6 @@ class SessionManager(val context: Context) {
         const val SPMobileNo = "SPMobileNo"
         const val SPAddress = "SPAddress"
         const val SPUserType = "SPUserType"
+        const val SPSyncData = "SPSyncData"
     }
 }

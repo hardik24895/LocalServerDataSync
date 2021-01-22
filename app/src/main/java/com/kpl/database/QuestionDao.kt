@@ -14,6 +14,10 @@ interface QuestionDao {
     fun getAllQuestion(): List<Question>
 
 
+    @Query("SELECT * FROM  ${Constant.TABLE_QUESTION} WHERE ${Constant.CategoryID} = :CategoryId")
+    fun getCategoryWiseQuestion(CategoryId: String): List<Question>
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertQuestion(question: Question)
 

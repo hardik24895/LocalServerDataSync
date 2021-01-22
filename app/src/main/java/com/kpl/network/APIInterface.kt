@@ -1,9 +1,7 @@
 package com.kpl.interfaces
 
 
-import com.kpl.model.GetMasterDataModel
-import com.kpl.model.GetServeyDataModel
-import com.kpl.model.SendSurverDataToServer
+import com.kpl.model.*
 import io.reactivex.Observable
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -21,6 +19,12 @@ interface APIInterface {
 
     @POST("service/")
     fun GetSurveyDataFromServer(@Body body: RequestBody): Observable<Response<GetServeyDataModel>>
+
+    @POST("service/")
+    fun GetOnlineServeyList(@Body body: RequestBody): Observable<Response<OnlineServeyDataModel>>
+
+    @POST("service/")
+    fun GetAssignProjectList(@Body body: RequestBody): Observable<Response<ProjectAssignDataModel>>
 
     /* @POST("common/category/getCategories")
      fun getCategory(): Observable<Response<CategoryModal>>

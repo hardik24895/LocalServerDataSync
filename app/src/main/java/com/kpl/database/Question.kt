@@ -13,6 +13,7 @@ data class Question(
     //@ColumnInfo(name = "ID") val id: Int,
     @ColumnInfo(name = Constant.QuestionID) val QuestionID: Int?,
     @ColumnInfo(name = Constant.Question) val Question: String?,
+    @ColumnInfo(name = Constant.CategoryID) val CategoryID: String?,
     @ColumnInfo(name = Constant.Questionoption) val Questionoption: String?,
     @ColumnInfo(name = Constant.Type) val Type: String?,
     @ColumnInfo(name = Constant.CreatedBy) val CreatedBy: String?,
