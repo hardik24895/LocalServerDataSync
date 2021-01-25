@@ -1,13 +1,12 @@
 package com.kpl.fragment
 
-import android.content.Context
-import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.kpl.R
 import com.kpl.adapter.SurveyAdapter
 import com.kpl.database.Survey
@@ -41,37 +40,33 @@ class LocalSurveyFragment : BaseFragment() {
         adapter = SurveyAdapter(requireContext(),surveyArray!!, true)
         recyclerView.adapter =adapter
 
-        GetDataFromDB().execute()
-
-
         swipeRefreshLayout.setOnRefreshListener {
 
             surveyArray!!.clear()
-            GetDataFromDB().execute()
-
+            getLocalServey()
         }
 
     }
 
-    inner class GetDataFromDB : AsyncTask<Context, Void, List<Survey>>() {
-        override fun doInBackground(vararg params: Context?): List<Survey> {
-
-            return appDatabase?.surveyDao()?.getAllPendingSurvey()!!
-        }
-
-        override fun onPostExecute(result: List<Survey>?) {
+    private fun getLocalServey() {
+        val mainLooper = Looper.getMainLooper()
+        Thread(Runnable {
             surveyArray?.clear()
-            list = result
+            list = appDatabase?.surveyDao()?.getAllPendingSurvey()!!
             surveyArray?.addAll(list!!)
-            adapter?.notifyDataSetChanged()
-            swipeRefreshLayout.isRefreshing = false
-        }
-
+            Handler(mainLooper).post {
+                adapter?.notifyDataSetChanged()
+                swipeRefreshLayout.isRefreshing = false
+            }
+        }).start()
     }
+
+
+
 
     override fun onResume() {
         super.onResume()
-        GetDataFromDB().execute()
+        getLocalServey()
     }
 
 }

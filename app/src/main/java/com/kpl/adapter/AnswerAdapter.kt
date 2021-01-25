@@ -20,10 +20,6 @@ import com.kpl.database.Question
 import com.kpl.database.SurveyAnswer
 import com.kpl.utils.Constant
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -177,12 +173,7 @@ class AnswerAdapter(
     }
 
 
-    inner class AddAndTODatabase(
-        var mContext: Context,
-        var isAdded: Boolean,
-        var isReplace: Boolean,
-        var surveyAnswer: SurveyAnswer
-    ) :
+    inner class AddAndTODatabase(var mContext: Context, var isAdded: Boolean, var isReplace: Boolean, var surveyAnswer: SurveyAnswer) :
         AsyncTask<Void, Void, Boolean>() {
         override fun doInBackground(vararg params: Void?): Boolean {
 
@@ -195,7 +186,7 @@ class AnswerAdapter(
 
             if (existAns == null) {
                 appDatabase!!.surveyAnswerDao().insert(surveyAnswer)
-                Log.d("TAG", "onPostExecute: DATA Addedd :  ${surveyAnswer.Answer}")
+
                 return true
             } else {
                 if (isReplace) {
@@ -230,13 +221,6 @@ class AnswerAdapter(
                         )
                     }
                 }
-
-
-                Log.d(
-                    "TAG",
-                    "onPostExecute: DATA exist :      ${surveyAnswer.SurveyID}        ${surveyAnswer.Answer}"
-                )
-
                 return false
             }
 

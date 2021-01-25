@@ -7,11 +7,10 @@
 
 
     <EditText
-        android:focusable="false"
-        android:clickable="false"
         android:id="@+id/edtOption"
         android:layout_width="match_parent"
         android:singleLine="true"
+        android:enabled="false"
         android:layout_height="wrap_content"
         android:fontFamily="@font/clan_ot_book"
         app:layout_constraintEnd_toEndOf="parent"

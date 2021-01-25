@@ -26,6 +26,9 @@ interface APIInterface {
     @POST("service/")
     fun GetAssignProjectList(@Body body: RequestBody): Observable<Response<ProjectAssignDataModel>>
 
+    @POST("service/")
+    fun UpdateUserProfile(@Body body: RequestBody): Observable<Response<UpdateProfileDataModel>>
+
     /* @POST("common/category/getCategories")
      fun getCategory(): Observable<Response<CategoryModal>>
 

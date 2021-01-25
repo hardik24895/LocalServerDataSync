@@ -147,19 +147,20 @@ fun Calendar.isSameMonth(newDate: Calendar): Boolean =
 
 var dialog: AlertDialog? = null
 fun AppCompatActivity.showAlert(msg: String, cancelable: Boolean = false) {
-    dialog = AlertDialog.Builder(this)
+    dialog = AlertDialog.Builder(this, R.style.MyAlertDialogTheme)
         .setMessage(msg)
         .setCancelable(cancelable)
         .setPositiveButton(
             getString(R.string.ok)
         ) { dialog, which -> dialog.dismiss() }
         .create()
+
     dialog?.show()
 }
 
 fun Fragment.showAlert(msg: String, cancelable: Boolean = false) {
     dismissAlertDialog()
-    dialog = AlertDialog.Builder(context)
+    dialog = AlertDialog.Builder(context, R.style.MyAlertDialogTheme)
         .setTitle(context?.getString(R.string.app_name))
         .setMessage(msg)
         .setCancelable(cancelable)

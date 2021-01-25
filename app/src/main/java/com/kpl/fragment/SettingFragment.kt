@@ -72,17 +72,13 @@ class SettingFragment : BaseFragment() {
         categoryArray = ArrayList()
 
         relaySendData.setOnClickListener {
-
-            requireContext()?.let { GetDataFromDB(it).execute() }
+            requireContext().let { GetDataFromDB(it).execute() }
 
         }
         relayGetData.setOnClickListener {
-
-
-            requireContext()?.let { CheckLocalServerExist(it).execute() }
+            requireContext().let { CheckLocalServerExist(it).execute() }
 
         }
-
 
     }
 
@@ -141,18 +137,18 @@ class SettingFragment : BaseFragment() {
 
         relayPrivacy.setOnClickListener {
             intent.putExtra("Title", "Privacy Policy")
-            intent.putExtra("Desc", "")
+            intent.putExtra("Desc", "PrivacyPolicy")
             startActivity(intent)
         }
 
         relayAboutus.setOnClickListener {
             intent.putExtra("Title", "About Us")
-            intent.putExtra("Desc", "")
+            intent.putExtra("Desc", "AboutUS")
             startActivity(intent)
         }
         relayTerms.setOnClickListener {
             intent.putExtra("Title", "Terms And Condition")
-            intent.putExtra("Desc", "")
+            intent.putExtra("Desc", "TermandCondition")
             startActivity(intent)
         }
 

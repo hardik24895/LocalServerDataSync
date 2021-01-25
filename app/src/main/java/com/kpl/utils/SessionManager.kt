@@ -110,5 +110,6 @@ class SessionManager(val context: Context) {
         const val SPAddress = "SPAddress"
         const val SPUserType = "SPUserType"
         const val SPSyncData = "SPSyncData"
+        const val SPToken = "SPToken"
     }
 }

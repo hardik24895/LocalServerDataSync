@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -20,7 +21,6 @@ import com.kpl.database.Category
 import com.kpl.database.Project
 import com.kpl.database.Question
 import com.kpl.database.Survey
-import com.kpl.interfaces.goToActivity
 import com.kpl.utils.NoScrollLinearLayoutManager
 import com.kpl.utils.SessionManager
 import kotlinx.android.synthetic.main.activity_question_answer.*
@@ -97,7 +97,8 @@ class QuestionAnswerActivity : BaseActivity() {
             txtDate.text = intent.getStringExtra("PROJECT_DATE")
             autoSiteName.setText(intent.getStringExtra("PROJECT_NAME"))
             Thread(Runnable {
-                var project: Project = ProjectID?.toInt()?.let { appDatabase?.projectDao()?.getProjectData(it) }!!
+                var project: Project =
+                    ProjectID?.toInt()?.let { appDatabase?.projectDao()?.getProjectData(it) }!!
                 txtAddress.setText(project.Address)
             }).start()
 
@@ -171,33 +172,46 @@ class QuestionAnswerActivity : BaseActivity() {
 
                 } else {
                     if (SurveyId == -1) {
-                        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                        val currentDate = sdf.format(Date())
-                        AddSurvey(
-                            this,
-                            Survey(
-                                null,
-                                ProjectID?.toInt()!!,
-                                autoSiteName.text.toString(),
-                                txtDate.text.toString(),
-                                session.getDataByKey(SessionManager.SPUserID, ""),
-                                session.getDataByKey(
-                                    SessionManager.SPFirstName,
-                                    ""
-                                ) + " " + session.getDataByKey(SessionManager.SPLastName, ""),
-                                currentDate,
-                                ModifiedBy,
-                                ModifiedDate,
-                                "0"
+
+                        val mainLooper = Looper.getMainLooper()
+                        Thread(Runnable {
+                            val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                            val currentDate = sdf.format(Date())
+                            var surveyId = appDatabase!!.surveyDao().insertSurvey(
+                                Survey(
+                                    null,
+                                    ProjectID?.toInt()!!,
+                                    autoSiteName.text.toString(),
+                                    txtDate.text.toString(),
+                                    session.getDataByKey(SessionManager.SPUserID, ""), session.getDataByKey(SessionManager.SPFirstName, "") + " " + session.getDataByKey(SessionManager.SPLastName, ""),
+                                    currentDate,
+                                    ModifiedBy,
+                                    ModifiedDate,
+                                    "0"
+                                )
                             )
-                        ).execute()
+                            appDatabase!!.surveyAnswerDao().updaterecord(surveyId.toInt())
+
+
+
+                            Handler(mainLooper).post {
+                                finish()
+                            }
+
+                        }).start()
+
+
                     } else {
                         finish()
                     }
                 }
                 scrollview1?.post(Runnable { scrollview1?.fullScroll(ScrollView.FOCUS_UP) })
-            }else{
-                Toast.makeText(this@QuestionAnswerActivity,"Please select project",Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    this@QuestionAnswerActivity,
+                    "Please select project",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             }
 
@@ -225,18 +239,18 @@ class QuestionAnswerActivity : BaseActivity() {
 
         }
 
-        getProject(this@QuestionAnswerActivity).execute()
+        //  getProject(this@QuestionAnswerActivity).execute()
+        getProject()
 
 
     }
 
-    var date =
-        DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth -> // TODO Auto-generated method stub
-            myCalendar.set(Calendar.YEAR, year)
-            myCalendar.set(Calendar.MONTH, monthOfYear)
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            updateLabel()
-        }
+    var date = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        myCalendar.set(Calendar.YEAR, year)
+        myCalendar.set(Calendar.MONTH, monthOfYear)
+        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        updateLabel()
+    }
 
     private fun updateLabel() {
         val myFormat = "dd/MM/yyyy"
@@ -244,6 +258,24 @@ class QuestionAnswerActivity : BaseActivity() {
         txtDate.setText(sdf.format(myCalendar.time))
     }
 
+
+    private fun getProject() {
+        val mainLooper = Looper.getMainLooper()
+        Thread(Runnable {
+            projectArray?.addAll(appDatabase!!.projectDao().getAllProject())
+            Handler(mainLooper).post {
+
+                for (list in projectArray!!) {
+                    AddressArray?.add(list.CompanyName.toString() + ", " + list.Title.toString())
+                }
+
+                adapterSiteName?.notifyDataSetChanged()
+
+            }
+
+        }).start()
+
+    }
 
     inner class getProject(var context: QuestionAnswerActivity) :
         AsyncTask<Void, Void, List<Project>>() {
@@ -281,7 +313,7 @@ class QuestionAnswerActivity : BaseActivity() {
 
         override fun onPostExecute(result: Long?) {
             Log.d("TAG", "onPostExecute: " + result.toString())
-            finish()
+
         }
     }
 

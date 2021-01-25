@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -26,7 +27,7 @@
         android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_32sdp"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:hint="Username"
+        android:hint="First Name"
         app:hintTextColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -34,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/app_icon">
 
         <EditText
-            android:id="@+id/edtUsername"
+            android:id="@+id/edtFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -49,16 +50,42 @@
         android:id="@+id/til2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:hint="Last Name"
+        app:hintTextColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til1">
+
+        <EditText
+            android:id="@+id/edtLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/sf_pro_display_regular"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
         android:hint="Email"
         app:hintTextColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/til1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/til1"
-        app:layout_constraintTop_toBottomOf="@+id/til1">
+        app:layout_constraintTop_toBottomOf="@+id/til2">
 
         <EditText
-            android:id="@+id/edtPassword"
+            android:id="@+id/edtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -70,7 +97,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til3"
+        android:id="@+id/til4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_8sdp"
@@ -79,10 +106,11 @@
         app:layout_constraintEnd_toEndOf="@id/til1"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/til1"
-        app:layout_constraintTop_toBottomOf="@+id/til2">
+        app:layout_constraintTop_toBottomOf="@+id/til3">
 
         <EditText
             android:id="@+id/edtContact"
+            android:enabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -94,21 +122,21 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/txtLogin"
+        android:id="@+id/txtUpdate"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginHorizontal="@dimen/_24sdp"
         android:layout_marginTop="@dimen/_32sdp"
         android:background="@drawable/bg_btn"
-        android:textAllCaps="true"
         android:fontFamily="@font/clan_ot_medium"
         android:gravity="center"
         android:text="Submit"
+        android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toEndOf="@+id/til2"
-        app:layout_constraintStart_toStartOf="@+id/til2"
-        app:layout_constraintTop_toBottomOf="@+id/til3" />
+        app:layout_constraintEnd_toEndOf="@+id/til3"
+        app:layout_constraintStart_toStartOf="@+id/til3"
+        app:layout_constraintTop_toBottomOf="@+id/til4" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
