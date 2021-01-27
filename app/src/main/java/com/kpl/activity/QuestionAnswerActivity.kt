@@ -257,11 +257,7 @@ class QuestionAnswerActivity : BaseActivity() {
     }
     val mOnItemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
         override fun onItemSelected(view: View?, position: Int, id: Long) {
-          Toast.makeText(
-              this@QuestionAnswerActivity,
-              "Item on position " + position + " : " + " Selected",
-              Toast.LENGTH_SHORT
-          ).show()
+          Toast.makeText(this@QuestionAnswerActivity, "Item on position " + position + " : " + " Selected", Toast.LENGTH_SHORT).show()
         }
 
         override fun onNothingSelected() {
@@ -291,7 +287,8 @@ class QuestionAnswerActivity : BaseActivity() {
 
 
             for (list in projectArray!!.indices) {
-                AddressArray?.add(projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString()
+                AddressArray?.add(
+                    projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString()
                 )
             }
             adapterSiteName = ArrayAdapter(this, R.layout.custom_spinner, AddressArray!!)
@@ -300,12 +297,15 @@ class QuestionAnswerActivity : BaseActivity() {
 
             Handler(mainLooper).post {
 
-                if (intent.hasExtra("PROJECT_NAME")  != null) {
-                    val spinnerPosition: Int = adapterSiteName!!.getPosition(intent.hasExtra("PROJECT_NAME").toString())
-                    autoSiteName.setSelectedItem (2)
+                if (intent.hasExtra("PROJECT_NAME") != null) {
+                    Log.e("TAG", "getProject: 123   "+ intent.getStringExtra("PROJECT_NAME").toString())
+                    val spinnerPosition: Int = adapterSiteName!!.getPosition(intent.getStringExtra("PROJECT_NAME").toString())
+                    autoSiteName.setSelectedItem(spinnerPosition)
+
+
                 }
 
-               /* if (intent.hasExtra("PROJECT_ID")) {
+                /* if (intent.hasExtra("PROJECT_ID")) {
                     for (item in projectArray!!.indices) {
                         if (projectArray!!.get(item).ProjectID.toString().equals(
                                 intent.getStringExtra(
