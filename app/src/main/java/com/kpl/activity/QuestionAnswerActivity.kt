@@ -36,7 +36,6 @@ import kotlin.collections.ArrayList
 
 class QuestionAnswerActivity : BaseActivity() {
 
-    var SurveyID: String? = ""
     var ProjectID: String? = ""
     var Title: String? = ""
     var Address: String? = ""
@@ -84,8 +83,6 @@ class QuestionAnswerActivity : BaseActivity() {
         AddressArray = ArrayList()
 
 
-
-
         txtDate.setOnClickListener {
 
             val datePickerDialog = DatePickerDialog(
@@ -111,16 +108,14 @@ class QuestionAnswerActivity : BaseActivity() {
         rvQueAns.layoutManager = layoutManager
         adapter = CategoryAdapter(this, categoryArray!!, SurveyId!!)
         rvQueAns.adapter = adapter
+        spinner.dialogOnlyLightTheme = true
+
 
 
         getProject()
         Handler(Looper.getMainLooper()).postDelayed({
             if (intent.hasExtra("PROJECT_NAME") != null) {
-                Log.e(
 
-                    "TAG",
-                    "getProject: 123   " + intent.getStringExtra("PROJECT_NAME").toString()
-                )
                 val spinnerPosition: Int = adapterSiteName!!.getPosition(
                     intent.getStringExtra("PROJECT_NAME").toString()
                 )
@@ -129,8 +124,8 @@ class QuestionAnswerActivity : BaseActivity() {
                 // autoSiteName?.setSelectedItem(spinnerPosition)
                 if (spinnerPosition != -1)
                     spinner?.setSelection(spinnerPosition)
-               // else
-                  //  spinner.invisible()
+                // else
+                //  spinner.invisible()
                 //spinner.nothingSelectedText = "Project Title"
 
                 // spinner?.setSelection(-1)
@@ -155,17 +150,25 @@ class QuestionAnswerActivity : BaseActivity() {
             ) {
                 if (position != -1) {
                     txtAddress.setText(projectArray?.get(position)?.Address)
-                    ProjectID = projectArray!!.get(position).ProjectID.toString()
+
                     Title =
                         projectArray!!.get(position).CompanyName.toString() + ", " + projectArray!!.get(
                             position
                         ).Title.toString()
+
+                    if (position == 0) {
+                        ProjectID = ""
+                    } else {
+                        ProjectID = projectArray!!.get(position).ProjectID.toString()
+                    }
                 }
 
             }
         }
 
         linlaySp?.setOnClickListener {
+
+            if (!intent.hasExtra("PROJECT_ID"))
             SearchableDialog(this,
                 itens!!,
                 "Project Title",
@@ -176,6 +179,7 @@ class QuestionAnswerActivity : BaseActivity() {
 
         }
         view.setOnClickListener {
+            if (!intent.hasExtra("PROJECT_ID"))
             SearchableDialog(this,
                 itens!!,
                 "Project Title",
@@ -210,10 +214,10 @@ class QuestionAnswerActivity : BaseActivity() {
 
         if (intent.hasExtra("PROJECT_ID")) {
             SurveyId = intent.getStringExtra("PROJECT_ID")?.toInt()
-            Log.d("TAG", "onCreate: " + SurveyId)
             ProjectID = intent.getStringExtra("PROJECT_ID")
             txtDate.text = intent.getStringExtra("PROJECT_DATE")
             // autoSiteName.setText(intent.getStringExtra("PROJECT_NAME"))
+
 
             var mainloop = Looper.getMainLooper()
             Thread(Runnable {
@@ -241,13 +245,13 @@ class QuestionAnswerActivity : BaseActivity() {
                     val scrollToPosition =
                         layoutManager?.scrollToPosition(layoutManager!!.findLastCompletelyVisibleItemPosition() + 1)
                     if (layoutManager!!.findLastCompletelyVisibleItemPosition() < 0) {
-                        spinner.visibility = View.VISIBLE
+                        linlaySp.visibility = View.VISIBLE
                         txtAddress.visibility = View.VISIBLE
                         txtDate.visibility = View.VISIBLE
                         txtPrevious.visibility = View.INVISIBLE
                         txtNext.setText("Next")
                     } else if (layoutManager!!.findLastCompletelyVisibleItemPosition() == (categoryArray!!.size - 2)) {
-                        spinner.visibility = View.GONE
+                        linlaySp.visibility = View.GONE
                         txtAddress.visibility = View.GONE
                         txtDate.visibility = View.GONE
                         txtPrevious.visibility = View.VISIBLE
@@ -256,14 +260,14 @@ class QuestionAnswerActivity : BaseActivity() {
                     } else {
                         txtNext.setText("Next")
                         txtPrevious.visibility = View.VISIBLE
-                        spinner.visibility = View.GONE
+                        linlaySp.visibility = View.GONE
                         txtAddress.visibility = View.GONE
                         txtDate.visibility = View.GONE
                     }
 
 
                 } else {
-                    if (SurveyId == 0) {
+                    if (SurveyId == -1) {
 
                         val mainLooper = Looper.getMainLooper()
                         Thread(Runnable {
@@ -318,13 +322,13 @@ class QuestionAnswerActivity : BaseActivity() {
 
                 if (layoutManager?.findLastCompletelyVisibleItemPosition() == 1) {
                     spinner.visibility = View.VISIBLE
-                    txtAddress.visibility = View.VISIBLE
+                    linlaySp.visibility = View.VISIBLE
                     txtDate.visibility = View.VISIBLE
                     txtPrevious.visibility = View.INVISIBLE
                 } else {
                     txtPrevious.visibility = View.VISIBLE
                     spinner.visibility = View.GONE
-                    txtAddress.visibility = View.GONE
+                    linlaySp.visibility = View.GONE
                     txtDate.visibility = View.GONE
                 }
 
@@ -354,8 +358,12 @@ class QuestionAnswerActivity : BaseActivity() {
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
 
-            projectArray?.add(Project(-1,"Project Title","",
-                "","","","","","","",""))
+            projectArray?.add(
+                Project(
+                    -1, "Project Title", "",
+                    "", "", "", "", "", "", "", ""
+                )
+            )
             projectArray?.addAll(appDatabase!!.projectDao().getAllProject())
 
 

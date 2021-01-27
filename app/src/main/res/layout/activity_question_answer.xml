@@ -45,9 +45,9 @@
                  android:textColorHint="@color/black" />-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                  android:id="@+id/linlaySp"
+                android:id="@+id/linlaySp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_36sdp"
                 android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_12sdp"
                 android:layout_marginEnd="@dimen/_16sdp"
@@ -58,14 +58,13 @@
                 <tech.hibk.searchablespinnerlibrary.SearchableSpinner
                     android:id="@+id/spinner"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:padding="@dimen/_5sdp"
+                    android:layout_height="match_parent"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:paddingHorizontal="@dimen/_5sdp"
                     app:cancelButtonColor="@color/black"
                     app:cancelButtontext="CLOSE"
                     app:dialogTitle="Sample"
-                    android:focusable="false"
-                    android:clickable="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

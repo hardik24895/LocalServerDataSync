@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.kpl.R
+import com.kpl.activity.QuestionAnswerActivity
 import com.kpl.adapter.SurveyAdapter
 import com.kpl.database.Survey
 import com.kpl.extention.invisible
