@@ -117,6 +117,7 @@ class QuestionAnswerActivity : BaseActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             if (intent.hasExtra("PROJECT_NAME") != null) {
                 Log.e(
+
                     "TAG",
                     "getProject: 123   " + intent.getStringExtra("PROJECT_NAME").toString()
                 )
