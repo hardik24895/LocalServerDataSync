@@ -16,4 +16,13 @@
     <string name="msg_get_data_from_server">Your local survey pending, so you want to remove and SYNC Data?</string>
     <string name="no_result_found">No Data Found</string>
 
+    <array name="data">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+
+    </array>
+
 </resources>

@@ -2,13 +2,11 @@ package com.kpl.activity
 
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.Toast
@@ -23,11 +21,11 @@ import com.kpl.database.Question
 import com.kpl.database.Survey
 import com.kpl.utils.NoScrollLinearLayoutManager
 import com.kpl.utils.SessionManager
+import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener
 import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.regex.Pattern
 import kotlin.collections.ArrayList
 
 
@@ -44,6 +42,7 @@ class QuestionAnswerActivity : BaseActivity() {
     var CreatedDate: String? = ""
     var ModifiedBy: String? = ""
     var ModifiedDate: String? = ""
+    var selectedPos: Int = -1
     var intent1: Intent? = null
 
     var layoutManager: NoScrollLinearLayoutManager? = null
@@ -76,6 +75,8 @@ class QuestionAnswerActivity : BaseActivity() {
         AddressArray = ArrayList()
         txtAddress.isSelected = true
 
+
+
         txtDate.setOnClickListener {
 
             val datePickerDialog = DatePickerDialog(
@@ -87,24 +88,6 @@ class QuestionAnswerActivity : BaseActivity() {
             )
             //  datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             datePickerDialog.show()
-
-        }
-
-        if (intent.hasExtra("PROJECT_ID")) {
-            SurveyId = intent.getStringExtra("PROJECT_ID")?.toInt()
-            Log.d("TAG", "onCreate: " + SurveyId)
-            ProjectID = intent.getStringExtra("PROJECT_ID")
-            txtDate.text = intent.getStringExtra("PROJECT_DATE")
-            autoSiteName.setText(intent.getStringExtra("PROJECT_NAME"))
-            Thread(Runnable {
-                var project: Project =
-                    ProjectID?.toInt()?.let { appDatabase?.projectDao()?.getProjectData(it) }!!
-                txtAddress.setText(project.Address)
-            }).start()
-
-            autoSiteName.isFocusableInTouchMode = false
-            txtDate.isFocusableInTouchMode = false
-            txtDate.isEnabled = false
 
         }
 
@@ -120,25 +103,55 @@ class QuestionAnswerActivity : BaseActivity() {
         adapter = CategoryAdapter(this, categoryArray!!, SurveyId!!)
         rvQueAns.adapter = adapter
 
-        adapterSiteName = ArrayAdapter(this, R.layout.custom_spinner, AddressArray!!)
-        autoSiteName.setAdapter(adapterSiteName)
-        autoSiteName.threshold = 0
-        autoSiteName.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, arg1, position, arg3 ->
+
+        getProject()
 
 
-                val list: List<String> =
-                    Pattern.compile(", ").split(parent.getItemAtPosition(position).toString())
-                        .toList()
+//        autoSiteName?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//            }
+//
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                Log.d("TAG", "onItemSelected: " + position)
+//
+//                txtAddress.setText(projectArray!!.get(position).Address)
+//                ProjectID = projectArray!!.get(position).ProjectID.toString()
+//                Title = projectArray!!.get(position).Title.toString()
+//
+//
+//            }
+//
+//        }
 
-                for (item in projectArray!!) {
-                    if (list.get(0).equals(item.CompanyName) && list.get(1).equals(item.Title)) {
-                        ProjectID = item.ProjectID.toString()
-                        txtAddress.setText(item.Address)
-                        break
-                    }
-                }
-            }
+
+
+
+
+        if (intent.hasExtra("PROJECT_ID")) {
+            SurveyId = intent.getStringExtra("PROJECT_ID")?.toInt()
+            Log.d("TAG", "onCreate: " + SurveyId)
+            ProjectID = intent.getStringExtra("PROJECT_ID")
+            txtDate.text = intent.getStringExtra("PROJECT_DATE")
+            // autoSiteName.setText(intent.getStringExtra("PROJECT_NAME"))
+
+
+            Thread(Runnable {
+                var project: Project =
+                    ProjectID?.toInt()?.let { appDatabase?.projectDao()?.getProjectData(it) }!!
+                txtAddress.setText(project.Address)
+            }).start()
+
+            //    autoSiteName.isFocusableInTouchMode = false
+            txtDate.isFocusableInTouchMode = false
+            txtDate.isEnabled = false
+
+
+        }
 
         updateLabel()
 
@@ -181,9 +194,13 @@ class QuestionAnswerActivity : BaseActivity() {
                                 Survey(
                                     null,
                                     ProjectID?.toInt()!!,
-                                    autoSiteName.text.toString(),
+                                    Title,
                                     txtDate.text.toString(),
-                                    session.getDataByKey(SessionManager.SPUserID, ""), session.getDataByKey(SessionManager.SPFirstName, "") + " " + session.getDataByKey(SessionManager.SPLastName, ""),
+                                    session.getDataByKey(SessionManager.SPUserID, ""),
+                                    session.getDataByKey(
+                                        SessionManager.SPFirstName,
+                                        ""
+                                    ) + " " + session.getDataByKey(SessionManager.SPLastName, ""),
                                     currentDate,
                                     ModifiedBy,
                                     ModifiedDate,
@@ -191,8 +208,6 @@ class QuestionAnswerActivity : BaseActivity() {
                                 )
                             )
                             appDatabase!!.surveyAnswerDao().updaterecord(surveyId.toInt())
-
-
 
                             Handler(mainLooper).post {
                                 finish()
@@ -239,10 +254,19 @@ class QuestionAnswerActivity : BaseActivity() {
 
         }
 
-        //  getProject(this@QuestionAnswerActivity).execute()
-        getProject()
+    }
+    val mOnItemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
+        override fun onItemSelected(view: View?, position: Int, id: Long) {
+          Toast.makeText(
+              this@QuestionAnswerActivity,
+              "Item on position " + position + " : " + " Selected",
+              Toast.LENGTH_SHORT
+          ).show()
+        }
 
-
+        override fun onNothingSelected() {
+         //   Toast.makeText(this@QuestionAnswerActivity, "Nothing Selected", Toast.LENGTH_SHORT).show()
+        }
     }
 
     var date = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -262,60 +286,87 @@ class QuestionAnswerActivity : BaseActivity() {
     private fun getProject() {
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
+
             projectArray?.addAll(appDatabase!!.projectDao().getAllProject())
+
+
+            for (list in projectArray!!.indices) {
+                AddressArray?.add(projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString()
+                )
+            }
+            adapterSiteName = ArrayAdapter(this, R.layout.custom_spinner, AddressArray!!)
+            autoSiteName.setAdapter(adapterSiteName)
+            autoSiteName.setOnItemSelectedListener(mOnItemSelectedListener)
+
             Handler(mainLooper).post {
 
-                for (list in projectArray!!) {
-                    AddressArray?.add(list.CompanyName.toString() + ", " + list.Title.toString())
+                if (intent.hasExtra("PROJECT_NAME")  != null) {
+                    val spinnerPosition: Int = adapterSiteName!!.getPosition(intent.hasExtra("PROJECT_NAME").toString())
+                    autoSiteName.setSelectedItem (2)
                 }
 
-                adapterSiteName?.notifyDataSetChanged()
+               /* if (intent.hasExtra("PROJECT_ID")) {
+                    for (item in projectArray!!.indices) {
+                        if (projectArray!!.get(item).ProjectID.toString().equals(
+                                intent.getStringExtra(
+                                    "PROJECT_ID"
+                                )
+                            )
+                        ) {
+                            selectedPos = item
+                            break
+                        }
+                    }
+                }
+                autoSiteName.setSelectedItem = 2
+                autoSiteName.setSelectedItem(2)*/
+
 
             }
 
         }).start()
 
     }
+//
+//    inner class getProject(var context: QuestionAnswerActivity) :
+//        AsyncTask<Void, Void, List<Project>>() {
+//        override fun doInBackground(vararg params: Void?): List<Project> {
+//
+//            return context.appDatabase!!.projectDao().getAllProject()
+//
+//        }
+//
+//        override fun onPostExecute(project: List<Project>?) {
+//
+//            if (project !== null) {
+//                projectArray?.addAll(project)
+//                for (list in project) {
+//                    AddressArray?.add(list.CompanyName.toString() + ", " + list.Title.toString())
+//                }
+//                Log.d("TAG", "onPostExecute: " + projectArray?.size)
+//                context.adapterSiteName?.notifyDataSetChanged()
+//
+//            }
+//        }
+//    }
 
-    inner class getProject(var context: QuestionAnswerActivity) :
-        AsyncTask<Void, Void, List<Project>>() {
-        override fun doInBackground(vararg params: Void?): List<Project> {
 
-            return context.appDatabase!!.projectDao().getAllProject()
-
-        }
-
-        override fun onPostExecute(project: List<Project>?) {
-
-            if (project !== null) {
-                projectArray?.addAll(project)
-                for (list in project) {
-                    AddressArray?.add(list.CompanyName.toString() + ", " + list.Title.toString())
-                }
-                Log.d("TAG", "onPostExecute: " + projectArray?.size)
-                context.adapterSiteName?.notifyDataSetChanged()
-
-            }
-        }
-    }
-
-
-    inner class AddSurvey(var context: QuestionAnswerActivity, var survey: Survey) :
-        AsyncTask<Void, Void, Long>() {
-        override fun doInBackground(vararg params: Void?): Long {
-
-            var surveyId = context.appDatabase!!.surveyDao().insertSurvey(survey)
-
-            context.appDatabase!!.surveyAnswerDao().updaterecord(surveyId.toInt())
-
-            return surveyId
-        }
-
-        override fun onPostExecute(result: Long?) {
-            Log.d("TAG", "onPostExecute: " + result.toString())
-
-        }
-    }
+//    inner class AddSurvey(var context: QuestionAnswerActivity, var survey: Survey) :
+//        AsyncTask<Void, Void, Long>() {
+//        override fun doInBackground(vararg params: Void?): Long {
+//
+//            var surveyId = context.appDatabase!!.surveyDao().insertSurvey(survey)
+//
+//            context.appDatabase!!.surveyAnswerDao().updaterecord(surveyId.toInt())
+//
+//            return surveyId
+//        }
+//
+//        override fun onPostExecute(result: Long?) {
+//            Log.d("TAG", "onPostExecute: " + result.toString())
+//
+//        }
+//    }
 
 
 }
