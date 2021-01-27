@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 
 import com.google.android.material.snackbar.Snackbar
 import com.kpl.R
+import com.kpl.database.AppDatabase
 import com.kpl.dialog.ProgressDialog
 import com.kpl.extention.dismissAlertDialog
 import com.kpl.interfaces.SnackbarActionListener
@@ -33,6 +34,7 @@ open class BaseFragment : Fragment() {
     var progressDialog: ProgressDialog? = null
     val autoDisposable = AutoDisposable()
     var snackbar: Snackbar? = null
+    var appDatabase: AppDatabase? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -40,11 +42,13 @@ open class BaseFragment : Fragment() {
         mActivity = activity
         session = SessionManager(context)
         autoDisposable.bindTo(this.lifecycle)
+        appDatabase = AppDatabase.getDatabase(context)!!
     }
 
    /* fun isThisMe(userId: String?): Boolean {
         return session.user != null && userId == session.user?._id
     }*/
+
 
     fun showProgressbar() {
         showProgressbar(null)

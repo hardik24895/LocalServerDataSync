@@ -11,80 +11,70 @@
         layout="@layout/toolbar_with_back_arrow" />
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til1"
+    <!--<AutoCompleteTextView
+        android:id="@+id/autoSiteName"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_36sdp"
         android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_32sdp"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:hint="Site Name"
-        app:hintTextColor="@color/black"
+        android:background="@drawable/bg_spinner"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:gravity="center_vertical"
+        android:hint="Project Name"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-        <EditText
-            android:id="@+id/edtSiteName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:fontFamily="@font/sf_pro_display_regular"
-            android:inputType="text"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black" />
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til2"
+    <TextView
+        android:id="@+id/txtAddress"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_36sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:hint="Company Name"
-        app:hintTextColor="@color/black"
+        android:background="@drawable/bg_spinner"
+        android:ellipsize="marquee"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/til1"
-        app:layout_constraintTop_toBottomOf="@+id/til1">
+        app:layout_constraintStart_toStartOf="@id/autoSiteName"
+        app:layout_constraintTop_toBottomOf="@id/autoSiteName" />
 
-        <EditText
-            android:id="@+id/edtCompanyName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:fontFamily="@font/sf_pro_display_regular"
-            android:inputType="text"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black" />
-    </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til3"
+    <TextView
+        android:id="@+id/txtDate"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_36sdp"
         android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginEnd="@dimen/_16sdp"
-        android:hint="Company Address"
-        app:hintTextColor="@color/black"
+        android:background="@drawable/bg_spinner"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til2">
+        app:layout_constraintTop_toBottomOf="@+id/txtAddress" />
 
-        <EditText
-            android:id="@+id/edtPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:fontFamily="@font/sf_pro_display_regular"
-            android:inputType="text"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black" />
-    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/txtSubmit"
@@ -95,11 +85,12 @@
         android:background="@drawable/bg_btn"
         android:fontFamily="@font/clan_ot_medium"
         android:gravity="center"
-        android:text="Submit"
+        android:text="Start Survey"
+        android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="@dimen/_14ssp"
-        app:layout_constraintEnd_toEndOf="@+id/til2"
-        app:layout_constraintStart_toStartOf="@+id/til2"
-        app:layout_constraintTop_toBottomOf="@+id/til3" />
-
+        app:layout_constraintEnd_toEndOf="@id/txtDate"
+        app:layout_constraintStart_toStartOf="@id/txtDate"
+        app:layout_constraintTop_toBottomOf="@id/txtDate" />
+-->
 </androidx.constraintlayout.widget.ConstraintLayout>

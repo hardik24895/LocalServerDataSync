@@ -4,23 +4,15 @@ import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.net.ConnectivityManager
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
 import com.kpl.R
 import com.kpl.interfaces.SnackbarActionListener
-
 import java.util.*
 
 
@@ -147,19 +139,20 @@ fun Calendar.isSameMonth(newDate: Calendar): Boolean =
 
 var dialog: AlertDialog? = null
 fun AppCompatActivity.showAlert(msg: String, cancelable: Boolean = false) {
-    dialog = AlertDialog.Builder(this)
+    dialog = AlertDialog.Builder(this, R.style.MyAlertDialogTheme)
         .setMessage(msg)
         .setCancelable(cancelable)
         .setPositiveButton(
             getString(R.string.ok)
         ) { dialog, which -> dialog.dismiss() }
         .create()
+
     dialog?.show()
 }
 
 fun Fragment.showAlert(msg: String, cancelable: Boolean = false) {
     dismissAlertDialog()
-    dialog = AlertDialog.Builder(context)
+    dialog = AlertDialog.Builder(context, R.style.MyAlertDialogTheme)
         .setTitle(context?.getString(R.string.app_name))
         .setMessage(msg)
         .setCancelable(cancelable)

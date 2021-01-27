@@ -11,7 +11,18 @@
     <string name="title_profile">Profile</string>
     <string name="title_setting">Setting</string>
     <string name="no">NO</string>
-    <string name="yes">Yes</string>
+    <string name="yes">YES</string>
+    <string name="msg_logout">Are you Sure to Logout?</string>
+    <string name="msg_get_data_from_server">Your local survey pending, so you want to remove and SYNC Data?</string>
+    <string name="no_result_found">No Data Found</string>
 
-    <string name="msg_logout">Do you really want to logout?</string>
+    <array name="data">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+
+    </array>
+
 </resources>

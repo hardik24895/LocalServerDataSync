@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.kpl.R
+import com.kpl.database.AppDatabase
 import com.kpl.dialog.ProgressDialog
 import com.kpl.extention.dismissAlertDialog
 import com.kpl.network.AutoDisposable
@@ -25,6 +26,7 @@ open class BaseActivity : AppCompatActivity() {
     var title: TextView? = null
     var toolbar: Toolbar? = null
     lateinit var session: SessionManager
+    var appDatabase: AppDatabase? = null
 
     var shouldPerformDispatchTouch = true
     var progressDialog: ProgressDialog? = null
@@ -35,6 +37,7 @@ open class BaseActivity : AppCompatActivity() {
         autoDisposable.bindTo(this.lifecycle)
         session = SessionManager(this)
         disableAutoFill()
+        appDatabase = AppDatabase.getDatabase(this)!!
     }
 
     /*fun isThisMe(userId: String?): Boolean {

@@ -14,6 +14,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
+import kotlin.jvm.Throws
 
 
 class SessionInterceptor(val context: Context, var token: String?) : Interceptor {
