@@ -7,9 +7,11 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.Toast
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
@@ -19,11 +21,14 @@ import com.kpl.database.Category
 import com.kpl.database.Project
 import com.kpl.database.Question
 import com.kpl.database.Survey
+import com.kpl.extention.invisible
 import com.kpl.utils.NoScrollLinearLayoutManager
 import com.kpl.utils.SessionManager
-import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener
+//import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener
 import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
+import tech.hibk.searchablespinnerlibrary.SearchableDialog
+import tech.hibk.searchablespinnerlibrary.SearchableItem
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -59,6 +64,7 @@ class QuestionAnswerActivity : BaseActivity() {
     var projectArray: ArrayList<Project>? = null
     var AddressArray: ArrayList<String>? = null
     var adapterSiteName: ArrayAdapter<String>? = null
+    var itens: List<SearchableItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,10 +76,13 @@ class QuestionAnswerActivity : BaseActivity() {
             finish()
         }
 
+        spinner.isEnabled = false
+        spinner.isClickable = false
+
         projectArray = ArrayList()
         categoryArray = ArrayList()
         AddressArray = ArrayList()
-        txtAddress.isSelected = true
+
 
 
 
@@ -105,6 +114,75 @@ class QuestionAnswerActivity : BaseActivity() {
 
 
         getProject()
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (intent.hasExtra("PROJECT_NAME") != null) {
+                Log.e(
+                    "TAG",
+                    "getProject: 123   " + intent.getStringExtra("PROJECT_NAME").toString()
+                )
+                val spinnerPosition: Int = adapterSiteName!!.getPosition(
+                    intent.getStringExtra("PROJECT_NAME").toString()
+                )
+                Log.d("myPos", "" + spinnerPosition)
+                // autoSiteName?.setOnItemSelectedListener(mOnItemSelectedListener)
+                // autoSiteName?.setSelectedItem(spinnerPosition)
+                if (spinnerPosition != -1)
+                    spinner?.setSelection(spinnerPosition)
+               // else
+                  //  spinner.invisible()
+                //spinner.nothingSelectedText = "Project Title"
+
+                // spinner?.setSelection(-1)
+
+
+                //autoSiteName.setOnItemSelectedListener(object  : AdapterView.OnItemSelectedListener)
+            } else {
+                //spinner?.setSelection(0)
+            }
+        }, 100)
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (position != -1) {
+                    txtAddress.setText(projectArray?.get(position)?.Address)
+                    ProjectID = projectArray!!.get(position).ProjectID.toString()
+                    Title =
+                        projectArray!!.get(position).CompanyName.toString() + ", " + projectArray!!.get(
+                            position
+                        ).Title.toString()
+                }
+
+            }
+        }
+
+        linlaySp?.setOnClickListener {
+            SearchableDialog(this,
+                itens!!,
+                "Project Title",
+                { item, _ ->
+                    //Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
+                    spinner.setSelection(item.id.toInt())
+                }).show()
+
+        }
+        view.setOnClickListener {
+            SearchableDialog(this,
+                itens!!,
+                "Project Title",
+                { item, _ ->
+                    // Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
+                    spinner.setSelection(item.id.toInt())
+                }).show()
+        }
 
 
 //        autoSiteName?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -129,9 +207,6 @@ class QuestionAnswerActivity : BaseActivity() {
 //        }
 
 
-
-
-
         if (intent.hasExtra("PROJECT_ID")) {
             SurveyId = intent.getStringExtra("PROJECT_ID")?.toInt()
             Log.d("TAG", "onCreate: " + SurveyId)
@@ -139,11 +214,14 @@ class QuestionAnswerActivity : BaseActivity() {
             txtDate.text = intent.getStringExtra("PROJECT_DATE")
             // autoSiteName.setText(intent.getStringExtra("PROJECT_NAME"))
 
-
+            var mainloop = Looper.getMainLooper()
             Thread(Runnable {
+
                 var project: Project =
                     ProjectID?.toInt()?.let { appDatabase?.projectDao()?.getProjectData(it) }!!
-                txtAddress.setText(project.Address)
+                Handler(mainloop).post {
+                    txtAddress.setText(project.Address)
+                }
             }).start()
 
             //    autoSiteName.isFocusableInTouchMode = false
@@ -162,13 +240,13 @@ class QuestionAnswerActivity : BaseActivity() {
                     val scrollToPosition =
                         layoutManager?.scrollToPosition(layoutManager!!.findLastCompletelyVisibleItemPosition() + 1)
                     if (layoutManager!!.findLastCompletelyVisibleItemPosition() < 0) {
-                        autoSiteName.visibility = View.VISIBLE
+                        spinner.visibility = View.VISIBLE
                         txtAddress.visibility = View.VISIBLE
                         txtDate.visibility = View.VISIBLE
                         txtPrevious.visibility = View.INVISIBLE
                         txtNext.setText("Next")
                     } else if (layoutManager!!.findLastCompletelyVisibleItemPosition() == (categoryArray!!.size - 2)) {
-                        autoSiteName.visibility = View.GONE
+                        spinner.visibility = View.GONE
                         txtAddress.visibility = View.GONE
                         txtDate.visibility = View.GONE
                         txtPrevious.visibility = View.VISIBLE
@@ -177,14 +255,14 @@ class QuestionAnswerActivity : BaseActivity() {
                     } else {
                         txtNext.setText("Next")
                         txtPrevious.visibility = View.VISIBLE
-                        autoSiteName.visibility = View.GONE
+                        spinner.visibility = View.GONE
                         txtAddress.visibility = View.GONE
                         txtDate.visibility = View.GONE
                     }
 
 
                 } else {
-                    if (SurveyId == -1) {
+                    if (SurveyId == 0) {
 
                         val mainLooper = Looper.getMainLooper()
                         Thread(Runnable {
@@ -238,13 +316,13 @@ class QuestionAnswerActivity : BaseActivity() {
                     layoutManager?.scrollToPosition(layoutManager!!.findLastCompletelyVisibleItemPosition() - 1)
 
                 if (layoutManager?.findLastCompletelyVisibleItemPosition() == 1) {
-                    autoSiteName.visibility = View.VISIBLE
+                    spinner.visibility = View.VISIBLE
                     txtAddress.visibility = View.VISIBLE
                     txtDate.visibility = View.VISIBLE
                     txtPrevious.visibility = View.INVISIBLE
                 } else {
                     txtPrevious.visibility = View.VISIBLE
-                    autoSiteName.visibility = View.GONE
+                    spinner.visibility = View.GONE
                     txtAddress.visibility = View.GONE
                     txtDate.visibility = View.GONE
                 }
@@ -255,19 +333,7 @@ class QuestionAnswerActivity : BaseActivity() {
         }
 
     }
-    val mOnItemSelectedListener: OnItemSelectedListener = object : OnItemSelectedListener {
-        override fun onItemSelected(view: View?, position: Int, id: Long) {
-          Toast.makeText(
-              this@QuestionAnswerActivity,
-              "Item on position " + position + " : " + " Selected",
-              Toast.LENGTH_SHORT
-          ).show()
-        }
 
-        override fun onNothingSelected() {
-         //   Toast.makeText(this@QuestionAnswerActivity, "Nothing Selected", Toast.LENGTH_SHORT).show()
-        }
-    }
 
     var date = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
         myCalendar.set(Calendar.YEAR, year)
@@ -287,42 +353,62 @@ class QuestionAnswerActivity : BaseActivity() {
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
 
+            projectArray?.add(Project(-1,"Project Title","",
+                "","","","","","","",""))
             projectArray?.addAll(appDatabase!!.projectDao().getAllProject())
 
 
             for (list in projectArray!!.indices) {
-                AddressArray?.add(projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString()
+                AddressArray?.add(
+                    projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString()
                 )
             }
-            adapterSiteName = ArrayAdapter(this, R.layout.custom_spinner, AddressArray!!)
-            autoSiteName.setAdapter(adapterSiteName)
-            autoSiteName.setOnItemSelectedListener(mOnItemSelectedListener)
 
-            Handler(mainLooper).post {
-
-                if (intent.hasExtra("PROJECT_NAME")  != null) {
-                    val spinnerPosition: Int = adapterSiteName!!.getPosition(intent.hasExtra("PROJECT_NAME").toString())
-                    autoSiteName.setSelectedItem (2)
-                }
-
-               /* if (intent.hasExtra("PROJECT_ID")) {
-                    for (item in projectArray!!.indices) {
-                        if (projectArray!!.get(item).ProjectID.toString().equals(
-                                intent.getStringExtra(
-                                    "PROJECT_ID"
-                                )
-                            )
-                        ) {
-                            selectedPos = item
-                            break
-                        }
-                    }
-                }
-                autoSiteName.setSelectedItem = 2
-                autoSiteName.setSelectedItem(2)*/
-
-
+            var myList: MutableList<SearchableItem> = mutableListOf()
+            for (items in AddressArray!!.indices) {
+                myList.add(SearchableItem(items.toLong(), AddressArray!!.get(items).toString()))
             }
+            itens = myList
+
+
+
+
+            adapterSiteName = ArrayAdapter(this, R.layout.custom_spinner, AddressArray!!)
+            spinner.setAdapter(adapterSiteName)
+            //  sp.setOnItemSelectedListener(mOnItemSelectedListener)
+
+            //  Handler(mainLooper).post {
+
+            /*  if (intent.hasExtra("PROJECT_NAME") != null) {
+                  Log.e(
+                      "TAG",
+                      "getProject: 123   " + intent.getStringExtra("PROJECT_NAME").toString()
+                  )
+                  val spinnerPosition: Int = adapterSiteName!!.getPosition(
+                      intent.getStringExtra("PROJECT_NAME").toString()
+                  )
+                  Log.d("myPos", ""+spinnerPosition)
+                  autoSiteName.setSelectedItem(spinnerPosition)
+              }*/
+
+            /* if (intent.hasExtra("PROJECT_ID")) {
+                 for (item in projectArray!!.indices) {
+                     if (projectArray!!.get(item).ProjectID.toString().equals(
+                             intent.getStringExtra(
+                                 "PROJECT_ID"
+                             )
+                         )
+                     ) {
+                         selectedPos = item
+                         break
+                     }
+                 }
+             }
+             autoSiteName.setSelectedItem = 2
+             autoSiteName.setSelectedItem(2)*/
+
+
+            //   }
 
         }).start()
 
