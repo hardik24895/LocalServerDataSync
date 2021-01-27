@@ -27,42 +27,80 @@
             android:orientation="vertical">
 
 
+            <!-- <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                 android:id="@+id/autoSiteName"
+                 android:layout_width="match_parent"
+                 android:layout_height="@dimen/_36sdp"
+                 android:layout_marginStart="@dimen/_16sdp"
+                 android:layout_marginTop="@dimen/_32sdp"
+                 android:layout_marginEnd="@dimen/_16sdp"
+                 android:background="@drawable/bg_spinner"
+                 android:fontFamily="@font/clan_ot_medium"
+                 android:gravity="center_vertical"
+                 app:hintText="Project Name"
+                 android:marqueeRepeatLimit="marquee_forever"
+                 android:paddingHorizontal="@dimen/_8sdp"
+                 android:singleLine="true"
+                 android:textColor="@color/black"
+                 android:textColorHint="@color/black" />-->
 
-           <!-- <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                android:id="@+id/autoSiteName"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                  android:id="@+id/linlaySp"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_36sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_32sdp"
+                android:layout_marginTop="@dimen/_12sdp"
                 android:layout_marginEnd="@dimen/_16sdp"
                 android:background="@drawable/bg_spinner"
-                android:fontFamily="@font/clan_ot_medium"
-                android:gravity="center_vertical"
-                app:hintText="Project Name"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:paddingHorizontal="@dimen/_8sdp"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />-->
+                android:orientation="vertical">
 
-            <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
-                android:id="@+id/autoSiteName"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_36sdp"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_marginTop="@dimen/_32sdp"
-                android:background="@drawable/bg_spinner"
-                android:layout_marginEnd="@dimen/_16sdp"
-                app:DoneSearchTintColor="@android:color/transparent"
-                android:fontFamily="@font/clan_ot_medium"
-                android:paddingHorizontal="@dimen/_8sdp"
-                app:SearchViewTextColor="@color/white"
-                app:AnimDuration="0"
-                app:SearchHintText="Project Name"
-                app:ShowBorders="true"
-                app:RevealEmptyText="Project Name"
-                app:SpinnerExpandHeight="300dp"/>
 
+                <tech.hibk.searchablespinnerlibrary.SearchableSpinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:padding="@dimen/_5sdp"
+                    app:cancelButtonColor="@color/black"
+                    app:cancelButtontext="CLOSE"
+                    app:dialogTitle="Sample"
+                    android:focusable="false"
+                    android:clickable="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:nothingSelectedText="Project Title"
+                    app:onlyLightTheme="true"
+                    tools:layout_editor_absoluteX="10dp" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinner"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/spinner" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!-- <gr.escsoft.michaelprimez.searchablespinner.SearchableSpinner
+                 android:id="@+id/autoSiteName"
+                 android:layout_width="match_parent"
+                 android:layout_height="@dimen/_36sdp"
+                 android:layout_marginStart="@dimen/_16sdp"
+                 android:layout_marginTop="@dimen/_32sdp"
+                 android:background="@drawable/bg_spinner"
+                 android:layout_marginEnd="@dimen/_16sdp"
+                 app:DoneSearchTintColor="@android:color/transparent"
+                 android:fontFamily="@font/clan_ot_medium"
+                 android:paddingHorizontal="@dimen/_8sdp"
+                 app:SearchViewTextColor="@color/white"
+                 app:AnimDuration="0"
+                 app:SearchHintText="Project Name"
+                 app:ShowBorders="true"
+                 app:RevealEmptyText="Project Name"
+                 app:SpinnerExpandHeight="300dp"/>-->
 
 
             <TextView
@@ -103,7 +141,6 @@
                 android:textColorHint="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
-                tools:visibility="gone"
                 android:id="@+id/rvQueAns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,7 +152,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
-                tools:listitem="@layout/row_question_answer" />
+                tools:listitem="@layout/row_question_answer"
+                tools:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -126,27 +164,27 @@
 
 
                 <TextView
-                    android:visibility="invisible"
                     android:id="@+id/txtPrevious"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
                     android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_weight="1"
                     android:background="@drawable/bg_btn"
                     android:fontFamily="@font/clan_ot_medium"
                     android:gravity="center"
                     android:text="Previous"
                     android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_14ssp" />
+                    android:textSize="@dimen/_14ssp"
+                    android:visibility="invisible" />
 
 
                 <TextView
                     android:id="@+id/txtNext"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
-                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/_4sdp"
+                    android:layout_weight="1"
                     android:background="@drawable/bg_btn"
                     android:fontFamily="@font/clan_ot_medium"
                     android:gravity="center"
