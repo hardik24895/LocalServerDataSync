@@ -19,6 +19,9 @@ data class CategoryItem(
 	@field:SerializedName("CategoryID")
 	val categoryID: String? = null,
 
+	@field:SerializedName("ParentID")
+	val parentID: String? = null,
+
 	@field:SerializedName("Status")
 	val status: String? = null,
 

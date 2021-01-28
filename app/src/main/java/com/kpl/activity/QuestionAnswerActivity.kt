@@ -108,7 +108,7 @@ class QuestionAnswerActivity : BaseActivity() {
         rvQueAns.layoutManager = layoutManager
         adapter = CategoryAdapter(this, categoryArray!!, SurveyId!!)
         rvQueAns.adapter = adapter
-        spinner.dialogOnlyLightTheme = true
+
 
 
 

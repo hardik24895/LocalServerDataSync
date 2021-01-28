@@ -9,6 +9,7 @@
         android:focusable="false"
         android:clickable="false"
         android:id="@+id/cbOption"
+        android:buttonTint="@color/purple_200"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/clan_ot_book"

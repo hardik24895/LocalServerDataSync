@@ -145,6 +145,7 @@ class Splashctivity : BaseActivity() {
                                 categoryArray?.add(
                                     Category(
                                         category.categoryID?.toInt(),
+                                        category.parentID?.toInt(),
                                         category.category.toString(),
                                         category.createdBy.toString(),
                                         category.createdDate.toString(),

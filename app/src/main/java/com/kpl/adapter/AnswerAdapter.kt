@@ -1,5 +1,7 @@
 package com.kpl.adapter
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Handler
@@ -14,12 +16,18 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioButton
 import androidx.recyclerview.widget.RecyclerView
+import com.ikovac.timepickerwithseconds.MyTimePickerDialog
 import com.kpl.R
 import com.kpl.database.AppDatabase
 import com.kpl.database.Question
 import com.kpl.database.SurveyAnswer
+import com.kpl.extention.getValue
+import com.kpl.extention.isEmpty
 import com.kpl.utils.Constant
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.activity_question_answer.*
+import kotlinx.android.synthetic.main.row_answer_date_picker.*
+import kotlinx.android.synthetic.main.row_answer_time_picker.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,8 +43,8 @@ class AnswerAdapter(
     var appDatabase: AppDatabase? = null,
     var surveyAnswer: SurveyAnswer? = null,
     var filledAns: String? = "",
-
-    ) : RecyclerView.Adapter<AnswerAdapter.ItemHolder>() {
+    val myCalendar: Calendar = Calendar.getInstance()
+) : RecyclerView.Adapter<AnswerAdapter.ItemHolder>() {
     private var lastRadioPosition: Int = -1
 
     override fun getItemCount(): Int {
@@ -57,6 +65,14 @@ class AnswerAdapter(
         } else if (type.equals(Constant.typeEdit)) {
             view =
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_edittext, parent, false)
+        } else if (type.equals(Constant.typeDatePicker)) {
+            view =
+                LayoutInflater.from(mContext)
+                    .inflate(R.layout.row_answer_date_picker, parent, false)
+        } else if (type.equals(Constant.typeTimePicker)) {
+            view =
+                LayoutInflater.from(mContext)
+                    .inflate(R.layout.row_answer_time_picker, parent, false)
         }
 
         return ItemHolder(view)
@@ -128,7 +144,70 @@ class AnswerAdapter(
                 ) {
                 }
             })
+        } else if (type.equals(Constant.typeTimePicker)) {
+
+            holder.edtTimeOption.setOnClickListener {
+
+                var hours = 0
+                var min = 0
+                var sec = 0
+
+                if (!holder.edtTimeOption.isEmpty()) {
+
+                    var getTime = holder.edtTimeOption.getValue().split(":")
+                    hours = getTime[0].toInt()
+                    min = getTime[1].toInt()
+                    sec = getTime[2].toInt()
+
+                }
+
+
+                val mTimePicker = MyTimePickerDialog(
+                    mContext,
+                    { view, hourOfDay, minute, seconds ->
+                        holder.edtTimeOption.setText(
+                            String.format("%02d", hourOfDay) +
+                                    ":" + String.format("%02d", minute) +
+                                    ":" + String.format("%02d", seconds)
+                        )
+                    },
+                    hours,
+                    min,
+                    sec,
+                    true
+                )
+                mTimePicker.show()
+
+
+            }
+
+        } else if (type.equals(Constant.typeDatePicker)) {
+
+            holder.edtDateOption.setOnClickListener {
+
+                var date =
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        myCalendar.set(Calendar.YEAR, year)
+                        myCalendar.set(Calendar.MONTH, monthOfYear)
+                        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        updateLabel(holder.edtDateOption, myCalendar)
+                    }
+
+
+                val datePickerDialog = DatePickerDialog(
+                    mContext,
+                    date,
+                    myCalendar.get(Calendar.YEAR),
+                    myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)
+                )
+                //  datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+                datePickerDialog.show()
+
+            }
+
         }
+
 
         //Set Answer
         val mainLooper = Looper.getMainLooper()
@@ -139,7 +218,7 @@ class AnswerAdapter(
                     if (type.equals(Constant.typeSigleSelection)) {
 
                         if (result.Answer.toString().equals(holder.rbOption?.text.toString())) {
-                              lastRadioPosition = position
+                            lastRadioPosition = position
                             holder.rbOption?.setChecked(true)
                         } else
                             holder.rbOption?.setChecked(false)
@@ -161,6 +240,13 @@ class AnswerAdapter(
     }
 
 
+    private fun updateLabel(editText: EditText, myCalendar: Calendar) {
+        val myFormat = "MMMM dd, yyyy"
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        editText.setText(sdf.format(myCalendar.time))
+    }
+
+
     private fun AddData(answer: String, isadded: Boolean, isReplace: Boolean) {
         val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
         val currentDate = sdf.format(Date())
@@ -173,7 +259,12 @@ class AnswerAdapter(
     }
 
 
-    inner class AddAndTODatabase(var mContext: Context, var isAdded: Boolean, var isReplace: Boolean, var surveyAnswer: SurveyAnswer) :
+    inner class AddAndTODatabase(
+        var mContext: Context,
+        var isAdded: Boolean,
+        var isReplace: Boolean,
+        var surveyAnswer: SurveyAnswer
+    ) :
         AsyncTask<Void, Void, Boolean>() {
         override fun doInBackground(vararg params: Void?): Boolean {
 

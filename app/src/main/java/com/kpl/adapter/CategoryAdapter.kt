@@ -10,14 +10,18 @@ import android.view.ViewGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.kpl.R
 import com.kpl.activity.LoginActivity
 import com.kpl.database.AppDatabase
 import com.kpl.database.Category
 import com.kpl.database.Question
 import com.kpl.interfaces.goToActivity
+import com.kpl.utils.NoScrollLinearLayoutManager
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.row_category.*
 
 
@@ -25,7 +29,8 @@ class CategoryAdapter(
     private val mContext: Context,
     var listCategory: MutableList<Category> = mutableListOf(),
     var SurveyId: Int,
-    var appDatabase: AppDatabase? = null
+    var appDatabase: AppDatabase? = null,
+    var layoutManager: NoScrollLinearLayoutManager? = null
 ) : RecyclerView.Adapter<CategoryAdapter.ItemHolder>() {
 
 
@@ -53,18 +58,38 @@ class CategoryAdapter(
         holder.txtQuestion?.setText(data.Category)
         val queAnsArray: ArrayList<Question> = ArrayList()
 
+        //if (data.ParentID == 0) {
         val mainLooper = Looper.getMainLooper()
-        Thread(Runnable { Log.e("TAG", "onBindViewHolder: Cat Id : " + data.CategoryID.toString())
+        Thread(Runnable {
+            Log.e("TAG", "onBindViewHolder: Cat Id : " + data.CategoryID.toString())
 
-            data.CategoryID.toString().let { appDatabase?.questionDao()?.getCategoryWiseQuestion(it)?.let { queAnsArray.addAll(it) } }
+            data.CategoryID.toString().let { appDatabase?.questionDao()?.getCategoryWiseQuestion(it)?.let { queAnsArray.addAll(it) }
+
+            }
+
+            var categoryArray: ArrayList<Category>? = ArrayList()
+            data.CategoryID?.let { appDatabase?.categoryDao()?.getSubCategory(it)?.let { categoryArray?.addAll(it) } }
 
             Handler(mainLooper).post {
                 val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
                 holder.rvAns?.layoutManager = layoutManager
-                var adapter = QuestionAnswerAdapter(mContext, queAnsArray,SurveyId)
+                var adapter = QuestionAnswerAdapter(mContext, queAnsArray, SurveyId)
                 holder.rvAns?.adapter = adapter
+
+
+                if (categoryArray!!.size > 0) {
+                    val mSnapHelper: SnapHelper = PagerSnapHelper()
+                    mSnapHelper.attachToRecyclerView(holder.rvAns)
+                    val layoutManager1 =
+                        NoScrollLinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
+                    layoutManager1!!.setScrollEnabled(false)
+                    holder.rvAns?.layoutManager = layoutManager1
+                    var adapter1 = CategoryAdapter(mContext, categoryArray!!, SurveyId!!)
+                    holder.rvAns?.adapter = adapter1
+                }
             }
         }).start()
+        //    }
 
 
     }

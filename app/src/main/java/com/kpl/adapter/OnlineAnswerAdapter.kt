@@ -58,7 +58,10 @@ class OnlineAnswerAdapter(
             view =
                 LayoutInflater.from(mContext)
                     .inflate(R.layout.row_answer_checkbox_disable, parent, false)
-        } else if (type.equals(Constant.typeEdit)) {
+        } else if (type.equals(Constant.typeEdit) or type.equals(Constant.typeDatePicker) or type.equals(
+                Constant.typeTimePicker
+            )
+        ) {
             view =
                 LayoutInflater.from(mContext)
                     .inflate(R.layout.row_answer_edittext_disable, parent, false)
@@ -107,7 +110,8 @@ class OnlineAnswerAdapter(
             Handler(mainLooper).post {
                 if (position != -1) {
                     if (type.equals(Constant.typeSigleSelection)) {
-                        if (surveyAnswerArray.get(position).answer.toString().equals(holder.rbOption?.text.toString())
+                        if (surveyAnswerArray.get(position).answer.toString()
+                                .equals(holder.rbOption?.text.toString())
                         ) {
                             holder.rbOption?.setChecked(true)
                         } else

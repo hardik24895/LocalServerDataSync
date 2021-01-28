@@ -8,6 +8,7 @@
     <CheckBox
         android:id="@+id/cbOption"
         android:layout_width="match_parent"
+        android:buttonTint="@color/purple_200"
         android:layout_height="wrap_content"
         android:fontFamily="@font/clan_ot_book"
         app:layout_constraintEnd_toEndOf="parent"

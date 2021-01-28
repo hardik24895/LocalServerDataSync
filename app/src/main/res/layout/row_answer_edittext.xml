@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:singleLine="true"
         android:layout_height="wrap_content"
+        android:textCursorDrawable="@color/purple_200"
+        android:backgroundTint="@color/purple_200"
         android:fontFamily="@font/clan_ot_book"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

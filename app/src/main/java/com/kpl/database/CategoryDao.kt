@@ -10,8 +10,11 @@ import com.kpl.utils.Constant
 interface CategoryDao {
 
 
-    @Query("SELECT * FROM " + Constant.TABLE_CATEGORY)
+    @Query("SELECT * FROM ${Constant.TABLE_CATEGORY} Where ${Constant.ParentID} = 0")
     fun getAllCategory(): List<Category>
+
+    @Query("SELECT * FROM ${Constant.TABLE_CATEGORY} Where ${Constant.ParentID} = :categoryID")
+    fun getSubCategory(categoryID: Int): List<Category>
 //
 //
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)

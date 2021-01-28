@@ -1,5 +1,6 @@
 package com.kpl.utils
 
+import android.widget.DatePicker
 import com.kpl.database.Category
 import java.util.prefs.Preferences
 
@@ -63,10 +64,13 @@ object Constant {
     const val typeEdit ="Edittext"
     const val typeSigleSelection ="Radio"
     const val typeMutliSelection ="Checkbox"
+    const val typeDatePicker ="Date"
+    const val typeTimePicker ="Time"
 
 
     //Table Category
     const val CategoryID = "CategoryID"
+    const val ParentID = "ParentID"
     const val Category = "Category"
 
 

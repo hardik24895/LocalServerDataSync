@@ -290,10 +290,11 @@ class SettingFragment : BaseFragment() {
 
             val jsonObject = JSONObject()
             jsonObject.put("Synctime", session.getDataByKey(SessionManager.SPSyncData))
+            //jsonObject.put("Synctime", "2021-01-28 10:48:02")
 
             // jsonBody.put("body", jsonObject)
 
-            result = Networking.setParentJsonData("getInsertMaster", jsonObject)
+            result = Networking.setParentJsonData("getUpdateMaster", jsonObject)
 
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -378,6 +379,7 @@ class SettingFragment : BaseFragment() {
                                 categoryArray?.add(
                                     Category(
                                         category.categoryID?.toInt(),
+                                        category.parentID?.toInt(),
                                         category.category.toString(),
                                         category.createdBy.toString(),
                                         category.createdDate.toString(),

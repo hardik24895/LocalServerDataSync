@@ -5,17 +5,20 @@
     android:layout_height="wrap_content">
 
 
-    <RadioButton
-        android:focusable="false"
-        android:clickable="false"
-        android:buttonTint="@color/purple_200"
-        android:id="@+id/rbOption"
+
+    <EditText
+        android:id="@+id/edtDateOption"
         android:layout_width="match_parent"
+        android:singleLine="true"
+        android:clickable="true"
+        android:editable="false"
+        android:focusable="false"
         android:layout_height="wrap_content"
+        android:textCursorDrawable="@color/purple_200"
+        android:backgroundTint="@color/purple_200"
         android:fontFamily="@font/clan_ot_book"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
