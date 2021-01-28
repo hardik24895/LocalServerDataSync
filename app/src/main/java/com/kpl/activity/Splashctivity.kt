@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.WindowManager
 import com.kpl.R
 import com.kpl.database.*
 import com.kpl.extention.showAlert
@@ -32,6 +33,9 @@ class Splashctivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        getWindow().setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splashctivity)
 
         employeeArray = ArrayList()
@@ -42,8 +46,12 @@ class Splashctivity : BaseActivity() {
 
 
         if (session.isLoggedIn) {
-            goToActivity<HomeActivity>()
-            finish()
+
+            Handler().postDelayed(Runnable {
+                goToActivity<HomeActivity>()
+                finish()
+            },2500)
+
         } else {
             getMasterDataFromServer()
         }

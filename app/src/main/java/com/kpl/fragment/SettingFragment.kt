@@ -283,6 +283,22 @@ class SettingFragment : BaseFragment() {
         }
     }
 
+    inner class ClearData(var context: Context) :
+        AsyncTask<Void, Void, Boolean>() {
+        override fun doInBackground(vararg params: Void?): Boolean? {
+
+            appDatabase!!.surveyDao().deleteAllReocord()
+            appDatabase!!.surveyAnswerDao().deleteAllReocord();
+
+            return true
+        }
+
+        override fun onPostExecute(result: Boolean?) {
+
+
+        }
+    }
+
     fun getMasterDataFromServer() {
         var result = ""
         showProgressbar()
@@ -310,6 +326,8 @@ class SettingFragment : BaseFragment() {
                     val data = response.data
                     hideProgressbar()
                     if (data != null) {
+
+                        ClearData(requireContext()).execute()
                         Log.d("TAG", "onSuccess: " + data.toString())
 
                         if (!data.employee.isEmpty())

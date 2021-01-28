@@ -55,7 +55,7 @@ class OnlineCategoryAdapter(
         holder.bindData(mContext)
         holder.txtNum?.setText("" + (position + 1) + ".")
         holder.txtQuestion?.setText(data.Category)
-        val queAnsArray: ArrayList<Question> = ArrayList()
+
 
 //        val mainLooper = Looper.getMainLooper()
 //        Thread(Runnable { Log.e("TAG", "onBindViewHolder: Cat Id : " + data.CategoryID.toString())
@@ -74,30 +74,26 @@ class OnlineCategoryAdapter(
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
             Log.e("TAG", "onBindViewHolder: Cat Id : " + data.CategoryID.toString())
-
-            data.CategoryID.toString().let { appDatabase?.questionDao()?.getCategoryWiseQuestion(it)?.let { queAnsArray.addAll(it) }
-
-            }
+            val queAnsArray: ArrayList<Question> = ArrayList()
+            data.CategoryID.toString().let { appDatabase?.questionDao()?.getCategoryWiseQuestion(it)?.let { queAnsArray.addAll(it) } }
 
             var categoryArray: ArrayList<Category>? = ArrayList()
             data.CategoryID?.let { appDatabase?.categoryDao()?.getSubCategory(it)?.let { categoryArray?.addAll(it) } }
 
             Handler(mainLooper).post {
+
                 val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
-                holder.rvAns?.layoutManager = layoutManager
+                holder.rvQue?.layoutManager = layoutManager
                 var adapter = OnlineQuestionAnswerAdapter(mContext, queAnsArray,surveyAnswerArray)
-                holder.rvAns?.adapter = adapter
+                holder.rvQue?.adapter = adapter
 
 
                 if (categoryArray!!.size > 0) {
-                    val mSnapHelper: SnapHelper = PagerSnapHelper()
-                    mSnapHelper.attachToRecyclerView(holder.rvAns)
-                    val layoutManager1 =
-                        NoScrollLinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false)
-                    layoutManager1!!.setScrollEnabled(false)
-                    holder.rvAns?.layoutManager = layoutManager1
+                    val layoutManager1 = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+                    holder.rvCat?.layoutManager = layoutManager1
                     var adapter1 = OnlineCategoryAdapter(mContext, categoryArray!!, surveyAnswerArray!!)
-                    holder.rvAns?.adapter = adapter1
+                    holder.rvCat?.adapter = adapter1
+
                 }
             }
         }).start()
@@ -111,14 +107,14 @@ class OnlineCategoryAdapter(
         var txtNum: TextView? = null
         var txtQuestion: TextView? = null
         var rvAns: RecyclerView? = null
-        var scrollview: ScrollView? = null
+      //  var scrollview: ScrollView? = null
 
 
         fun bindData(context: Context) {
             txtNum = containerView.findViewById(R.id.txtNum)
             txtQuestion = containerView.findViewById(R.id.txtQuestion)
             rvAns = containerView.findViewById(R.id.rvAns)
-            scrollview = containerView.findViewById(R.id.scrollview)
+           // scrollview = containerView.findViewById(R.id.scrollview)
 
 
         }
