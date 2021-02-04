@@ -30,6 +30,7 @@
         <activity android:name=".activity.QuestionAnswerActivity" />
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.HomeActivity" />
+        <service android:name=".service.ImageUploadService" />
 
     </application>
 
