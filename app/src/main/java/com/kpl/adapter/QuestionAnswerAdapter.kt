@@ -3,8 +3,6 @@ package com.kpl.adapter
 import android.app.AlertDialog
 import android.content.Context
 import android.net.Uri
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kpl.R
 import com.kpl.activity.QuestionAnswerActivity
-import com.kpl.database.AppDatabase
 import com.kpl.database.Question
 import com.kpl.database.SurveyAnswer
 import com.kpl.utils.Constant.SelectedImagePosition
