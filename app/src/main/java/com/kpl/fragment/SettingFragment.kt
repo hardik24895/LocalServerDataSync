@@ -24,6 +24,7 @@ import com.kpl.model.*
 import com.kpl.network.CallbackObserver
 import com.kpl.network.Networking
 import com.kpl.network.addTo
+import com.kpl.service.ImageUploadService
 import com.kpl.utils.Constant
 import com.kpl.utils.SessionManager
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -42,6 +43,9 @@ class SettingFragment : BaseFragment() {
 
     lateinit var intent: Intent
 
+    var lService: ImageUploadService? = null
+    var dataReceiver: DataReceiver? = null
+
     var ansArray: ArrayList<SurveyAnswer>? = null
     var surveyArray: ArrayList<Survey>? = null
     var employeeArray: ArrayList<Employee>? = null
@@ -50,13 +54,30 @@ class SettingFragment : BaseFragment() {
     var categoryArray: ArrayList<Category>? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_setting, container, false)
         intent = Intent(requireContext(), InformationActivity::class.java)
         return root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireActivity().bindService(
+                Intent(requireContext(), ImageUploadService::class.java),
+                mConnection!!,
+                Context.BIND_AUTO_CREATE
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mConnection != null) {
+            requireActivity().unbindService(mConnection!!)
+            mConnection = null
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,7 +93,9 @@ class SettingFragment : BaseFragment() {
         categoryArray = ArrayList()
 
         relaySendData.setOnClickListener {
-            requireContext().let { GetDataFromDB(it).execute() }
+            requireContext().let {
+                GetDataFromDB(it).execute()
+            }
 
         }
         relayGetData.setOnClickListener {
@@ -83,7 +106,7 @@ class SettingFragment : BaseFragment() {
     }
 
     inner class CheckLocalServerExist(var context: Context) :
-        AsyncTask<Void, Void, Boolean>() {
+            AsyncTask<Void, Void, Boolean>() {
         override fun doInBackground(vararg params: Void?): Boolean? {
             surveyArray?.addAll(appDatabase!!.surveyDao().getAllPendingSurvey())
 
@@ -94,16 +117,16 @@ class SettingFragment : BaseFragment() {
 
             if (surveyArray?.size!! > 0) {
                 val dialog = YesNoActionDailog.newInstance(requireContext(),
-                    object : YesNoActionDailog.onItemClick {
-                        override fun onItemCLicked() {
-                            getMasterDataFromServer()
-                        }
-                    })
+                        object : YesNoActionDailog.onItemClick {
+                            override fun onItemCLicked() {
+                                getMasterDataFromServer()
+                            }
+                        })
                 val bundle = Bundle()
                 bundle.putString(Constant.TITLE, this@SettingFragment.getString(R.string.app_name))
                 bundle.putString(
-                    Constant.TEXT,
-                    this@SettingFragment.getString(R.string.msg_get_data_from_server)
+                        Constant.TEXT,
+                        this@SettingFragment.getString(R.string.msg_get_data_from_server)
                 )
                 dialog.arguments = bundle
                 dialog.show(childFragmentManager, "YesNO")
@@ -114,7 +137,7 @@ class SettingFragment : BaseFragment() {
     }
 
     inner class GetDataFromDB(var context: Context) :
-        AsyncTask<Void, Void, Boolean>() {
+            AsyncTask<Void, Void, Boolean>() {
         override fun doInBackground(vararg params: Void?): Boolean? {
             ansArray?.addAll(appDatabase!!.surveyAnswerDao().getAll())
             surveyArray?.addAll(appDatabase!!.surveyDao().getAllPendingSurvey())
@@ -124,11 +147,29 @@ class SettingFragment : BaseFragment() {
 
         override fun onPostExecute(result: Boolean?) {
 
-            if (surveyArray?.size!! > 0)
+            if (surveyArray?.size!! > 0) {
+                val intent = Intent(requireContext(), ImageUploadService::class.java)
+                requireActivity().startService(intent)
                 SendDatatoServer()
+            }
+
         }
     }
 
+    //define 2 Broadcast Receivers
+    inner class DataReceiver : BroadcastReceiver() {
+        override fun onReceive(
+                context: Context,
+                intent: Intent
+        ) {
+            val totalMetres = intent.getStringExtra("metre")
+            val currentSpeed = intent.getStringExtra("currentSpeed")
+            val avgSpeed = intent.getStringExtra("avgSpeed")
+            val steps = intent.getStringExtra("steps")
+            // tvCurrentSpeed.setText(currentSpeed);
+            // tvAvgSpeed.setText(avgSpeed);
+        }
+    }
 
     fun clickEvent() {
         relayNotification.setOnClickListener {
@@ -154,16 +195,16 @@ class SettingFragment : BaseFragment() {
 
         relayLogout.setOnClickListener {
             val dialog = YesNoActionDailog.newInstance(requireContext(),
-                object : YesNoActionDailog.onItemClick {
-                    override fun onItemCLicked() {
-                        //   val mobile=  session.getDataByKey(Constant.MOBILE)
-                        //    val code=  session.getDataByKey(Constant.PHONE_CODE)
-                        session.clearSession()
-                        //  session.storeDataByKey(Constant.USER_ID, mobile)
-                        //  session.storeDataByKey(Constant.PHONE_CODE, code)
-                        goToActivityAndClearTask<LoginActivity>()
-                    }
-                })
+                    object : YesNoActionDailog.onItemClick {
+                        override fun onItemCLicked() {
+                            //   val mobile=  session.getDataByKey(Constant.MOBILE)
+                            //    val code=  session.getDataByKey(Constant.PHONE_CODE)
+                            session.clearSession()
+                            //  session.storeDataByKey(Constant.USER_ID, mobile)
+                            //  session.storeDataByKey(Constant.PHONE_CODE, code)
+                            goToActivityAndClearTask<LoginActivity>()
+                        }
+                    })
             val bundle = Bundle()
             bundle.putString(Constant.TITLE, this.getString(R.string.app_name))
             bundle.putString(Constant.TEXT, this.getString(R.string.msg_logout))
@@ -230,29 +271,29 @@ class SettingFragment : BaseFragment() {
             e.printStackTrace()
         }
         Networking
-            .with(requireContext())
-            .getServices()
-            .SendServeyToServer(Networking.wrapParams(result))//wrapParams Wraps parameters in to Request body Json format
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object : CallbackObserver<SendSurverDataToServer>() {
-                override fun onSuccess(response: SendSurverDataToServer) {
-                    val data = response.data
-                    hideProgressbar()
-                    if (data != null) {
-                        UpdateSurveyStatus(requireContext()).execute()
+                .with(requireContext())
+                .getServices()
+                .SendServeyToServer(Networking.wrapParams(result))//wrapParams Wraps parameters in to Request body Json format
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : CallbackObserver<SendSurverDataToServer>() {
+                    override fun onSuccess(response: SendSurverDataToServer) {
+                        val data = response.data
+                        hideProgressbar()
+                        if (data != null) {
+                            UpdateSurveyStatus(requireContext()).execute()
 
-                    } else {
-                        showAlert(getString(R.string.something_went_wrong))
+                        } else {
+                            showAlert(getString(R.string.something_went_wrong))
+                        }
                     }
-                }
 
-                override fun onFailed(code: Int, message: String) {
-                    showAlert(message)
-                    hideProgressbar()
-                }
+                    override fun onFailed(code: Int, message: String) {
+                        showAlert(message)
+                        hideProgressbar()
+                    }
 
-            }).addTo(autoDisposable)
+                }).addTo(autoDisposable)
     }
 
     private fun convertDateFormate(surveyDate: String?): String {
@@ -319,6 +360,17 @@ class SettingFragment : BaseFragment() {
             e.printStackTrace()
         }
         Networking
+                .with(requireContext())
+                .getServices()
+                .getMasterData(Networking.wrapParams(result))//wrapParams Wraps parameters in to Request body Json format
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : CallbackObserver<GetMasterDataModel>() {
+                    override fun onSuccess(response: GetMasterDataModel) {
+                        val data = response.data
+                        hideProgressbar()
+                        if (data != null) {
+                            Log.d("TAG", "onSuccess: " + data.toString())
             .with(requireContext())
             .getServices()
             .getMasterData(Networking.wrapParams(result))//wrapParams Wraps parameters in to Request body Json format
@@ -333,66 +385,66 @@ class SettingFragment : BaseFragment() {
                         ClearData(requireContext()).execute()
                         Log.d("TAG", "onSuccess: " + data.toString())
 
-                        if (!data.employee.isEmpty())
-                            for (iteam in data.employee.indices) {
-                                val emp: EmployeeItem = data.employee.get(iteam)
-                                employeeArray?.add(
-                                    Employee(
-                                        emp.userID?.toInt(),
-                                        emp.roleID?.toInt(),
-                                        emp.emailID.toString(),
-                                        emp.password.toString(),
-                                        emp.firstName.toString(),
-                                        emp.lastName.toString(),
-                                        emp.mobileNo.toString(),
-                                        emp.address.toString(),
-                                        emp.userType.toString(),
-                                        emp.isDeleted.toString(),
-                                        emp.createdBy.toString(),
-                                        emp.createdDate.toString(),
-                                        emp.modifiedBy.toString(),
-                                        emp.modifiedDate.toString(),
-                                        emp.status.toString()
+                            if (!data.employee.isEmpty())
+                                for (iteam in data.employee.indices) {
+                                    val emp: EmployeeItem = data.employee.get(iteam)
+                                    employeeArray?.add(
+                                            Employee(
+                                                    emp.userID?.toInt(),
+                                                    emp.roleID?.toInt(),
+                                                    emp.emailID.toString(),
+                                                    emp.password.toString(),
+                                                    emp.firstName.toString(),
+                                                    emp.lastName.toString(),
+                                                    emp.mobileNo.toString(),
+                                                    emp.address.toString(),
+                                                    emp.userType.toString(),
+                                                    emp.isDeleted.toString(),
+                                                    emp.createdBy.toString(),
+                                                    emp.createdDate.toString(),
+                                                    emp.modifiedBy.toString(),
+                                                    emp.modifiedDate.toString(),
+                                                    emp.status.toString()
+                                            )
                                     )
-                                )
-                            }
-                        if (!data.project.isEmpty())
-                            for (iteam in data.project.indices) {
-                                val project: ProjectItem = data.project.get(iteam)
-                                projectArray?.add(
-                                    Project(
-                                        project.projectID?.toInt(),
-                                        project.companyName.toString(),
-                                        project.title.toString(),
-                                        project.address.toString(),
-                                        project.mobileNo.toString(),
-                                        project.type.toString(),
-                                        project.status.toString(),
-                                        project.createdBy.toString(),
-                                        project.createdDate.toString(),
-                                        project.modifiedBy.toString(),
-                                        project.modifiedDate.toString()
+                                }
+                            if (!data.project.isEmpty())
+                                for (iteam in data.project.indices) {
+                                    val project: ProjectItem = data.project.get(iteam)
+                                    projectArray?.add(
+                                            Project(
+                                                    project.projectID?.toInt(),
+                                                    project.companyName.toString(),
+                                                    project.title.toString(),
+                                                    project.address.toString(),
+                                                    project.mobileNo.toString(),
+                                                    project.type.toString(),
+                                                    project.status.toString(),
+                                                    project.createdBy.toString(),
+                                                    project.createdDate.toString(),
+                                                    project.modifiedBy.toString(),
+                                                    project.modifiedDate.toString()
+                                            )
                                     )
-                                )
-                            }
-                        if (!data.question.isEmpty())
-                            for (iteam in data.question.indices) {
-                                val question: QuestionItem = data.question.get(iteam)
-                                quesitionArray?.add(
-                                    Question(
-                                        question.questionID?.toInt(),
-                                        question.question.toString(),
-                                        question.categoryID.toString(),
-                                        question.questionoption.toString(),
-                                        question.type.toString(),
-                                        question.createdBy.toString(),
-                                        question.createdDate.toString(),
-                                        question.modifiedBy.toString(),
-                                        question.modifiedDate.toString(),
-                                        question.status.toString()
+                                }
+                            if (!data.question.isEmpty())
+                                for (iteam in data.question.indices) {
+                                    val question: QuestionItem = data.question.get(iteam)
+                                    quesitionArray?.add(
+                                            Question(
+                                                    question.questionID?.toInt(),
+                                                    question.question.toString(),
+                                                    question.categoryID.toString(),
+                                                    question.questionoption.toString(),
+                                                    question.type.toString(),
+                                                    question.createdBy.toString(),
+                                                    question.createdDate.toString(),
+                                                    question.modifiedBy.toString(),
+                                                    question.modifiedDate.toString(),
+                                                    question.status.toString()
+                                            )
                                     )
-                                )
-                            }
+                                }
 
                         if (!data.category.isEmpty())
                             for (iteam in data.category.indices) {
@@ -412,39 +464,59 @@ class SettingFragment : BaseFragment() {
                             }
 
 
-                        val mainLooper = Looper.getMainLooper()
-                        Thread(Runnable {
-                            employeeArray?.let { appDatabase!!.employeeDao().insertAllUser(it) }
-                            projectArray?.let { appDatabase!!.projectDao().insertAllProject(it) }
-                            quesitionArray?.let {
-                                appDatabase!!.questionDao().insertAllQuestion(it)
-                            }
-                            categoryArray?.let { appDatabase!!.categoryDao().insertAllCategory(it) }
+                            val mainLooper = Looper.getMainLooper()
+                            Thread(Runnable {
+                                employeeArray?.let { appDatabase!!.employeeDao().insertAllUser(it) }
+                                projectArray?.let { appDatabase!!.projectDao().insertAllProject(it) }
+                                quesitionArray?.let {
+                                    appDatabase!!.questionDao().insertAllQuestion(it)
+                                }
+                                categoryArray?.let { appDatabase!!.categoryDao().insertAllCategory(it) }
 
 
-                            Handler(mainLooper).post {
+                                Handler(mainLooper).post {
 
 
-                                val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                                val currentDate = sdf.format(Date())
-                                session.storeDataByKey(SessionManager.SPSyncData, currentDate)
+                                    val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                                    val currentDate = sdf.format(Date())
+                                    session.storeDataByKey(SessionManager.SPSyncData, currentDate)
 
-                            }
-                        }).start()
+                                }
+                            }).start()
 
 
-                    } else {
-                        showAlert(getString(R.string.something_went_wrong))
+                        } else {
+                            showAlert(getString(R.string.something_went_wrong))
+                        }
                     }
-                }
 
-                override fun onFailed(code: Int, message: String) {
-                    showAlert(message)
-                    hideProgressbar()
-                }
+                    override fun onFailed(code: Int, message: String) {
+                        showAlert(message)
+                        hideProgressbar()
+                    }
 
-            }).addTo(autoDisposable)
+                }).addTo(autoDisposable)
     }
 
+    private var mConnection: ServiceConnection? =
+            object : ServiceConnection {
+                override fun onServiceConnected(
+                        className: ComponentName,
+                        service: IBinder
+                ) {
+                    //bind to LocationService
+                    val binder =
+                            service as ImageUploadService.MyBinder
+                    lService = binder.service
+
+
+                    //tvCurrentSpeed.setText(lService.getCurrentSpeed().equals("0")?"0.00":lService.getCurrentSpeed());
+                    //tvAvgSpeed.setText(lService.getAvgSpeed().equals("0")?"0.00":lService.getAvgSpeed());
+                }
+
+                override fun onServiceDisconnected(arg0: ComponentName) {
+                    lService = null
+                }
+            }
 
 }
