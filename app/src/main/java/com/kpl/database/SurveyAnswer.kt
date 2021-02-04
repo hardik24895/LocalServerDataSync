@@ -13,6 +13,7 @@ data class SurveyAnswer(
     @ColumnInfo(name = "SurveyID") var SurveyID: Int,
     @ColumnInfo(name = "QuestionID") val QuestionID: String?,
     @ColumnInfo(name = "Answer") val Answer: String?,
+    @ColumnInfo(name = "Image") var Image: String?,
     @ColumnInfo(name = "CreatedBy") val CreatedBy: String?,
     @ColumnInfo(name = "CreatedDate") val CreatedDate: String?,
     @ColumnInfo(name = "ModifiedBy") val ModifiedBy: String?,

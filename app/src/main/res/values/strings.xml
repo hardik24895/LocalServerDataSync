@@ -15,6 +15,8 @@
     <string name="msg_logout">Are you Sure to Logout?</string>
     <string name="msg_get_data_from_server">Your local survey pending, so you want to remove and SYNC Data?</string>
     <string name="no_result_found">No Data Found</string>
+    <string name="option_gallery">Gallery</string>
+    <string name="option_camera">Camera</string>
 
     <array name="data">
         <item>1</item>

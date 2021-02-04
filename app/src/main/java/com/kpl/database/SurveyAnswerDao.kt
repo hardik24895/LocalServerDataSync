@@ -31,4 +31,7 @@ interface SurveyAnswerDao {
     @Query("DELETE FROM " + Constant.TABLE_SURVEY_ANSWER)
     fun deleteAllReocord()
 
+    @Query("Update ${Constant.TABLE_SURVEY_ANSWER} set Image = :imagepath  Where ${Constant.SurveyID} = :surveyID and ${Constant.QuestionID} = :questionID")
+    fun updateImage(surveyID: Int, questionID: String, imagepath: String)
+
 }

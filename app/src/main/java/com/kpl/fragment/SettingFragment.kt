@@ -192,7 +192,9 @@ class SettingFragment : BaseFragment() {
 
                     jGroup.put("QuestionID", ansArray?.get(i)?.QuestionID)
                     jGroup.put("Answer", ansArray?.get(i)?.Answer)
+                    jGroup.put("ServeyID", ansArray?.get(i)?.SurveyID)
                     jGroup.put("UserID", session.getDataByKey(SessionManager.SPUserID))
+                    jGroup.put("Image", ansArray?.get(i)?.Image)
 //
                     jsonAnswerArray?.put(jGroup)
 
@@ -207,6 +209,7 @@ class SettingFragment : BaseFragment() {
                 try {
                     jGroup.put("ProjectID", surveyArray?.get(i)?.ProjectID)
                     jGroup.put("Title", surveyArray?.get(i)?.Title)
+                    jGroup.put("ServeyID", surveyArray?.get(i)?.SurveyID)
                     jGroup.put("SurveyDate", convertDateFormate(surveyArray?.get(i)?.SurveyDate))
                     jGroup.put("UserID", session.getDataByKey(SessionManager.SPUserID))
 

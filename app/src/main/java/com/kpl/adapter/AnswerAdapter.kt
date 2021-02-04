@@ -56,23 +56,23 @@ class AnswerAdapter(
 
         appDatabase = AppDatabase.getDatabase(mContext)!!
 
-        if (type.equals(Constant.typeSigleSelection)) {
+        if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
             view = LayoutInflater.from(mContext)
                 .inflate(R.layout.row_answer_radiobutton, parent, false)
-        } else if (type.equals(Constant.typeMutliSelection)) {
+        } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             view =
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_checkbox, parent, false)
-        } else if (type.equals(Constant.typeEdit)) {
+        } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeEditWithImage)) {
             view =
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_edittext, parent, false)
         } else if (type.equals(Constant.typeDatePicker)) {
-            view =
-                LayoutInflater.from(mContext)
-                    .inflate(R.layout.row_answer_date_picker, parent, false)
+            view = LayoutInflater.from(mContext)
+                .inflate(R.layout.row_answer_date_picker, parent, false)
         } else if (type.equals(Constant.typeTimePicker)) {
-            view =
-                LayoutInflater.from(mContext)
-                    .inflate(R.layout.row_answer_time_picker, parent, false)
+            view = LayoutInflater.from(mContext)
+                .inflate(R.layout.row_answer_time_picker, parent, false)
+        } else if (type.equals(Constant.typeImageView)) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_image, parent, false)
         }
 
         return ItemHolder(view)
@@ -84,7 +84,7 @@ class AnswerAdapter(
         val data = list?.get(position)
         holder.bindData(mContext)
 
-        if (type.equals(Constant.typeSigleSelection)) {
+        if (type.equals(Constant.typeSigleSelection) ||type.equals(Constant.typeSigleSelectionWithImage)) {
             holder.rbOption?.setText(data.toString())
             holder.rbOption?.isChecked = position == lastRadioPosition
 
@@ -96,7 +96,6 @@ class AnswerAdapter(
                     lastRadioPosition = position
 
                 })
-
 
             }
 
@@ -113,14 +112,14 @@ class AnswerAdapter(
 //                }, 100)
 //            }
 
-        } else if (type.equals(Constant.typeMutliSelection)) {
+        } else if (type.equals(Constant.typeMutliSelection)||type.equals(Constant.typeMutliSelectionWithImage)) {
             holder.cbOption?.setText(data.toString())
             holder.cbOption?.setOnClickListener {
                 Log.e("TAG", "onBindViewHolder: 123    " + holder.cbOption!!.isChecked)
 
                 AddData(holder.cbOption!!.getText().toString(), holder.cbOption!!.isChecked, false)
             }
-        } else if (type.equals(Constant.typeEdit)) {
+        } else if (type.equals(Constant.typeEdit)||type.equals(Constant.typeEditWithImage)) {
             holder.edtOption?.setText(filledAns)
 
             holder.edtOption?.addTextChangedListener(object : TextWatcher {
@@ -215,14 +214,14 @@ class AnswerAdapter(
             val result = appDatabase!!.surveyAnswerDao().checkRecordExist(SurveyId, QueId)
             Handler(mainLooper).post {
                 if (result != null)
-                    if (type.equals(Constant.typeSigleSelection)) {
+                    if (type.equals(Constant.typeSigleSelection)||type.equals(Constant.typeSigleSelectionWithImage)) {
 
                         if (result.Answer.toString().equals(holder.rbOption?.text.toString())) {
                             lastRadioPosition = position
                             holder.rbOption?.setChecked(true)
                         } else
                             holder.rbOption?.setChecked(false)
-                    } else if (type.equals(Constant.typeMutliSelection)) {
+                    } else if (type.equals(Constant.typeMutliSelection)||type.equals(Constant.typeMutliSelectionWithImage)) {
 
                         val strs = result.Answer.toString().split(",").toTypedArray()
                         for (iteam in strs) {
@@ -232,7 +231,7 @@ class AnswerAdapter(
                             }
                         }
 
-                    } else if (type.equals(Constant.typeEdit)) {
+                    } else if (type.equals(Constant.typeEdit)||type.equals(Constant.typeEditWithImage)) {
                         holder.edtOption?.setText(result.Answer?.toString())
                     }
             }
@@ -254,7 +253,7 @@ class AnswerAdapter(
             mContext,
             isadded,
             isReplace,
-            SurveyAnswer(null, SurveyId, QueId, answer, "", currentDate, "", currentDate, "1")
+            SurveyAnswer(null, SurveyId, QueId, answer, "", "", currentDate, "", currentDate, "1")
         ).execute()
     }
 

@@ -1,7 +1,9 @@
 package com.kpl.activity
 
+
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,20 +13,16 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import android.widget.Toast
-import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.kpl.R
 import com.kpl.adapter.CategoryAdapter
-import com.kpl.database.Category
-import com.kpl.database.Project
-import com.kpl.database.Question
-import com.kpl.database.Survey
-import com.kpl.extention.invisible
+import com.kpl.adapter.QuestionAnswerAdapter
+import com.kpl.database.*
 import com.kpl.utils.NoScrollLinearLayoutManager
 import com.kpl.utils.SessionManager
-//import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 import tech.hibk.searchablespinnerlibrary.SearchableDialog
@@ -35,6 +33,27 @@ import kotlin.collections.ArrayList
 
 
 class QuestionAnswerActivity : BaseActivity() {
+
+
+    override fun onHolderDataItem(
+        holder1: QuestionAnswerAdapter.ItemHolder?,
+        surveyAnswer1: SurveyAnswer
+    ) {
+        holder = holder1!!
+        surveyAnswer = surveyAnswer1!!
+
+    }
+
+    fun getImageOption() {
+
+
+    }
+
+    companion object {
+        var holder: QuestionAnswerAdapter.ItemHolder? = null
+        var surveyAnswer: SurveyAnswer? = null
+    }
+
 
     var ProjectID: String? = ""
     var Title: String? = ""
@@ -56,7 +75,6 @@ class QuestionAnswerActivity : BaseActivity() {
     var categoryArray: ArrayList<Category>? = null
 
     var list: List<Question>? = null
-
     var SurveyId: Int? = -1
 
     val myCalendar: Calendar = Calendar.getInstance()
@@ -69,6 +87,7 @@ class QuestionAnswerActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question_answer)
 
+        getImageOption()
         txtTitle.setText("Question Answer")
 
         imgBack.setOnClickListener {
@@ -169,24 +188,24 @@ class QuestionAnswerActivity : BaseActivity() {
         linlaySp?.setOnClickListener {
 
             if (!intent.hasExtra("PROJECT_ID"))
-            SearchableDialog(this,
-                itens!!,
-                "Project Title",
-                { item, _ ->
-                    //Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
-                    spinner.setSelection(item.id.toInt())
-                }).show()
+                SearchableDialog(this,
+                    itens!!,
+                    "Project Title",
+                    { item, _ ->
+                        //Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
+                        spinner.setSelection(item.id.toInt())
+                    }).show()
 
         }
         view.setOnClickListener {
             if (!intent.hasExtra("PROJECT_ID"))
-            SearchableDialog(this,
-                itens!!,
-                "Project Title",
-                { item, _ ->
-                    // Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
-                    spinner.setSelection(item.id.toInt())
-                }).show()
+                SearchableDialog(this,
+                    itens!!,
+                    "Project Title",
+                    { item, _ ->
+                        // Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
+                        spinner.setSelection(item.id.toInt())
+                    }).show()
         }
 
 
@@ -339,6 +358,52 @@ class QuestionAnswerActivity : BaseActivity() {
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (resultCode) {
+            RESULT_OK -> {
+
+                var resultUri = UCrop.getOutput(data!!)
+                var obj = QuestionAnswerAdapter.MyImageSelected()
+                obj.onImageItemCilck(holder, resultUri,surveyAnswer!!,this)
+
+
+                getProject(this@QuestionAnswerActivity,surveyAnswer!!,resultUri.toString()).execute()
+
+
+            }
+
+            RESULT_CANCELED -> {
+            }
+        }
+    }
+
+    inner class getProject(var context: QuestionAnswerActivity, var mySurveyAnswer: SurveyAnswer, var result: String) : AsyncTask<Void, Void, Boolean>() {
+        override fun doInBackground(vararg params: Void?): Boolean {
+
+
+            var existAns: SurveyAnswer? = null
+            Companion.surveyAnswer!!.Image = result.toString()
+            existAns = appDatabase?.surveyAnswerDao()?.checkRecordExist(Companion.surveyAnswer!!.SurveyID, Companion.surveyAnswer!!.QuestionID.toString())
+
+            if (existAns == null) {
+                appDatabase!!.surveyAnswerDao().insert(Companion.surveyAnswer!!)
+
+            } else {
+                appDatabase!!.surveyAnswerDao().updateImage(Companion.surveyAnswer!!.SurveyID, Companion.surveyAnswer!!.QuestionID.toString(), result.toString())
+            }
+
+
+            return true
+
+        }
+
+        override fun onPostExecute(result: Boolean?) {
+
+
+        }
+    }
+
 
     var date = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
         myCalendar.set(Calendar.YEAR, year)
@@ -381,87 +446,12 @@ class QuestionAnswerActivity : BaseActivity() {
 
 
 
-
             adapterSiteName = ArrayAdapter(this, R.layout.custom_spinner, AddressArray!!)
             spinner.setAdapter(adapterSiteName)
-            //  sp.setOnItemSelectedListener(mOnItemSelectedListener)
-
-            //  Handler(mainLooper).post {
-
-            /*  if (intent.hasExtra("PROJECT_NAME") != null) {
-                  Log.e(
-                      "TAG",
-                      "getProject: 123   " + intent.getStringExtra("PROJECT_NAME").toString()
-                  )
-                  val spinnerPosition: Int = adapterSiteName!!.getPosition(
-                      intent.getStringExtra("PROJECT_NAME").toString()
-                  )
-                  Log.d("myPos", ""+spinnerPosition)
-                  autoSiteName.setSelectedItem(spinnerPosition)
-              }*/
-
-            /* if (intent.hasExtra("PROJECT_ID")) {
-                 for (item in projectArray!!.indices) {
-                     if (projectArray!!.get(item).ProjectID.toString().equals(
-                             intent.getStringExtra(
-                                 "PROJECT_ID"
-                             )
-                         )
-                     ) {
-                         selectedPos = item
-                         break
-                     }
-                 }
-             }
-             autoSiteName.setSelectedItem = 2
-             autoSiteName.setSelectedItem(2)*/
-
-
-            //   }
 
         }).start()
 
     }
-//
-//    inner class getProject(var context: QuestionAnswerActivity) :
-//        AsyncTask<Void, Void, List<Project>>() {
-//        override fun doInBackground(vararg params: Void?): List<Project> {
-//
-//            return context.appDatabase!!.projectDao().getAllProject()
-//
-//        }
-//
-//        override fun onPostExecute(project: List<Project>?) {
-//
-//            if (project !== null) {
-//                projectArray?.addAll(project)
-//                for (list in project) {
-//                    AddressArray?.add(list.CompanyName.toString() + ", " + list.Title.toString())
-//                }
-//                Log.d("TAG", "onPostExecute: " + projectArray?.size)
-//                context.adapterSiteName?.notifyDataSetChanged()
-//
-//            }
-//        }
-//    }
-
-
-//    inner class AddSurvey(var context: QuestionAnswerActivity, var survey: Survey) :
-//        AsyncTask<Void, Void, Long>() {
-//        override fun doInBackground(vararg params: Void?): Long {
-//
-//            var surveyId = context.appDatabase!!.surveyDao().insertSurvey(survey)
-//
-//            context.appDatabase!!.surveyAnswerDao().updaterecord(surveyId.toInt())
-//
-//            return surveyId
-//        }
-//
-//        override fun onPostExecute(result: Long?) {
-//            Log.d("TAG", "onPostExecute: " + result.toString())
-//
-//        }
-//    }
 
 
 }

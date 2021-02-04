@@ -1,14 +1,10 @@
 package com.kpl.utils
 
-import android.widget.DatePicker
-import com.kpl.database.Category
-import java.util.prefs.Preferences
-
 object Constant {
 
     // SharedPresfrence
     const val PreferencesName = "KPL_Pref"
-
+    var SelectedImagePosition = 0
 
 
     // Database Name
@@ -49,6 +45,7 @@ object Constant {
 
     //Table Question
     const val QuestionID = "QuestionID"
+
     const val Question = "Question"
     const val Type = "Type"
     const val Questionoption = "Questionoption"
@@ -66,6 +63,10 @@ object Constant {
     const val typeMutliSelection ="Checkbox"
     const val typeDatePicker ="Date"
     const val typeTimePicker ="Time"
+    const val typeImageView ="Image"
+    const val typeEditWithImage ="Edittext + Image"
+    const val typeSigleSelectionWithImage ="Radio + Image"
+    const val typeMutliSelectionWithImage ="Checkbox + Image"
 
 
     //Table Category
