@@ -3,6 +3,9 @@ package com.kpl.adapter
 import android.app.AlertDialog
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +16,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kpl.R
 import com.kpl.activity.QuestionAnswerActivity
+import com.kpl.database.AppDatabase
 import com.kpl.database.Question
 import com.kpl.database.SurveyAnswer
 import com.kpl.utils.Constant.SelectedImagePosition
 import com.kpl.utils.Constant.typeEditWithImage
+import com.kpl.utils.Constant.typeImageView
 import com.kpl.utils.Constant.typeMutliSelectionWithImage
 import com.kpl.utils.Constant.typeSigleSelectionWithImage
+import com.kpl.utils.SessionManager
 import com.sprinters.ui.dialog.ImagePickerBottomSheetDialog
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.extensions.LayoutContainer
@@ -30,7 +36,9 @@ import java.util.*
 class QuestionAnswerAdapter(
     private val mContext: Context,
     var list: MutableList<Question> = mutableListOf(),
-    var SurveyId: Int
+    var SurveyId: Int,
+    var sessionManager: SessionManager? = null,
+    var appDatabase: AppDatabase? = null
 ) : RecyclerView.Adapter<QuestionAnswerAdapter.ItemHolder>() {
 
 
@@ -40,6 +48,8 @@ class QuestionAnswerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+        sessionManager = SessionManager(mContext)
+        appDatabase = AppDatabase.getDatabase(mContext)
         return ItemHolder(
             LayoutInflater.from(mContext).inflate(
                 R.layout.row_question_answer,
@@ -56,30 +66,51 @@ class QuestionAnswerAdapter(
         holder.txtNum?.setText("" + (position + 1) + ".")
         holder.txtQuestion?.setText(data.Question)
 
-       // holder?.imgUrl?.setImageURI()
+        //holder?.imgUrl?.setImageURI()
 
         var stringArray = data.Questionoption?.split(",")
 
         val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         holder.rvAns?.layoutManager = layoutManager
         var adapter = AnswerAdapter(
-            mContext,
-            stringArray,
-            data.Type.toString(),
-            data.QuestionID.toString(),
-            data,
-            SurveyId,
+            mContext, stringArray, data.Type.toString(), data.QuestionID.toString(), data, SurveyId,
             holder.rvAns!!
         )
         holder.rvAns?.adapter = adapter
-        if (data.Type.equals(typeEditWithImage) || data.Type.equals(typeSigleSelectionWithImage) || data.Type.equals(
-                typeMutliSelectionWithImage
-            )
+        if (data.Type.equals(typeEditWithImage) || data.Type.equals(typeSigleSelectionWithImage) || data.Type.equals(typeMutliSelectionWithImage) || data.Type.equals(typeImageView)
         ) {
             holder.imgUrl?.setVisibility(View.VISIBLE)
+
+            val mainLooper = Looper.getMainLooper()
+            Thread(Runnable {
+
+                var ImagePath: String? = ""
+
+                ImagePath = appDatabase?.surveyAnswerDao()
+                    ?.getImagePath(SurveyId, data.QuestionID.toString())
+
+                Handler(mainLooper).post {
+
+
+                    if (!ImagePath.equals("") && !ImagePath.equals(null)) {
+                        var selectedimageName =
+                            ImagePath?.replace("file:///storage/emulated/0/.kpl/", "")
+                        val file = File(
+                            Environment.getExternalStorageDirectory().toString() + "/.kpl/",
+                            selectedimageName
+                        )
+                        holder.imgUrl?.setImageURI(Uri.parse(file.toString()))
+                    }
+
+                }
+
+            }).start()
+
+
         } else {
             holder.imgUrl?.setVisibility(View.GONE)
         }
+
 
         holder.imgUrl?.setOnClickListener {
 
@@ -92,10 +123,24 @@ class QuestionAnswerAdapter(
                 .newInstance(mContext,
                     object : ImagePickerBottomSheetDialog.OnModeSelected {
                         override fun onMediaPicked(uri: Uri) {
+
+
+                            val direct =
+                                File(Environment.getExternalStorageDirectory().toString() + "/.kpl")
+
+                            if (!direct.exists()) {
+                                val wallpaperDirectory = File(
+                                    Environment.getExternalStorageDirectory().toString() + "/.kpl/"
+                                )
+                                wallpaperDirectory.mkdirs()
+                            }
+
                             val destinationUri = Uri.fromFile(
                                 File(
-                                    mContext.cacheDir,
-                                    "IMG_" + System.currentTimeMillis()
+                                    Environment.getExternalStorageDirectory().toString() + "/.kpl/",
+                                    "IMG_${System.currentTimeMillis()}_user_${
+                                        sessionManager?.getDataByKey(SessionManager.SPUserID)
+                                    }_Que_${data.QuestionID.toString()}.jpg"
                                 )
                             )
                             UCrop.of(uri, destinationUri).withAspectRatio(1f, 1f)
@@ -169,13 +214,17 @@ class QuestionAnswerAdapter(
     }
 
     class MyImageSelected : onImageCliks {
-        override fun onImageItemCilck(holder: ItemHolder?, bitmap: Uri?, surveyAnswer: SurveyAnswer, mContext: Context) {
+        override fun onImageItemCilck(
+            holder: ItemHolder?,
+            bitmap: Uri?,
+            surveyAnswer: SurveyAnswer,
+            mContext: Context
+        ) {
 
 
-          //  var appDatabase = AppDatabase.getDatabase(mContext)!!
+            //  var appDatabase = AppDatabase.getDatabase(mContext)!!
 
             holder?.imgUrl?.setImageURI(bitmap)
-
 
 
         }

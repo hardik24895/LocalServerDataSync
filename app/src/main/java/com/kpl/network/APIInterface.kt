@@ -3,10 +3,13 @@ package com.kpl.interfaces
 
 import com.kpl.model.*
 import io.reactivex.Observable
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface APIInterface {
 
@@ -29,16 +32,12 @@ interface APIInterface {
     @POST("service/")
     fun UpdateUserProfile(@Body body: RequestBody): Observable<Response<UpdateProfileDataModel>>
 
-    /* @POST("common/category/getCategories")
-     fun getCategory(): Observable<Response<CategoryModal>>
-
-     @POST("common/country/getCountries")
-     fun getCountry(): Observable<Response<CountryModal>>
-
-     @POST("common/state/getStates")
-     fun getState(@Body body: RequestBody): Observable<Response<StateModal>>
+    @Multipart
+    @POST("service/")
+    fun ImageUploadApi(@Part ImageData: MultipartBody.Part,
+                       @Part("method") method: RequestBody,
+                       @Part("ImageName") ImageName: RequestBody
+    ): Observable<Response<ImageUploadModel>>
 
 
-     @POST("home/signup")
-     fun signup(@Body body: RequestBody): Observable<Response<UserModal>>*/
 }

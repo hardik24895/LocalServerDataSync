@@ -45,6 +45,8 @@ object Constant {
 
     //Table Question
     const val QuestionID = "QuestionID"
+    const val Answer = "Answer"
+    const val Image = "Image"
 
     const val Question = "Question"
     const val Type = "Type"
@@ -67,6 +69,7 @@ object Constant {
     const val typeEditWithImage ="Edittext + Image"
     const val typeSigleSelectionWithImage ="Radio + Image"
     const val typeMutliSelectionWithImage ="Checkbox + Image"
+    const val typeNumeric ="Numeric"
 
 
     //Table Category

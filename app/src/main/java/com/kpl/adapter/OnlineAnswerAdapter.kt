@@ -51,20 +51,15 @@ class OnlineAnswerAdapter(
 
         appDatabase = AppDatabase.getDatabase(mContext)!!
 
-        if (type.equals(Constant.typeSigleSelection)) {
+        if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
             view = LayoutInflater.from(mContext)
                 .inflate(R.layout.row_answer_radiobutton_disable, parent, false)
-        } else if (type.equals(Constant.typeMutliSelection)) {
-            view =
-                LayoutInflater.from(mContext)
-                    .inflate(R.layout.row_answer_checkbox_disable, parent, false)
-        } else if (type.equals(Constant.typeEdit) or type.equals(Constant.typeDatePicker) or type.equals(
-                Constant.typeTimePicker
-            )
-        ) {
-            view =
-                LayoutInflater.from(mContext)
-                    .inflate(R.layout.row_answer_edittext_disable, parent, false)
+        } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_checkbox_disable, parent, false)
+        } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric)|| type.equals(Constant.typeEditWithImage) || type.equals(Constant.typeDatePicker) || type.equals(Constant.typeTimePicker)) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_edittext_disable, parent, false)
+        }else if (type.equals(Constant.typeImageView)) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_image, parent, false)
         }
 
         return ItemHolder(view)
@@ -76,47 +71,35 @@ class OnlineAnswerAdapter(
         holder.bindData(mContext)
 
 
-        if (type.equals(Constant.typeSigleSelection)) {
+        if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
             holder.rbOption?.setText(data.toString())
-        } else if (type.equals(Constant.typeMutliSelection)) {
+        } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             holder.cbOption?.setText(data.toString())
         }
 
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
             var position: Int = -1
-            Log.d("TAG", "onBindViewHolder:1   ${data.toString()}")
+          //  Log.d("TAG", "onBindViewHolder:1   ${data.toString()}")
             for (items in surveyAnswerArray.indices) {
                 if (surveyAnswerArray.get(items).questionID.equals(QueId)) {
-                    Log.d(
-                        "TAG",
-                        "onBindViewHolder:   =${pos}        ${surveyAnswerArray.get(items).questionID}        ${
-                            surveyAnswerArray.get(items).answer
-                        }       ${QueId}"
-                    )
+
                     position = items
                     break
-                } else {
-                    Log.d(
-                        "TAG",
-                        "onBindViewHolder:    ${pos}        ${surveyAnswerArray.get(items).questionID}        ${
-                            surveyAnswerArray.get(items).answer
-                        }       ${QueId}"
-                    )
                 }
             }
 
 
             Handler(mainLooper).post {
                 if (position != -1) {
-                    if (type.equals(Constant.typeSigleSelection)) {
+                    if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
                         if (surveyAnswerArray.get(position).answer.toString()
                                 .equals(holder.rbOption?.text.toString())
                         ) {
                             holder.rbOption?.setChecked(true)
                         } else
                             holder.rbOption?.setChecked(false)
-                    } else if (type.equals(Constant.typeMutliSelection)) {
+                    } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
 
                         val strs =
                             surveyAnswerArray.get(position).answer.toString().split(",")
@@ -128,7 +111,10 @@ class OnlineAnswerAdapter(
                             }
                         }
 
-                    } else if (type.equals(Constant.typeEdit)) {
+                    } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric)|| type.equals(Constant.typeEditWithImage) || type.equals(
+                            Constant.typeDatePicker
+                        ) || type.equals(Constant.typeTimePicker)
+                    ) {
                         holder.edtOption?.setText(surveyAnswerArray.get(position).answer?.toString())
                     }
                 }

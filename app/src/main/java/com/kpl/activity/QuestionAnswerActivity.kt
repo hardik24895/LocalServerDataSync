@@ -120,13 +120,7 @@ class QuestionAnswerActivity : BaseActivity() {
             appDatabase?.categoryDao()?.getAllCategory()?.let { categoryArray?.addAll(it) }
         }).start()
 
-        val mSnapHelper: SnapHelper = PagerSnapHelper()
-        mSnapHelper.attachToRecyclerView(rvQueAns)
-        layoutManager = NoScrollLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        layoutManager!!.setScrollEnabled(false)
-        rvQueAns.layoutManager = layoutManager
-        adapter = CategoryAdapter(this, categoryArray!!, SurveyId!!)
-        rvQueAns.adapter = adapter
+
 
 
 
@@ -237,7 +231,6 @@ class QuestionAnswerActivity : BaseActivity() {
             txtDate.text = intent.getStringExtra("PROJECT_DATE")
             // autoSiteName.setText(intent.getStringExtra("PROJECT_NAME"))
 
-
             var mainloop = Looper.getMainLooper()
             Thread(Runnable {
 
@@ -252,9 +245,14 @@ class QuestionAnswerActivity : BaseActivity() {
             txtDate.isFocusableInTouchMode = false
             txtDate.isEnabled = false
 
-
         }
-
+        val mSnapHelper: SnapHelper = PagerSnapHelper()
+        mSnapHelper.attachToRecyclerView(rvQueAns)
+        layoutManager = NoScrollLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        layoutManager!!.setScrollEnabled(false)
+        rvQueAns.layoutManager = layoutManager
+        adapter = CategoryAdapter(this, categoryArray!!, SurveyId!!)
+        rvQueAns.adapter = adapter
         updateLabel()
 
 

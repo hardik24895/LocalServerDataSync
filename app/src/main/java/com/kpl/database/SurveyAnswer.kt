@@ -9,16 +9,16 @@ import com.kpl.utils.Constant
 data class SurveyAnswer(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "SurveyAnswerID") val SurveyAnswerID: Long? = null,
-    @ColumnInfo(name = "SurveyID") var SurveyID: Int,
-    @ColumnInfo(name = "QuestionID") val QuestionID: String?,
-    @ColumnInfo(name = "Answer") val Answer: String?,
-    @ColumnInfo(name = "Image") var Image: String?,
-    @ColumnInfo(name = "CreatedBy") val CreatedBy: String?,
-    @ColumnInfo(name = "CreatedDate") val CreatedDate: String?,
-    @ColumnInfo(name = "ModifiedBy") val ModifiedBy: String?,
-    @ColumnInfo(name = "ModifiedDate") val ModifiedDate: String?,
-    @ColumnInfo(name = "Status") val Status: String?
+    @ColumnInfo(name = Constant.SurveyAnswerID) val SurveyAnswerID: Long? = null,
+    @ColumnInfo(name = Constant.SurveyID) var SurveyID: Int,
+    @ColumnInfo(name = Constant.QuestionID) val QuestionID: String?,
+    @ColumnInfo(name = Constant.Answer) val Answer: String?,
+    @ColumnInfo(name = Constant.Image) var Image: String?,
+    @ColumnInfo(name = Constant.CreatedBy) val CreatedBy: String?,
+    @ColumnInfo(name = Constant.CreatedDate) val CreatedDate: String?,
+    @ColumnInfo(name = Constant.ModifiedBy) val ModifiedBy: String?,
+    @ColumnInfo(name = Constant.ModifiedDate) val ModifiedDate: String?,
+    @ColumnInfo(name = Constant.Status) val Status: String?
 
 )
 

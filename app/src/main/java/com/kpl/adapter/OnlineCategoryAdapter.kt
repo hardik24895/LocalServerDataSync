@@ -73,7 +73,7 @@ class OnlineCategoryAdapter(
 
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
-            Log.e("TAG", "onBindViewHolder: Cat Id : " + data.CategoryID.toString())
+         //   Log.e("TAG", "onBindViewHolder: Cat Id : " + data.CategoryID.toString())
             val queAnsArray: ArrayList<Question> = ArrayList()
             data.CategoryID.toString().let { appDatabase?.questionDao()?.getCategoryWiseQuestion(it)?.let { queAnsArray.addAll(it) } }
 

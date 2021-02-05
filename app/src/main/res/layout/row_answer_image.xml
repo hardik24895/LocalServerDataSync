@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_16ssp"
         android:background="@drawable/bg_btn"
+        android:visibility="gone"
         android:fontFamily="@font/clan_ot_book"
         android:padding="@dimen/_8sdp"
         android:text="Upload Image"

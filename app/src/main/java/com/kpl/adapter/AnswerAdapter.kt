@@ -1,12 +1,12 @@
 package com.kpl.adapter
 
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,7 +25,6 @@ import com.kpl.extention.getValue
 import com.kpl.extention.isEmpty
 import com.kpl.utils.Constant
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.row_answer_date_picker.*
 import kotlinx.android.synthetic.main.row_answer_time_picker.*
 import java.text.SimpleDateFormat
@@ -62,7 +61,10 @@ class AnswerAdapter(
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             view =
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_checkbox, parent, false)
-        } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeEditWithImage)) {
+        } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
+                Constant.typeEditWithImage
+            )
+        ) {
             view =
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_edittext, parent, false)
         } else if (type.equals(Constant.typeDatePicker)) {
@@ -84,7 +86,7 @@ class AnswerAdapter(
         val data = list?.get(position)
         holder.bindData(mContext)
 
-        if (type.equals(Constant.typeSigleSelection) ||type.equals(Constant.typeSigleSelectionWithImage)) {
+        if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
             holder.rbOption?.setText(data.toString())
             holder.rbOption?.isChecked = position == lastRadioPosition
 
@@ -112,14 +114,24 @@ class AnswerAdapter(
 //                }, 100)
 //            }
 
-        } else if (type.equals(Constant.typeMutliSelection)||type.equals(Constant.typeMutliSelectionWithImage)) {
+        } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             holder.cbOption?.setText(data.toString())
             holder.cbOption?.setOnClickListener {
-                Log.e("TAG", "onBindViewHolder: 123    " + holder.cbOption!!.isChecked)
+                //   Log.e("TAG", "onBindViewHolder: 123    " + holder.cbOption!!.isChecked)
 
                 AddData(holder.cbOption!!.getText().toString(), holder.cbOption!!.isChecked, false)
             }
-        } else if (type.equals(Constant.typeEdit)||type.equals(Constant.typeEditWithImage)) {
+        } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
+                Constant.typeEditWithImage
+            )
+        ) {
+
+            if (type.equals(Constant.typeNumeric)) {
+                holder.edtOption?.setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED)
+            }else{
+                holder.edtOption?.setInputType(InputType.TYPE_CLASS_TEXT)
+            }
+
             holder.edtOption?.setText(filledAns)
 
             holder.edtOption?.addTextChangedListener(object : TextWatcher {
@@ -214,14 +226,14 @@ class AnswerAdapter(
             val result = appDatabase!!.surveyAnswerDao().checkRecordExist(SurveyId, QueId)
             Handler(mainLooper).post {
                 if (result != null)
-                    if (type.equals(Constant.typeSigleSelection)||type.equals(Constant.typeSigleSelectionWithImage)) {
+                    if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
 
                         if (result.Answer.toString().equals(holder.rbOption?.text.toString())) {
                             lastRadioPosition = position
                             holder.rbOption?.setChecked(true)
                         } else
                             holder.rbOption?.setChecked(false)
-                    } else if (type.equals(Constant.typeMutliSelection)||type.equals(Constant.typeMutliSelectionWithImage)) {
+                    } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
 
                         val strs = result.Answer.toString().split(",").toTypedArray()
                         for (iteam in strs) {
@@ -231,7 +243,10 @@ class AnswerAdapter(
                             }
                         }
 
-                    } else if (type.equals(Constant.typeEdit)||type.equals(Constant.typeEditWithImage)) {
+                    } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
+                            Constant.typeEditWithImage
+                        )
+                    ) {
                         holder.edtOption?.setText(result.Answer?.toString())
                     }
             }
