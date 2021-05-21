@@ -62,7 +62,7 @@ class AnswerAdapter(
 
         appDatabase = AppDatabase.getDatabase(mContext)!!
 
-        if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
+        if (type.equals(Constant.typeDropDown) ) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_spinner, parent, false)
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             view =
@@ -81,7 +81,7 @@ class AnswerAdapter(
                 .inflate(R.layout.row_answer_time_picker, parent, false)
         } else if (type.equals(Constant.typeImageView)) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_image, parent, false)
-        } else if (type.equals(Constant.typeDropDown)) {
+        } else if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_radiobutton, parent, false)
         }
 
@@ -97,7 +97,7 @@ class AnswerAdapter(
         if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
 
 
-            /* holder.rbOption?.setText(data.toString())
+             holder.rbOption?.setText(data.toString())
              holder.rbOption?.isChecked = position == lastRadioPosition
 
              holder.rbOption?.setOnClickListener {
@@ -109,7 +109,7 @@ class AnswerAdapter(
 
                  })
 
-             }*/
+             }
 
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             holder.cbOption?.setText(data.toString())
@@ -329,13 +329,12 @@ class AnswerAdapter(
             Handler(mainLooper).post {
                 if (result != null)
                     if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
-                        for ( i in optionAray.indices){
-                            if (result.Answer.toString().equals(optionAray.get(i))) {
-                                holder.spinner?.setSelection(i)
-                                break
-                            }
-                        }
 
+                        if (result.Answer.toString().equals(holder.rbOption?.text.toString())) {
+                            lastRadioPosition = position
+                            holder.rbOption?.setChecked(true)
+                        } else
+                            holder.rbOption?.setChecked(false)
 
                     } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
 
@@ -353,7 +352,12 @@ class AnswerAdapter(
                     }
 
                     else if (type.equals(Constant.typeDropDown)) {
-
+                        for ( i in optionAray.indices){
+                            if (result.Answer.toString().equals(optionAray.get(i))) {
+                                holder.spinner?.setSelection(i)
+                                break
+                            }
+                        }
                     }
             }
         }).start()
@@ -448,7 +452,7 @@ class AnswerAdapter(
     inner class ItemHolder(override val containerView: View?) :
         RecyclerView.ViewHolder(containerView!!),
         LayoutContainer {
-        // var rbOption: RadioButton? = null
+         var rbOption: RadioButton? = null
         var cbOption: CheckBox? = null
         var edtOption: EditText? = null
         var spinner: SearchableSpinner? = null
@@ -456,6 +460,7 @@ class AnswerAdapter(
 
 
         fun bindData(context: Context) {
+            rbOption = containerView?.findViewById(R.id.rbOption)
             view = containerView?.findViewById(R.id.view)
             spinner = containerView?.findViewById(R.id.spinner)
             cbOption = containerView?.findViewById(R.id.cbOption)

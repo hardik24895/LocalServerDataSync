@@ -157,20 +157,6 @@ class SettingFragment : BaseFragment() {
         }
     }
 
-    //define 2 Broadcast Receivers
-    inner class DataReceiver : BroadcastReceiver() {
-        override fun onReceive(
-            context: Context,
-            intent: Intent
-        ) {
-            val totalMetres = intent.getStringExtra("metre")
-            val currentSpeed = intent.getStringExtra("currentSpeed")
-            val avgSpeed = intent.getStringExtra("avgSpeed")
-            val steps = intent.getStringExtra("steps")
-            // tvCurrentSpeed.setText(currentSpeed);
-            // tvAvgSpeed.setText(avgSpeed);
-        }
-    }
 
     fun clickEvent() {
         relayNotification.setOnClickListener {

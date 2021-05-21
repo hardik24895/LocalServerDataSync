@@ -53,8 +53,7 @@ class OnlineAnswerAdapter(
         appDatabase = AppDatabase.getDatabase(mContext)!!
 
         if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
-            view = LayoutInflater.from(mContext)
-                .inflate(R.layout.row_spinner, parent, false)
+            view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_radiobutton_disable, parent, false)
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_checkbox_disable, parent, false)
         } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric)|| type.equals(Constant.typeEditWithImage) || type.equals(Constant.typeDatePicker) || type.equals(Constant.typeTimePicker)) {
@@ -62,7 +61,7 @@ class OnlineAnswerAdapter(
         }else if (type.equals(Constant.typeImageView)) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_image, parent, false)
         } else if (type.equals(Constant.typeDropDown)) {
-
+            view = LayoutInflater.from(mContext).inflate(R.layout.row_spinner, parent, false)
         }
 
         return ItemHolder(view)
@@ -75,8 +74,11 @@ class OnlineAnswerAdapter(
 
 
         if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
-         //   holder.rbOption?.setText(data.toString())
-
+            holder.rbOption?.setText(data.toString())
+        } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
+            holder.cbOption?.setText(data.toString())
+        }
+        else if (type.equals(Constant.typeDropDown)) {
             optionAray.add(mContext.getString(R.string.select_answer))
             var list = que.Questionoption?.split(",")
             list?.let { optionAray.addAll(it) }
@@ -116,12 +118,6 @@ class OnlineAnswerAdapter(
 
             holder.spinner?.isEnabled = false
             holder.spinner?.isEnabled = false
-
-        } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
-            holder.cbOption?.setText(data.toString())
-        }
-        else if (type.equals(Constant.typeDropDown)) {
-
         }
 
         val mainLooper = Looper.getMainLooper()
@@ -140,12 +136,13 @@ class OnlineAnswerAdapter(
             Handler(mainLooper).post {
                 if (position != -1) {
                     if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
-                        for ( i in optionAray.indices){
-                            if (surveyAnswerArray.get(position).answer.toString().equals(optionAray.get(i))) {
-                                holder.spinner?.setSelection(i)
-                                break
-                            }
-                        }
+
+                        if (surveyAnswerArray.get(position).answer.toString()
+                                .equals(holder.rbOption?.text.toString())
+                        ) {
+                            holder.rbOption?.setChecked(true)
+                        } else
+                            holder.rbOption?.setChecked(false)
                     } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
 
                         val strs = surveyAnswerArray.get(position).answer.toString().split(",")
@@ -164,6 +161,12 @@ class OnlineAnswerAdapter(
                         holder.edtOption?.setText(surveyAnswerArray.get(position).answer?.toString())
                     }
                     else if (type.equals(Constant.typeDropDown)) {
+                        for ( i in optionAray.indices){
+                            if (surveyAnswerArray.get(position).answer.toString().equals(optionAray.get(i))) {
+                                holder.spinner?.setSelection(i)
+                                break
+                            }
+                        }
 
                     }
                 }
@@ -176,7 +179,7 @@ class OnlineAnswerAdapter(
     inner class ItemHolder(override val containerView: View?) :
         RecyclerView.ViewHolder(containerView!!),
         LayoutContainer {
-       // var rbOption: RadioButton? = null
+        var rbOption: RadioButton? = null
         var cbOption: CheckBox? = null
         var edtOption: EditText? = null
         var spinner: SearchableSpinner? = null
@@ -184,6 +187,7 @@ class OnlineAnswerAdapter(
 
 
         fun bindData(context: Context) {
+            rbOption = containerView?.findViewById(R.id.rbOption)
             view = containerView?.findViewById(R.id.view)
             spinner = containerView?.findViewById(R.id.spinner)
             cbOption = containerView?.findViewById(R.id.cbOption)

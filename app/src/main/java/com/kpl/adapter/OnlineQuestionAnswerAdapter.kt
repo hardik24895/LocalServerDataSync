@@ -59,7 +59,7 @@ class OnlineQuestionAnswerAdapter(
         holder.txtQuestion?.setText(data.Question)
 
         var stringArray = data.Questionoption?.split(",")
-        if (data.Type.equals(Constant.typeSigleSelection) || data.Type.equals(Constant.typeSigleSelectionWithImage)){
+        if (data.Type.equals(Constant.typeDropDown) ){
             stringArray = listOf("")
         }
         val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
