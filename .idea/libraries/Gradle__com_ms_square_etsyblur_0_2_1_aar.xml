@@ -1,15 +1,15 @@
 <component name="libraryTable">
   <library name="Gradle: com.ms-square:etsyblur:0.2.1@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0b4e7a657b1f9b7977b0a3016de5eeba/jetified-etsyblur-0.2.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0b4e7a657b1f9b7977b0a3016de5eeba/jetified-etsyblur-0.2.1/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/0b4e7a657b1f9b7977b0a3016de5eeba/jetified-etsyblur-0.2.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/Downloads/gradle-7.0-all/caches/transforms-2/files-2.1/55ff89d03c3ee7a2e6bf7130db776f3f/jetified-etsyblur-0.2.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/Downloads/gradle-7.0-all/caches/transforms-2/files-2.1/55ff89d03c3ee7a2e6bf7130db776f3f/jetified-etsyblur-0.2.1/res" />
+      <root url="file://$USER_HOME$/Downloads/gradle-7.0-all/caches/transforms-2/files-2.1/55ff89d03c3ee7a2e6bf7130db776f3f/jetified-etsyblur-0.2.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/3284f8a2389b4f71021595d1bfb49dbd20223cdf/etsyblur-0.2.1-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/gradle-7.0-all/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/3284f8a2389b4f71021595d1bfb49dbd20223cdf/etsyblur-0.2.1-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/81ea6989221863945c04eedc491042151388361a/etsyblur-0.2.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/gradle-7.0-all/caches/modules-2/files-2.1/com.ms-square/etsyblur/0.2.1/81ea6989221863945c04eedc491042151388361a/etsyblur-0.2.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

@@ -13,9 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.RadioButton
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.ikovac.timepickerwithseconds.MyTimePickerDialog
 import com.kpl.R
@@ -30,8 +28,12 @@ import com.kpl.widgets.MinMaxFilter
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_answer_date_picker.*
 import kotlinx.android.synthetic.main.row_answer_time_picker.*
+import tech.hibk.searchablespinnerlibrary.SearchableDialog
+import tech.hibk.searchablespinnerlibrary.SearchableItem
+import tech.hibk.searchablespinnerlibrary.SearchableSpinner
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AnswerAdapter(
@@ -48,7 +50,9 @@ class AnswerAdapter(
     val myCalendar: Calendar = Calendar.getInstance()
 ) : RecyclerView.Adapter<AnswerAdapter.ItemHolder>() {
     private var lastRadioPosition: Int = -1
-
+    var optionAray: ArrayList<String> = ArrayList()
+    var adapterOption: ArrayAdapter<String>? = null
+    var itens: List<SearchableItem>? = null
     override fun getItemCount(): Int {
         return list?.size!!
     }
@@ -59,14 +63,14 @@ class AnswerAdapter(
         appDatabase = AppDatabase.getDatabase(mContext)!!
 
         if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
-            view = LayoutInflater.from(mContext)
-                .inflate(R.layout.row_answer_radiobutton, parent, false)
+            view = LayoutInflater.from(mContext).inflate(R.layout.row_spinner, parent, false)
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             view =
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_checkbox, parent, false)
         } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
                 Constant.typeEditWithImage
-            )) {
+            )
+        ) {
             view =
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_edittext, parent, false)
         } else if (type.equals(Constant.typeDatePicker)) {
@@ -89,19 +93,89 @@ class AnswerAdapter(
         holder.bindData(mContext)
 
         if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
-            holder.rbOption?.setText(data.toString())
-            holder.rbOption?.isChecked = position == lastRadioPosition
+            optionAray.add(mContext.getString(R.string.select_answer))
+            var list = dataQue.Questionoption?.split(",")
+            list?.let { optionAray.addAll(it) }
+            var myList: MutableList<SearchableItem> = mutableListOf()
 
-            holder.rbOption?.setOnClickListener {
-                AddData(holder.rbOption!!.getText().toString(), true, true)
-                recview.post(Runnable {
-                    notifyItemChanged(lastRadioPosition)
-                    notifyItemChanged(position)
-                    lastRadioPosition = position
 
-                })
+            for (items in optionAray.indices) {
+
+                if(items==0){
+                    myList.add(
+                        SearchableItem(
+                            0,
+                            mContext.getString(R.string.select_answer)
+                        )
+                    )
+                }else{
+                    myList.add(
+                        SearchableItem(
+                            items.toLong(),
+                            optionAray.get(items )
+                        )
+                    )
+                }
+
 
             }
+
+
+            itens = myList
+
+            adapterOption = ArrayAdapter(
+                mContext,
+                R.layout.custom_spinner,
+                optionAray
+            )
+            holder.spinner?.setAdapter(adapterOption)
+
+
+
+            holder.view?.setOnClickListener {
+
+                SearchableDialog(mContext,
+                    itens!!,
+                    mContext.getString(R.string.select_answer),
+                    { item, _ ->
+                        holder.spinner?.setSelection(item.id.toInt())
+                    }).show()
+            }
+
+
+
+            holder.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (position != -1 && optionAray.size > position) {
+                        AddData(optionAray.get(position).toString(), true, true)
+                    }
+
+                }
+
+            }
+
+
+            /* holder.rbOption?.setText(data.toString())
+             holder.rbOption?.isChecked = position == lastRadioPosition
+
+             holder.rbOption?.setOnClickListener {
+                 AddData(holder.rbOption!!.getText().toString(), true, true)
+                 recview.post(Runnable {
+                     notifyItemChanged(lastRadioPosition)
+                     notifyItemChanged(position)
+                     lastRadioPosition = position
+
+                 })
+
+             }*/
 
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             holder.cbOption?.setText(data.toString())
@@ -111,18 +185,26 @@ class AnswerAdapter(
             }
         } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
                 Constant.typeEditWithImage
-            )) {
+            )
+        ) {
 
             if (type.equals(Constant.typeNumeric)) {
 
-                if(dataQue.DataType.equals("Decimal"))
-                {
+                if (dataQue.DataType.equals("Decimal")) {
                     holder.edtOption?.setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED)
 
-                    if(!dataQue.Max!!.toString().equals(""))
-                    holder.edtOption?.setFilters(arrayOf<InputFilter>(DigitsInputFilter(10,2,dataQue.Max!!.toDouble())))
+                    if (!dataQue.Max!!.toString().equals(""))
+                        holder.edtOption?.setFilters(
+                            arrayOf<InputFilter>(
+                                DigitsInputFilter(
+                                    10,
+                                    2,
+                                    dataQue.Max!!.toDouble()
+                                )
+                            )
+                        )
 
-                }else{
+                } else {
                     if (!dataQue.Max!!.toString().equals(""))
                         holder.edtOption?.setFilters(
                             arrayOf<InputFilter>(
@@ -135,7 +217,7 @@ class AnswerAdapter(
                     holder.edtOption?.setInputType(InputType.TYPE_CLASS_NUMBER)
                 }
 
-            }else{
+            } else {
                 holder.edtOption?.setInputType(InputType.TYPE_CLASS_TEXT)
             }
 
@@ -192,7 +274,11 @@ class AnswerAdapter(
                     mContext,
                     { view, hourOfDay, minute, seconds ->
                         holder.edtTimeOption.setText(
-                            String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds))
+                            String.format("%02d", hourOfDay) + ":" + String.format(
+                                "%02d",
+                                minute
+                            ) + ":" + String.format("%02d", seconds)
+                        )
                     },
                     hours,
                     min,
@@ -239,12 +325,14 @@ class AnswerAdapter(
             Handler(mainLooper).post {
                 if (result != null)
                     if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
+                        for ( i in optionAray.indices){
+                            if (result.Answer.toString().equals(optionAray.get(i))) {
+                                holder.spinner?.setSelection(i)
+                                break
+                            }
+                        }
 
-                        if (result.Answer.toString().equals(holder.rbOption?.text.toString())) {
-                            lastRadioPosition = position
-                            holder.rbOption?.setChecked(true)
-                        } else
-                            holder.rbOption?.setChecked(false)
+
                     } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
 
                         val strs = result.Answer.toString().split(",").toTypedArray()
@@ -264,7 +352,6 @@ class AnswerAdapter(
             }
         }).start()
     }
-
 
 
     private fun updateLabel(editText: EditText, myCalendar: Calendar) {
@@ -355,13 +442,16 @@ class AnswerAdapter(
     inner class ItemHolder(override val containerView: View?) :
         RecyclerView.ViewHolder(containerView!!),
         LayoutContainer {
-        var rbOption: RadioButton? = null
+        // var rbOption: RadioButton? = null
         var cbOption: CheckBox? = null
         var edtOption: EditText? = null
+        var spinner: SearchableSpinner? = null
+        var view: View? = null
 
 
         fun bindData(context: Context) {
-            rbOption = containerView?.findViewById(R.id.rbOption)
+            view = containerView?.findViewById(R.id.view)
+            spinner = containerView?.findViewById(R.id.spinner)
             cbOption = containerView?.findViewById(R.id.cbOption)
             edtOption = containerView?.findViewById(R.id.edtOption)
 

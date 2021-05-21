@@ -482,9 +482,7 @@ class QuestionAnswerActivity : BaseActivity() {
 
 
             for (list in projectArray!!.indices) {
-                AddressArray?.add(
-                    projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString()
-                )
+                AddressArray?.add(projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString())
             }
 
             var myList: MutableList<SearchableItem> = mutableListOf()
