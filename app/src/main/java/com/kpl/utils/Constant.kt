@@ -51,6 +51,10 @@ object Constant {
     const val Question = "Question"
     const val Type = "Type"
     const val Questionoption = "Questionoption"
+    const val Min = "Min"
+    const val Max = "Max"
+    const val Length = "Length"
+    const val DataType = "DataType"
 
     //Table Project
     const val ProjectID = "ProjectID"

@@ -3,10 +3,8 @@ package com.kpl.activity
 
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.os.AsyncTask
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.net.Uri
+import android.os.*
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -20,6 +18,7 @@ import com.kpl.R
 import com.kpl.adapter.CategoryAdapter
 import com.kpl.adapter.QuestionAnswerAdapter
 import com.kpl.database.*
+import com.kpl.utils.Constant
 import com.kpl.utils.NoScrollLinearLayoutManager
 import com.kpl.utils.SessionManager
 import com.yalantis.ucrop.UCrop
@@ -27,6 +26,8 @@ import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 import tech.hibk.searchablespinnerlibrary.SearchableDialog
 import tech.hibk.searchablespinnerlibrary.SearchableItem
+import java.io.*
+import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -361,34 +362,84 @@ class QuestionAnswerActivity : BaseActivity() {
         when (resultCode) {
             RESULT_OK -> {
 
-                var resultUri = UCrop.getOutput(data!!)
-                var obj = QuestionAnswerAdapter.MyImageSelected()
-                obj.onImageItemCilck(holder, resultUri,surveyAnswer!!,this)
+                if (data != null) {
+                    var resultUri = UCrop.getOutput(data!!)
+                    var obj = QuestionAnswerAdapter.MyImageSelected()
+                    obj.onImageItemCilck(holder, resultUri, surveyAnswer!!, this)
+                   if(resultUri!= null)
+                     savefile(resultUri!!)
 
-
-                getProject(this@QuestionAnswerActivity,surveyAnswer!!,resultUri.toString()).execute()
-
-
+                }
             }
 
             RESULT_CANCELED -> {
             }
         }
     }
+    fun savefile(sourceuri: Uri) {
+        val sourceFilename: String = sourceuri.path.toString()
+        val direct =
+            File(Environment.getExternalStorageDirectory().toString() + "/.kpl")
+        if (!direct.exists()) {
+            val wallpaperDirectory = File(
+                Environment.getExternalStorageDirectory().toString() + "/.kpl/"
+            )
+            wallpaperDirectory.mkdirs()
+        }
+        val destinationUri = Uri.fromFile(
+            File(Environment.getExternalStorageDirectory().toString() + "/.kpl/", "IMG_${System.currentTimeMillis()}_user_${session?.getDataByKey(SessionManager.SPUserID)}_Que_${Constant.SelectedImagePosition}.jpg")
+        )
+        val destinationFilename = destinationUri.path
+        var bis: BufferedInputStream? = null
+        var bos: BufferedOutputStream? = null
+        try {
+            bis = BufferedInputStream(FileInputStream(sourceFilename))
+            bos = BufferedOutputStream(FileOutputStream(destinationFilename, false))
+            val buf = ByteArray(1024)
+            bis.read(buf)
+            do {
+                bos.write(buf)
+            } while (bis.read(buf) !== -1)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                if (bis != null) bis.close()
+                if (bos != null) bos.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
 
-    inner class getProject(var context: QuestionAnswerActivity, var mySurveyAnswer: SurveyAnswer, var result: String) : AsyncTask<Void, Void, Boolean>() {
+        getProject(
+            this@QuestionAnswerActivity,
+            surveyAnswer!!, "file://"+destinationFilename.toString()
+        ).execute()
+    }
+    inner class getProject(
+        var context: QuestionAnswerActivity,
+        var mySurveyAnswer: SurveyAnswer,
+        var result: String
+    ) : AsyncTask<Void, Void, Boolean>() {
         override fun doInBackground(vararg params: Void?): Boolean {
 
 
             var existAns: SurveyAnswer? = null
             Companion.surveyAnswer!!.Image = result.toString()
-            existAns = appDatabase?.surveyAnswerDao()?.checkRecordExist(Companion.surveyAnswer!!.SurveyID, Companion.surveyAnswer!!.QuestionID.toString())
+            existAns = appDatabase?.surveyAnswerDao()?.checkRecordExist(
+                Companion.surveyAnswer!!.SurveyID,
+                Companion.surveyAnswer!!.QuestionID.toString()
+            )
 
             if (existAns == null) {
                 appDatabase!!.surveyAnswerDao().insert(Companion.surveyAnswer!!)
 
             } else {
-                appDatabase!!.surveyAnswerDao().updateImage(Companion.surveyAnswer!!.SurveyID, Companion.surveyAnswer!!.QuestionID.toString(), result.toString())
+                appDatabase!!.surveyAnswerDao().updateImage(
+                    Companion.surveyAnswer!!.SurveyID,
+                    Companion.surveyAnswer!!.QuestionID.toString(),
+                    result.toString()
+                )
             }
 
 

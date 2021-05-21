@@ -6,6 +6,7 @@ import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
@@ -24,6 +25,8 @@ import com.kpl.database.SurveyAnswer
 import com.kpl.extention.getValue
 import com.kpl.extention.isEmpty
 import com.kpl.utils.Constant
+import com.kpl.widgets.DigitsInputFilter
+import com.kpl.widgets.MinMaxFilter
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_answer_date_picker.*
 import kotlinx.android.synthetic.main.row_answer_time_picker.*
@@ -36,7 +39,7 @@ class AnswerAdapter(
     var list: List<String>? = mutableListOf(),
     var type: String,
     var QueId: String,
-    var data: Question,
+    var dataQue: Question,
     var SurveyId: Int,
     var recview: RecyclerView,
     var appDatabase: AppDatabase? = null,
@@ -63,8 +66,7 @@ class AnswerAdapter(
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_checkbox, parent, false)
         } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
                 Constant.typeEditWithImage
-            )
-        ) {
+            )) {
             view =
                 LayoutInflater.from(mContext).inflate(R.layout.row_answer_edittext, parent, false)
         } else if (type.equals(Constant.typeDatePicker)) {
@@ -101,33 +103,38 @@ class AnswerAdapter(
 
             }
 
-//
-//            holder.rbOption?.setOnClickListener {
-//
-//                val copyOfLastCheckedPosition: Int = lastRadioPosition
-//                lastRadioPosition = position
-//
-//                Handler().postDelayed({
-//                    notifyDataSetChanged()
-//                    //   notifyItemChanged(copyOfLastCheckedPosition)
-//                    //   notifyItemChanged(lastRadioPosition)
-//                }, 100)
-//            }
-
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             holder.cbOption?.setText(data.toString())
             holder.cbOption?.setOnClickListener {
-                //   Log.e("TAG", "onBindViewHolder: 123    " + holder.cbOption!!.isChecked)
 
                 AddData(holder.cbOption!!.getText().toString(), holder.cbOption!!.isChecked, false)
             }
         } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
                 Constant.typeEditWithImage
-            )
-        ) {
+            )) {
 
             if (type.equals(Constant.typeNumeric)) {
-                holder.edtOption?.setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED)
+
+                if(dataQue.DataType.equals("Decimal"))
+                {
+                    holder.edtOption?.setInputType(InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED)
+
+                    if(!dataQue.Max!!.toString().equals(""))
+                    holder.edtOption?.setFilters(arrayOf<InputFilter>(DigitsInputFilter(10,2,dataQue.Max!!.toDouble())))
+
+                }else{
+                    if (!dataQue.Max!!.toString().equals(""))
+                        holder.edtOption?.setFilters(
+                            arrayOf<InputFilter>(
+                                MinMaxFilter(
+                                    0,
+                                    dataQue.Max!!.toInt()
+                                )
+                            )
+                        )
+                    holder.edtOption?.setInputType(InputType.TYPE_CLASS_NUMBER)
+                }
+
             }else{
                 holder.edtOption?.setInputType(InputType.TYPE_CLASS_TEXT)
             }
@@ -136,6 +143,15 @@ class AnswerAdapter(
 
             holder.edtOption?.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
+
+//                    if (type.equals(Constant.typeNumeric)) {
+//                        if (dataQue.DataType.equals("Decimal")) {
+//
+//
+//                        } else {
+//                            if()
+//                        }
+//                    } else
                     AddData(s.toString(), true, true)
                 }
 
@@ -145,14 +161,13 @@ class AnswerAdapter(
                     count: Int,
                     after: Int
                 ) {
+
+//                    val format = DecimalFormat("##.##")
+//                    val formatted: String = format.format(s)
+//                    holder.edtOption?.setText(formatted)
                 }
 
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int
-                ) {
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 }
             })
         } else if (type.equals(Constant.typeTimePicker)) {
@@ -177,10 +192,7 @@ class AnswerAdapter(
                     mContext,
                     { view, hourOfDay, minute, seconds ->
                         holder.edtTimeOption.setText(
-                            String.format("%02d", hourOfDay) +
-                                    ":" + String.format("%02d", minute) +
-                                    ":" + String.format("%02d", seconds)
-                        )
+                            String.format("%02d", hourOfDay) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconds))
                     },
                     hours,
                     min,
@@ -252,6 +264,7 @@ class AnswerAdapter(
             }
         }).start()
     }
+
 
 
     private fun updateLabel(editText: EditText, myCalendar: Calendar) {

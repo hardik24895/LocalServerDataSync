@@ -1,4 +1,4 @@
-package com.sprinters.utils
+package com.kpl.utils
 
 import androidx.viewpager.widget.ViewPager
 

@@ -15,6 +15,12 @@ data class Question(
     @ColumnInfo(name = Constant.Question) val Question: String?,
     @ColumnInfo(name = Constant.CategoryID) val CategoryID: String?,
     @ColumnInfo(name = Constant.Questionoption) val Questionoption: String?,
+
+    @ColumnInfo(name = Constant.Min) val Min: String?,
+    @ColumnInfo(name = Constant.Max) val Max: String?,
+    @ColumnInfo(name = Constant.Length) val Length: String?,
+    @ColumnInfo(name = Constant.DataType) val DataType: String?,
+
     @ColumnInfo(name = Constant.Type) val Type: String?,
     @ColumnInfo(name = Constant.CreatedBy) val CreatedBy: String?,
     @ColumnInfo(name = Constant.CreatedDate) val CreatedDate: String?,

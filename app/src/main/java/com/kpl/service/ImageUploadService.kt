@@ -128,9 +128,6 @@ class ImageUploadService : Service() {
         val imageName: RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), file.name)
         val methodName: RequestBody =
             RequestBody.create("text/plain".toMediaTypeOrNull(), "addSurveyImage")
-
-
-
         Networking
             .with(this)
             .getServices()

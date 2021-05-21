@@ -35,7 +35,8 @@ class Splashctivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         getWindow().setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        );
         setContentView(R.layout.activity_splashctivity)
 
         employeeArray = ArrayList()
@@ -50,7 +51,7 @@ class Splashctivity : BaseActivity() {
             Handler().postDelayed(Runnable {
                 goToActivity<HomeActivity>()
                 finish()
-            },2500)
+            }, 2500)
 
         } else {
             getMasterDataFromServer()
@@ -137,6 +138,10 @@ class Splashctivity : BaseActivity() {
                                         question.question.toString(),
                                         question.categoryID.toString(),
                                         question.questionoption.toString(),
+                                        question.min.toString(),
+                                        question.max.toString(),
+                                        question.length.toString(),
+                                        question.dataType.toString(),
                                         question.type.toString(),
                                         question.createdBy.toString(),
                                         question.createdDate.toString(),
@@ -169,12 +174,14 @@ class Splashctivity : BaseActivity() {
                         Thread(Runnable {
                             employeeArray?.let { appDatabase!!.employeeDao().insertAllUser(it) }
                             projectArray?.let { appDatabase!!.projectDao().insertAllProject(it) }
-                            quesitionArray?.let { appDatabase!!.questionDao().insertAllQuestion(it) }
+                            quesitionArray?.let {
+                                appDatabase!!.questionDao().insertAllQuestion(it)
+                            }
                             categoryArray?.let { appDatabase!!.categoryDao().insertAllCategory(it) }
 
                             val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
                             val currentDate = sdf.format(Date())
-                            session.storeDataByKey(SessionManager.SPSyncData,currentDate)
+                            session.storeDataByKey(SessionManager.SPSyncData, currentDate)
 
                             Handler(mainLooper).post {
 

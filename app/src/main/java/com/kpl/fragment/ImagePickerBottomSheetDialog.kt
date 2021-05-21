@@ -1,4 +1,4 @@
-package com.sprinters.ui.dialog
+package com.kpl.ui.dialog
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.kpl.R
-import com.sprinters.utils.picker.RxImagePicker
-import com.sprinters.utils.picker.Sources
+import com.kpl.utils.picker.RxImagePicker
+import com.kpl.utils.picker.Sources
 import kotlinx.android.synthetic.main.common_dialog_image_picker.*
 
 class ImagePickerBottomSheetDialog(context: Context) : BaseBottomSheetDialogFragment(),
@@ -48,10 +48,10 @@ class ImagePickerBottomSheetDialog(context: Context) : BaseBottomSheetDialogFrag
         preventDoubleClick(view)
         dismiss()
         when (view.id) {
-           R.id.tvCamera -> {
+            R.id.tvCamera -> {
                 pickImageFromSource(Sources.CAMERA)
             }
-           R.id.tvGallery -> {
+            R.id.tvGallery -> {
                 pickImageFromSource(Sources.GALLERY)
             }
         }

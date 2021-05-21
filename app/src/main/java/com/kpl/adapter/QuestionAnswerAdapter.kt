@@ -19,13 +19,14 @@ import com.kpl.activity.QuestionAnswerActivity
 import com.kpl.database.AppDatabase
 import com.kpl.database.Question
 import com.kpl.database.SurveyAnswer
+import com.kpl.ui.dialog.ImagePickerBottomSheetDialog
+import com.kpl.utils.Constant
 import com.kpl.utils.Constant.SelectedImagePosition
 import com.kpl.utils.Constant.typeEditWithImage
 import com.kpl.utils.Constant.typeImageView
 import com.kpl.utils.Constant.typeMutliSelectionWithImage
 import com.kpl.utils.Constant.typeSigleSelectionWithImage
 import com.kpl.utils.SessionManager
-import com.sprinters.ui.dialog.ImagePickerBottomSheetDialog
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.extensions.LayoutContainer
 import java.io.File
@@ -72,12 +73,10 @@ class QuestionAnswerAdapter(
 
         val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
         holder.rvAns?.layoutManager = layoutManager
-        var adapter = AnswerAdapter(
-            mContext, stringArray, data.Type.toString(), data.QuestionID.toString(), data, SurveyId,
-            holder.rvAns!!
-        )
+        var adapter = AnswerAdapter(mContext, stringArray, data.Type.toString(), data.QuestionID.toString(), data, SurveyId, holder.rvAns!!)
         holder.rvAns?.adapter = adapter
-        if (data.Type.equals(typeEditWithImage) || data.Type.equals(typeSigleSelectionWithImage) || data.Type.equals(typeMutliSelectionWithImage) || data.Type.equals(typeImageView)
+        if (data.Type.equals(typeEditWithImage) || data.Type.equals(typeSigleSelectionWithImage)
+            || data.Type.equals(typeMutliSelectionWithImage) || data.Type.equals(typeImageView)
         ) {
             holder.imgUrl?.setVisibility(View.VISIBLE)
 
@@ -118,31 +117,39 @@ class QuestionAnswerAdapter(
             val currentDate = sdf.format(Date())
 
 
-            SelectedImagePosition = position
+
+            SelectedImagePosition = data.QuestionID!!
             val dialog = ImagePickerBottomSheetDialog
                 .newInstance(mContext,
                     object : ImagePickerBottomSheetDialog.OnModeSelected {
                         override fun onMediaPicked(uri: Uri) {
 
+//
+//                            val direct =
+//                                File(Environment.getExternalStorageDirectory().toString() + "/.kpl")
+//                            if (!direct.exists()) {
+//                                val wallpaperDirectory = File(
+//                                    Environment.getExternalStorageDirectory().toString() + "/.kpl/"
+//                                )
+//                                wallpaperDirectory.mkdirs()
+//                            }
+//                            val destinationUri = Uri.fromFile(
+//                                File(
+//                                    Environment.getExternalStorageDirectory().toString() + "/.kpl/",
+//                                    "IMG_${System.currentTimeMillis()}_user_${
+//                                        sessionManager?.getDataByKey(SessionManager.SPUserID)
+//                                    }_Que_${data.QuestionID.toString()}.jpg"
+//                                )
+//                            )
 
-                            val direct =
-                                File(Environment.getExternalStorageDirectory().toString() + "/.kpl")
-
-                            if (!direct.exists()) {
-                                val wallpaperDirectory = File(
-                                    Environment.getExternalStorageDirectory().toString() + "/.kpl/"
-                                )
-                                wallpaperDirectory.mkdirs()
-                            }
 
                             val destinationUri = Uri.fromFile(
                                 File(
-                                    Environment.getExternalStorageDirectory().toString() + "/.kpl/",
-                                    "IMG_${System.currentTimeMillis()}_user_${
-                                        sessionManager?.getDataByKey(SessionManager.SPUserID)
-                                    }_Que_${data.QuestionID.toString()}.jpg"
+                                    (mContext as QuestionAnswerActivity).cacheDir,
+                                    "IMG_" + System.currentTimeMillis()
                                 )
                             )
+                            Log.d("TAG", "onMediaPicked: "+destinationUri)
                             UCrop.of(uri, destinationUri).withAspectRatio(1f, 1f)
                                 .start(mContext as QuestionAnswerActivity)
                         }
@@ -221,11 +228,9 @@ class QuestionAnswerAdapter(
             mContext: Context
         ) {
 
-
             //  var appDatabase = AppDatabase.getDatabase(mContext)!!
 
             holder?.imgUrl?.setImageURI(bitmap)
-
 
         }
 

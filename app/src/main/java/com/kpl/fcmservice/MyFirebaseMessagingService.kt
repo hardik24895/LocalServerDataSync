@@ -1,4 +1,4 @@
-package com.sprinters.ui.service
+package com.kpl.ui.service
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

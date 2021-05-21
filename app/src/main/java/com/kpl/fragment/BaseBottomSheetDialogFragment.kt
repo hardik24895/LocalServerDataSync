@@ -1,4 +1,4 @@
-package com.sprinters.ui.dialog
+package com.kpl.ui.dialog
 
 import androidx.annotation.NonNull
 import androidx.fragment.app.FragmentManager

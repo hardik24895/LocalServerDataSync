@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.kpl.utils.Constant
-import com.kpl.utils.Constant.SurveyAnswerID
 
 @Dao
 interface SurveyAnswerDao {

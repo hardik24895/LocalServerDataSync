@@ -7,22 +7,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import android.widget.TextView
-import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SnapHelper
 import com.kpl.R
-import com.kpl.activity.LoginActivity
 import com.kpl.database.AppDatabase
 import com.kpl.database.Category
 import com.kpl.database.Question
-import com.kpl.interfaces.goToActivity
+import com.kpl.extention.invisible
+import com.kpl.extention.visible
 import com.kpl.utils.NoScrollLinearLayoutManager
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.row_category.*
 
 
@@ -62,26 +57,37 @@ class CategoryAdapter(
         //if (data.ParentID == 0) {
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
-          //  Log.e("TAG", "onBindViewHolder: Cat Id : " + data.CategoryID.toString())
+            //  Log.e("TAG", "onBindViewHolder: Cat Id : " + data.CategoryID.toString())
             val queAnsArray: ArrayList<Question> = ArrayList()
-            data.CategoryID.toString().let { appDatabase?.questionDao()?.getCategoryWiseQuestion(it)?.let { queAnsArray.addAll(it) } }
+            data.CategoryID.toString().let {
+                appDatabase?.questionDao()?.getCategoryWiseQuestion(it)
+                    ?.let { queAnsArray.addAll(it) }
+            }
+
 
             var categoryArray: ArrayList<Category>? = ArrayList()
-            data.CategoryID?.let { appDatabase?.categoryDao()?.getSubCategory(it)?.let { categoryArray?.addAll(it) } }
+            data.CategoryID?.let {
+                appDatabase?.categoryDao()?.getSubCategory(it)?.let { categoryArray?.addAll(it) }
+            }
 
             Handler(mainLooper).post {
-               val layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
-               holder.rvQue?.layoutManager = layoutManager
-               var adapter = QuestionAnswerAdapter(mContext, queAnsArray, SurveyId)
-               holder.rvQue?.adapter = adapter
+                val layoutManager =
+                    LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+                holder.rvQue?.layoutManager = layoutManager
+                var adapter = QuestionAnswerAdapter(mContext, queAnsArray, SurveyId)
+                holder.rvQue?.adapter = adapter
 
 
                 if (categoryArray!!.size > 0) {
-                   val layoutManager1 = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
-                   holder.rvCat?.layoutManager = layoutManager1
-                   var adapter1 = CategoryAdapter(mContext, categoryArray, SurveyId)
-                   holder.rvCat?.adapter = adapter1
+                    holder.rvCat.visible()
+                    val layoutManager1 =
+                        LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+                    holder.rvCat?.layoutManager = layoutManager1
+                    var adapter1 = CategoryAdapter(mContext, categoryArray, SurveyId)
+                    holder.rvCat?.adapter = adapter1
 
+                } else {
+                    holder.rvCat.invisible()
                 }
             }
         }).start()
@@ -98,12 +104,10 @@ class CategoryAdapter(
         var rvQue: RecyclerView? = null
 
 
-
         fun bindData(context: Context) {
             txtNum = containerView.findViewById(R.id.txtNum)
             txtQuestion = containerView.findViewById(R.id.txtQuestion)
             rvQue = containerView.findViewById(R.id.rvQue)
-
 
 
         }
