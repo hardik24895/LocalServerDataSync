@@ -81,6 +81,8 @@ class AnswerAdapter(
                 .inflate(R.layout.row_answer_time_picker, parent, false)
         } else if (type.equals(Constant.typeImageView)) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_image, parent, false)
+        } else if (type.equals(Constant.typeDropDown)) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_radiobutton, parent, false)
         }
 
         return ItemHolder(view)
@@ -93,74 +95,6 @@ class AnswerAdapter(
         holder.bindData(mContext)
 
         if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
-            optionAray.add(mContext.getString(R.string.select_answer))
-            var list = dataQue.Questionoption?.split(",")
-            list?.let { optionAray.addAll(it) }
-            var myList: MutableList<SearchableItem> = mutableListOf()
-
-
-            for (items in optionAray.indices) {
-
-                if(items==0){
-                    myList.add(
-                        SearchableItem(
-                            0,
-                            mContext.getString(R.string.select_answer)
-                        )
-                    )
-                }else{
-                    myList.add(
-                        SearchableItem(
-                            items.toLong(),
-                            optionAray.get(items )
-                        )
-                    )
-                }
-
-
-            }
-
-
-            itens = myList
-
-            adapterOption = ArrayAdapter(
-                mContext,
-                R.layout.custom_spinner,
-                optionAray
-            )
-            holder.spinner?.setAdapter(adapterOption)
-
-
-
-            holder.view?.setOnClickListener {
-
-                SearchableDialog(mContext,
-                    itens!!,
-                    mContext.getString(R.string.select_answer),
-                    { item, _ ->
-                        holder.spinner?.setSelection(item.id.toInt())
-                    }).show()
-            }
-
-
-
-            holder.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    if (position != -1 && optionAray.size > position) {
-                        AddData(optionAray.get(position).toString(), true, true)
-                    }
-
-                }
-
-            }
 
 
             /* holder.rbOption?.setText(data.toString())
@@ -315,6 +249,76 @@ class AnswerAdapter(
 
             }
 
+        } else if (type.equals(Constant.typeDropDown)) {
+            optionAray.add(mContext.getString(R.string.select_answer))
+            var list = dataQue.Questionoption?.split(",")
+            list?.let { optionAray.addAll(it) }
+            var myList: MutableList<SearchableItem> = mutableListOf()
+
+
+            for (items in optionAray.indices) {
+
+                if(items==0){
+                    myList.add(
+                        SearchableItem(
+                            0,
+                            mContext.getString(R.string.select_answer)
+                        )
+                    )
+                }else{
+                    myList.add(
+                        SearchableItem(
+                            items.toLong(),
+                            optionAray.get(items )
+                        )
+                    )
+                }
+
+
+            }
+
+
+            itens = myList
+
+            adapterOption = ArrayAdapter(
+                mContext,
+                R.layout.custom_spinner,
+                optionAray
+            )
+            holder.spinner?.setAdapter(adapterOption)
+
+
+
+            holder.view?.setOnClickListener {
+
+                SearchableDialog(mContext,
+                    itens!!,
+                    mContext.getString(R.string.select_answer),
+                    { item, _ ->
+                        holder.spinner?.setSelection(item.id.toInt())
+                    }).show()
+            }
+
+
+
+            holder.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (position != -1 && optionAray.size > position) {
+                        AddData(optionAray.get(position).toString(), true, true)
+                    }
+
+                }
+
+            }
+
         }
 
 
@@ -344,10 +348,12 @@ class AnswerAdapter(
                         }
 
                     } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
-                            Constant.typeEditWithImage
-                        )
-                    ) {
+                            Constant.typeEditWithImage)) {
                         holder.edtOption?.setText(result.Answer?.toString())
+                    }
+
+                    else if (type.equals(Constant.typeDropDown)) {
+
                     }
             }
         }).start()

@@ -66,6 +66,7 @@ object Constant {
     //QuesionType
     const val typeEdit ="Edittext"
     const val typeSigleSelection ="Radio"
+    const val typeDropDown ="Dropdown"
     const val typeMutliSelection ="Checkbox"
     const val typeDatePicker ="Date"
     const val typeTimePicker ="Time"

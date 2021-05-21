@@ -61,6 +61,8 @@ class OnlineAnswerAdapter(
             view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_edittext_disable, parent, false)
         }else if (type.equals(Constant.typeImageView)) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_image, parent, false)
+        } else if (type.equals(Constant.typeDropDown)) {
+
         }
 
         return ItemHolder(view)
@@ -118,6 +120,9 @@ class OnlineAnswerAdapter(
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             holder.cbOption?.setText(data.toString())
         }
+        else if (type.equals(Constant.typeDropDown)) {
+
+        }
 
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
@@ -157,6 +162,9 @@ class OnlineAnswerAdapter(
                         ) || type.equals(Constant.typeTimePicker)
                     ) {
                         holder.edtOption?.setText(surveyAnswerArray.get(position).answer?.toString())
+                    }
+                    else if (type.equals(Constant.typeDropDown)) {
+
                     }
                 }
             }
