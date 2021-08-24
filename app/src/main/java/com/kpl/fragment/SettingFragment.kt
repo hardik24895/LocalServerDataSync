@@ -412,6 +412,7 @@ class SettingFragment : BaseFragment() {
                                     Project(
                                         project.projectID?.toInt(),
                                         project.companyName.toString(),
+                                        project.userID.toString(),
                                         project.title.toString(),
                                         project.address.toString(),
                                         project.mobileNo.toString(),

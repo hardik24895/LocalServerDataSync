@@ -1,16 +1,18 @@
 package com.kpl.activity
 
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.*
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ScrollView
-import android.widget.Toast
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
@@ -27,7 +29,6 @@ import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 import tech.hibk.searchablespinnerlibrary.SearchableDialog
 import tech.hibk.searchablespinnerlibrary.SearchableItem
 import java.io.*
-import java.net.URI
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -120,9 +121,6 @@ class QuestionAnswerActivity : BaseActivity() {
         Thread(Runnable {
             appDatabase?.categoryDao()?.getAllCategory()?.let { categoryArray?.addAll(it) }
         }).start()
-
-
-
 
 
 
@@ -474,11 +472,11 @@ class QuestionAnswerActivity : BaseActivity() {
 
             projectArray?.add(
                 Project(
-                    -1, "Project Title", "",
+                    -1, "Project Title", "","",
                     "", "", "", "", "", "", "", ""
                 )
             )
-            projectArray?.addAll(appDatabase!!.projectDao().getAllProject())
+            projectArray?.addAll(appDatabase!!.projectDao().getAllProject( session.getDataByKey(SessionManager.SPUserID, "").toString()))
 
 
             for (list in projectArray!!.indices) {
@@ -499,6 +497,7 @@ class QuestionAnswerActivity : BaseActivity() {
         }).start()
 
     }
+
 
 
 }

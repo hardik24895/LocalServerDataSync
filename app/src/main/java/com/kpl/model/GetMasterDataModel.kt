@@ -133,6 +133,10 @@ data class ProjectItem(
     @field:SerializedName("CompanyName")
     val companyName: String? = null,
 
+
+    @field:SerializedName("UserID")
+    val userID: String? = null,
+
     @field:SerializedName("Type")
     val type: String? = null,
 

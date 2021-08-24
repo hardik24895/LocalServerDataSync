@@ -2,6 +2,7 @@ package com.kpl.adapter
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Environment
 import android.os.Handler
@@ -32,6 +33,13 @@ import kotlinx.android.extensions.LayoutContainer
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.core.content.ContextCompat.getSystemService
+
+import android.widget.EditText
+
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
 
 
 class QuestionAnswerAdapter(
@@ -238,6 +246,7 @@ class QuestionAnswerAdapter(
         }
 
     }
+
 
 
 }

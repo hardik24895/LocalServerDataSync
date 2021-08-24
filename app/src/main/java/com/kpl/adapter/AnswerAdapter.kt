@@ -2,18 +2,25 @@ package com.kpl.adapter
 
 import android.app.DatePickerDialog
 import android.content.Context
+import android.graphics.Rect
 import android.os.AsyncTask
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ikovac.timepickerwithseconds.MyTimePickerDialog
 import com.kpl.R
@@ -24,7 +31,6 @@ import com.kpl.extention.getValue
 import com.kpl.extention.isEmpty
 import com.kpl.utils.Constant
 import com.kpl.widgets.DigitsInputFilter
-import com.kpl.widgets.MinMaxFilter
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.row_answer_date_picker.*
 import kotlinx.android.synthetic.main.row_answer_time_picker.*
@@ -59,10 +65,10 @@ class AnswerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         var view: View? = null
-
+        parent.getFocusedChild()
         appDatabase = AppDatabase.getDatabase(mContext)!!
 
-        if (type.equals(Constant.typeDropDown) ) {
+        if (type.equals(Constant.typeDropDown)) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_spinner, parent, false)
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             view =
@@ -82,7 +88,8 @@ class AnswerAdapter(
         } else if (type.equals(Constant.typeImageView)) {
             view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_image, parent, false)
         } else if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.row_answer_radiobutton, parent, false)
+            view = LayoutInflater.from(mContext)
+                .inflate(R.layout.row_answer_radiobutton, parent, false)
         }
 
         return ItemHolder(view)
@@ -96,25 +103,26 @@ class AnswerAdapter(
 
         if (type.equals(Constant.typeSigleSelection) || type.equals(Constant.typeSigleSelectionWithImage)) {
 
+            holder.rbOption?.setText(data.toString())
+            holder.rbOption?.isChecked = position == lastRadioPosition
 
-             holder.rbOption?.setText(data.toString())
-             holder.rbOption?.isChecked = position == lastRadioPosition
+            holder.rbOption?.setOnClickListener {
 
-             holder.rbOption?.setOnClickListener {
-                 AddData(holder.rbOption!!.getText().toString(), true, true)
-                 recview.post(Runnable {
-                     notifyItemChanged(lastRadioPosition)
-                     notifyItemChanged(position)
-                     lastRadioPosition = position
+                AddData(holder.rbOption!!.getText().toString(), true, true)
 
-                 })
+                recview.post(Runnable {
+                    notifyItemChanged(lastRadioPosition)
+                    notifyItemChanged(position)
+                    lastRadioPosition = position
 
-             }
+                })
+                recview.requestFocus()
+                holder.rbOption?.requestFocus()
+            }
 
         } else if (type.equals(Constant.typeMutliSelection) || type.equals(Constant.typeMutliSelectionWithImage)) {
             holder.cbOption?.setText(data.toString())
             holder.cbOption?.setOnClickListener {
-
                 AddData(holder.cbOption!!.getText().toString(), holder.cbOption!!.isChecked, false)
             }
         } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
@@ -139,15 +147,13 @@ class AnswerAdapter(
                         )
 
                 } else {
-                    if (!dataQue.Max!!.toString().equals(""))
-                        holder.edtOption?.setFilters(
-                            arrayOf<InputFilter>(
-                                MinMaxFilter(
-                                    0,
-                                    dataQue.Max!!.toInt()
-                                )
-                            )
-                        )
+                    //    if (!dataQue.Max!!.toString().equals(""))
+
+                    val maxLength = 10
+                    val fArray = arrayOfNulls<InputFilter>(1)
+                    fArray[0] = LengthFilter(maxLength)
+                    holder.edtOption?.setFilters(fArray)
+
                     holder.edtOption?.setInputType(InputType.TYPE_CLASS_NUMBER)
                 }
 
@@ -258,18 +264,18 @@ class AnswerAdapter(
 
             for (items in optionAray.indices) {
 
-                if(items==0){
+                if (items == 0) {
                     myList.add(
                         SearchableItem(
                             0,
                             mContext.getString(R.string.select_answer)
                         )
                     )
-                }else{
+                } else {
                     myList.add(
                         SearchableItem(
                             items.toLong(),
-                            optionAray.get(items )
+                            optionAray.get(items)
                         )
                     )
                 }
@@ -347,12 +353,12 @@ class AnswerAdapter(
                         }
 
                     } else if (type.equals(Constant.typeEdit) || type.equals(Constant.typeNumeric) || type.equals(
-                            Constant.typeEditWithImage)) {
+                            Constant.typeEditWithImage
+                        )
+                    ) {
                         holder.edtOption?.setText(result.Answer?.toString())
-                    }
-
-                    else if (type.equals(Constant.typeDropDown)) {
-                        for ( i in optionAray.indices){
+                    } else if (type.equals(Constant.typeDropDown)) {
+                        for (i in optionAray.indices) {
                             if (result.Answer.toString().equals(optionAray.get(i))) {
                                 holder.spinner?.setSelection(i)
                                 break
@@ -452,7 +458,7 @@ class AnswerAdapter(
     inner class ItemHolder(override val containerView: View?) :
         RecyclerView.ViewHolder(containerView!!),
         LayoutContainer {
-         var rbOption: RadioButton? = null
+        var rbOption: RadioButton? = null
         var cbOption: CheckBox? = null
         var edtOption: EditText? = null
         var spinner: SearchableSpinner? = null
@@ -471,6 +477,7 @@ class AnswerAdapter(
 
 
     }
+
 
 }
 
