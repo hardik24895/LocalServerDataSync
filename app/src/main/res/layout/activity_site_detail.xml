@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SiteDetailActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_with_back_arrow" />
+
+
+    <!--<AutoCompleteTextView
+        android:id="@+id/autoSiteName"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_36sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_32sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:background="@drawable/bg_spinner"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:gravity="center_vertical"
+        android:hint="Project Name"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+
+    <TextView
+        android:id="@+id/txtAddress"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_36sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:background="@drawable/bg_spinner"
+        android:ellipsize="marquee"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/autoSiteName"
+        app:layout_constraintTop_toBottomOf="@id/autoSiteName" />
+
+
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_36sdp"
+        android:layout_marginStart="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:background="@drawable/bg_spinner"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/_8sdp"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtAddress" />
+
+
+    <TextView
+        android:id="@+id/txtSubmit"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_32sdp"
+        android:background="@drawable/bg_btn"
+        android:fontFamily="@font/clan_ot_medium"
+        android:gravity="center"
+        android:text="Start Survey"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintEnd_toEndOf="@id/txtDate"
+        app:layout_constraintStart_toStartOf="@id/txtDate"
+        app:layout_constraintTop_toBottomOf="@id/txtDate" />
+-->
+</androidx.constraintlayout.widget.ConstraintLayout>

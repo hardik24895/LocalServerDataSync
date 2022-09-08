@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1071579144714",
+    "project_id": "kppl-b5b22",
+    "storage_bucket": "kppl-b5b22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071579144714:android:5bbab5feee92cac6fb75f3",
+        "android_client_info": {
+          "package_name": "com.kpl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071579144714-42f07matcabbjgbgdium9b88fpp34bje.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgQf-hMdsG4Mt3pGkrLl0zUMqJQ-LBV6c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071579144714-42f07matcabbjgbgdium9b88fpp34bje.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
