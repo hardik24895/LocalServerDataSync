@@ -8,6 +8,7 @@
     <RadioButton
         android:focusable="false"
         android:clickable="false"
+        android:buttonTint="@color/purple_200"
         android:id="@+id/rbOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

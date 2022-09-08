@@ -10,6 +10,7 @@ data class Category(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = Constant.CategoryID) var CategoryID: Int?,
+    @ColumnInfo(name = Constant.ParentID) var ParentID: Int?,
     @ColumnInfo(name = Constant.Category) var Category: String,
     @ColumnInfo(name = Constant.CreatedBy) var CreatedBy: String?,
     @ColumnInfo(name = Constant.CreatedDate) var CreatedDate: String?,

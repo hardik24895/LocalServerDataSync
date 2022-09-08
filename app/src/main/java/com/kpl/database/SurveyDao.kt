@@ -26,5 +26,8 @@ interface SurveyDao {
     @Query("Update ${Constant.TABLE_SURVEY} set ${Constant.Status} = 1 Where ${Constant.Status} = 0 ")
     fun uploadDataDone()
 
+    @Query("DELETE FROM " + Constant.TABLE_SURVEY)
+    fun deleteAllReocord()
+
 
 }

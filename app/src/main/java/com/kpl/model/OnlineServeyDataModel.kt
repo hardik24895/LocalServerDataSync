@@ -26,6 +26,9 @@ data class SurveyAnswerData(
     @field:SerializedName("Rno")
     val rno: String? = null,
 
+    @field:SerializedName("Image")
+    val imageUrl: String? = null,
+
     @field:SerializedName("SurveyID")
     val surveyID: String? = null,
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_8sdp"
@@ -47,51 +48,24 @@
             android:id="@+id/rvAns"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/txtNum"
             app:layout_constraintTop_toBottomOf="@id/txtQuestion" />
 
 
-        <!--            <RadioButton-->
-        <!--                android:id="@+id/txtAnswer1"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:fontFamily="@font/clan_ot_book"-->
-        <!--                android:text="RESULT_OK"-->
-        <!--                android:textColor="@color/black"-->
-        <!--                android:textSize="@dimen/_10ssp" />-->
-
-        <!--            <RadioButton-->
-        <!--                android:id="@+id/txtAnswer2"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:fontFamily="@font/clan_ot_book"-->
-        <!--                android:text="RESULT_CANCEL"-->
-        <!--                android:textColor="@color/black"-->
-        <!--                android:textSize="@dimen/_10ssp" />-->
-
-
-        <!--            <RadioButton-->
-        <!--                android:id="@+id/txtAnswer3"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:fontFamily="@font/clan_ot_book"-->
-        <!--                android:text="RESULT_CRASH"-->
-        <!--                android:textColor="@color/black"-->
-        <!--                android:textSize="@dimen/_10ssp" />-->
-
-
-        <!--            <RadioButton-->
-        <!--                android:id="@+id/txtAnswer4"-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:fontFamily="@font/clan_ot_book"-->
-        <!--                android:text="Option A &amp; B Both"-->
-        <!--                android:textColor="@color/black"-->
-        <!--                android:textSize="@dimen/_10ssp" />-->
-
-        <!--        </RadioGroup>-->
+        <ImageView
+            android:id="@+id/uploadImage"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:fontFamily="@font/clan_ot_book"
+            android:src="@drawable/ic_upload"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvAns"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

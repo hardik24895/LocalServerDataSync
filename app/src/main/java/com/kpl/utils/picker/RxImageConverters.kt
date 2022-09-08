@@ -1,4 +1,4 @@
-package com.sprinters.utils.picker
+package com.kpl.utils.picker
 
 import android.content.Context
 import android.graphics.Bitmap

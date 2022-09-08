@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/linlaySp"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_36sdp"
+    android:background="@drawable/bg_spinner"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+        <tech.hibk.searchablespinnerlibrary.SearchableSpinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false"
+            android:paddingHorizontal="@dimen/_5sdp"
+            app:cancelButtonColor="@color/black"
+            app:cancelButtontext="CLOSE"
+            app:dialogTitle="Sample"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:nothingSelectedText="Select Answer"
+            app:onlyLightTheme="true"
+            tools:layout_editor_absoluteX="10dp" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/spinner" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+

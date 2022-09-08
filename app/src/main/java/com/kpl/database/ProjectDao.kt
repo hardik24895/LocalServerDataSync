@@ -10,8 +10,8 @@ import com.kpl.utils.Constant
 interface ProjectDao {
 
 
-    @Query("SELECT * FROM " + Constant.TABLE_PROJECT)
-    fun getAllProject(): List<Project>
+    @Query("SELECT * FROM  ${Constant.TABLE_PROJECT} WHERE ${Constant.UserID}  = :UserId")
+    fun getAllProject(UserId: String): List<Project>
 
     @Query("SELECT * FROM  ${Constant.TABLE_PROJECT} WHERE ${Constant.ProjectID}  = :ProjectId")
     fun getProjectData(ProjectId: Int): Project

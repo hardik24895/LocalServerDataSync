@@ -1,13 +1,10 @@
 package com.kpl.utils
 
-import com.kpl.database.Category
-import java.util.prefs.Preferences
-
 object Constant {
 
     // SharedPresfrence
     const val PreferencesName = "KPL_Pref"
-
+    var SelectedImagePosition = 0
 
 
     // Database Name
@@ -48,9 +45,16 @@ object Constant {
 
     //Table Question
     const val QuestionID = "QuestionID"
+    const val Answer = "Answer"
+    const val Image = "Image"
+
     const val Question = "Question"
     const val Type = "Type"
     const val Questionoption = "Questionoption"
+    const val Min = "Min"
+    const val Max = "Max"
+    const val Length = "Length"
+    const val DataType = "DataType"
 
     //Table Project
     const val ProjectID = "ProjectID"
@@ -62,11 +66,20 @@ object Constant {
     //QuesionType
     const val typeEdit ="Edittext"
     const val typeSigleSelection ="Radio"
+    const val typeDropDown ="Dropdown"
     const val typeMutliSelection ="Checkbox"
+    const val typeDatePicker ="Date"
+    const val typeTimePicker ="Time"
+    const val typeImageView ="Image"
+    const val typeEditWithImage ="Edittext + Image"
+    const val typeSigleSelectionWithImage ="Radio + Image"
+    const val typeMutliSelectionWithImage ="Checkbox + Image"
+    const val typeNumeric ="Numeric"
 
 
     //Table Category
     const val CategoryID = "CategoryID"
+    const val ParentID = "ParentID"
     const val Category = "Category"
 
 

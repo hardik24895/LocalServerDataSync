@@ -1,34 +1,34 @@
 package com.kpl.activity
 
+
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.graphics.Rect
+import android.net.Uri
+import android.os.*
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ScrollView
-import android.widget.Toast
-import androidx.core.view.get
+import android.view.inputmethod.InputMethodManager
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import com.kpl.R
 import com.kpl.adapter.CategoryAdapter
-import com.kpl.database.Category
-import com.kpl.database.Project
-import com.kpl.database.Question
-import com.kpl.database.Survey
-import com.kpl.extention.invisible
+import com.kpl.adapter.QuestionAnswerAdapter
+import com.kpl.database.*
+import com.kpl.utils.Constant
 import com.kpl.utils.NoScrollLinearLayoutManager
 import com.kpl.utils.SessionManager
-//import gr.escsoft.michaelprimez.searchablespinner.interfaces.OnItemSelectedListener
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_question_answer.*
 import kotlinx.android.synthetic.main.toolbar_with_back_arrow.*
 import tech.hibk.searchablespinnerlibrary.SearchableDialog
 import tech.hibk.searchablespinnerlibrary.SearchableItem
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -36,7 +36,27 @@ import kotlin.collections.ArrayList
 
 class QuestionAnswerActivity : BaseActivity() {
 
-    var SurveyID: String? = ""
+
+    override fun onHolderDataItem(
+        holder1: QuestionAnswerAdapter.ItemHolder?,
+        surveyAnswer1: SurveyAnswer
+    ) {
+        holder = holder1!!
+        surveyAnswer = surveyAnswer1!!
+
+    }
+
+    fun getImageOption() {
+
+
+    }
+
+    companion object {
+        var holder: QuestionAnswerAdapter.ItemHolder? = null
+        var surveyAnswer: SurveyAnswer? = null
+    }
+
+
     var ProjectID: String? = ""
     var Title: String? = ""
     var Address: String? = ""
@@ -57,7 +77,6 @@ class QuestionAnswerActivity : BaseActivity() {
     var categoryArray: ArrayList<Category>? = null
 
     var list: List<Question>? = null
-
     var SurveyId: Int? = -1
 
     val myCalendar: Calendar = Calendar.getInstance()
@@ -70,6 +89,7 @@ class QuestionAnswerActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_question_answer)
 
+        getImageOption()
         txtTitle.setText("Question Answer")
 
         imgBack.setOnClickListener {
@@ -82,8 +102,6 @@ class QuestionAnswerActivity : BaseActivity() {
         projectArray = ArrayList()
         categoryArray = ArrayList()
         AddressArray = ArrayList()
-
-
 
 
         txtDate.setOnClickListener {
@@ -104,23 +122,12 @@ class QuestionAnswerActivity : BaseActivity() {
             appDatabase?.categoryDao()?.getAllCategory()?.let { categoryArray?.addAll(it) }
         }).start()
 
-        val mSnapHelper: SnapHelper = PagerSnapHelper()
-        mSnapHelper.attachToRecyclerView(rvQueAns)
-        layoutManager = NoScrollLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        layoutManager!!.setScrollEnabled(false)
-        rvQueAns.layoutManager = layoutManager
-        adapter = CategoryAdapter(this, categoryArray!!, SurveyId!!)
-        rvQueAns.adapter = adapter
 
 
         getProject()
         Handler(Looper.getMainLooper()).postDelayed({
             if (intent.hasExtra("PROJECT_NAME") != null) {
-                Log.e(
 
-                    "TAG",
-                    "getProject: 123   " + intent.getStringExtra("PROJECT_NAME").toString()
-                )
                 val spinnerPosition: Int = adapterSiteName!!.getPosition(
                     intent.getStringExtra("PROJECT_NAME").toString()
                 )
@@ -129,8 +136,8 @@ class QuestionAnswerActivity : BaseActivity() {
                 // autoSiteName?.setSelectedItem(spinnerPosition)
                 if (spinnerPosition != -1)
                     spinner?.setSelection(spinnerPosition)
-               // else
-                  //  spinner.invisible()
+                // else
+                //  spinner.invisible()
                 //spinner.nothingSelectedText = "Project Title"
 
                 // spinner?.setSelection(-1)
@@ -155,34 +162,43 @@ class QuestionAnswerActivity : BaseActivity() {
             ) {
                 if (position != -1) {
                     txtAddress.setText(projectArray?.get(position)?.Address)
-                    ProjectID = projectArray!!.get(position).ProjectID.toString()
+
                     Title =
                         projectArray!!.get(position).CompanyName.toString() + ", " + projectArray!!.get(
                             position
                         ).Title.toString()
+
+                    if (position == 0) {
+                        ProjectID = ""
+                    } else {
+                        ProjectID = projectArray!!.get(position).ProjectID.toString()
+                    }
                 }
 
             }
         }
 
         linlaySp?.setOnClickListener {
-            SearchableDialog(this,
-                itens!!,
-                "Project Title",
-                { item, _ ->
-                    //Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
-                    spinner.setSelection(item.id.toInt())
-                }).show()
+
+            if (!intent.hasExtra("PROJECT_ID"))
+                SearchableDialog(this,
+                    itens!!,
+                    "Project Title",
+                    { item, _ ->
+                        //Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
+                        spinner.setSelection(item.id.toInt())
+                    }).show()
 
         }
         view.setOnClickListener {
-            SearchableDialog(this,
-                itens!!,
-                "Project Title",
-                { item, _ ->
-                    // Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
-                    spinner.setSelection(item.id.toInt())
-                }).show()
+            if (!intent.hasExtra("PROJECT_ID"))
+                SearchableDialog(this,
+                    itens!!,
+                    "Project Title",
+                    { item, _ ->
+                        // Toast.makeText(this@QuestionAnswerActivity, item.title, Toast.LENGTH_SHORT).show()
+                        spinner.setSelection(item.id.toInt())
+                    }).show()
         }
 
 
@@ -210,7 +226,6 @@ class QuestionAnswerActivity : BaseActivity() {
 
         if (intent.hasExtra("PROJECT_ID")) {
             SurveyId = intent.getStringExtra("PROJECT_ID")?.toInt()
-            Log.d("TAG", "onCreate: " + SurveyId)
             ProjectID = intent.getStringExtra("PROJECT_ID")
             txtDate.text = intent.getStringExtra("PROJECT_DATE")
             // autoSiteName.setText(intent.getStringExtra("PROJECT_NAME"))
@@ -229,9 +244,14 @@ class QuestionAnswerActivity : BaseActivity() {
             txtDate.isFocusableInTouchMode = false
             txtDate.isEnabled = false
 
-
         }
-
+        val mSnapHelper: SnapHelper = PagerSnapHelper()
+        mSnapHelper.attachToRecyclerView(rvQueAns)
+        layoutManager = NoScrollLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        layoutManager!!.setScrollEnabled(false)
+        rvQueAns.layoutManager = layoutManager
+        adapter = CategoryAdapter(this, categoryArray!!, SurveyId!!)
+        rvQueAns.adapter = adapter
         updateLabel()
 
 
@@ -241,13 +261,13 @@ class QuestionAnswerActivity : BaseActivity() {
                     val scrollToPosition =
                         layoutManager?.scrollToPosition(layoutManager!!.findLastCompletelyVisibleItemPosition() + 1)
                     if (layoutManager!!.findLastCompletelyVisibleItemPosition() < 0) {
-                        spinner.visibility = View.VISIBLE
+                        linlaySp.visibility = View.VISIBLE
                         txtAddress.visibility = View.VISIBLE
                         txtDate.visibility = View.VISIBLE
                         txtPrevious.visibility = View.INVISIBLE
                         txtNext.setText("Next")
                     } else if (layoutManager!!.findLastCompletelyVisibleItemPosition() == (categoryArray!!.size - 2)) {
-                        spinner.visibility = View.GONE
+                        linlaySp.visibility = View.GONE
                         txtAddress.visibility = View.GONE
                         txtDate.visibility = View.GONE
                         txtPrevious.visibility = View.VISIBLE
@@ -256,14 +276,14 @@ class QuestionAnswerActivity : BaseActivity() {
                     } else {
                         txtNext.setText("Next")
                         txtPrevious.visibility = View.VISIBLE
-                        spinner.visibility = View.GONE
+                        linlaySp.visibility = View.GONE
                         txtAddress.visibility = View.GONE
                         txtDate.visibility = View.GONE
                     }
 
 
                 } else {
-                    if (SurveyId == 0) {
+                    if (SurveyId == -1) {
 
                         val mainLooper = Looper.getMainLooper()
                         Thread(Runnable {
@@ -318,13 +338,13 @@ class QuestionAnswerActivity : BaseActivity() {
 
                 if (layoutManager?.findLastCompletelyVisibleItemPosition() == 1) {
                     spinner.visibility = View.VISIBLE
-                    txtAddress.visibility = View.VISIBLE
+                    linlaySp.visibility = View.VISIBLE
                     txtDate.visibility = View.VISIBLE
                     txtPrevious.visibility = View.INVISIBLE
                 } else {
                     txtPrevious.visibility = View.VISIBLE
                     spinner.visibility = View.GONE
-                    txtAddress.visibility = View.GONE
+                    linlaySp.visibility = View.GONE
                     txtDate.visibility = View.GONE
                 }
 
@@ -333,6 +353,102 @@ class QuestionAnswerActivity : BaseActivity() {
 
         }
 
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (resultCode) {
+            RESULT_OK -> {
+
+                if (data != null) {
+                    var resultUri = UCrop.getOutput(data!!)
+                    var obj = QuestionAnswerAdapter.MyImageSelected()
+                    obj.onImageItemCilck(holder, resultUri, surveyAnswer!!, this)
+                   if(resultUri!= null)
+                     savefile(resultUri!!)
+
+                }
+            }
+
+            RESULT_CANCELED -> {
+            }
+        }
+    }
+    fun savefile(sourceuri: Uri) {
+        val sourceFilename: String = sourceuri.path.toString()
+        val direct =
+            File(Environment.getExternalStorageDirectory().toString() + "/.kpl")
+        if (!direct.exists()) {
+            val wallpaperDirectory = File(
+                Environment.getExternalStorageDirectory().toString() + "/.kpl/"
+            )
+            wallpaperDirectory.mkdirs()
+        }
+        val destinationUri = Uri.fromFile(
+            File(Environment.getExternalStorageDirectory().toString() + "/.kpl/", "IMG_${System.currentTimeMillis()}_user_${session?.getDataByKey(SessionManager.SPUserID)}_Que_${Constant.SelectedImagePosition}.jpg")
+        )
+        val destinationFilename = destinationUri.path
+        var bis: BufferedInputStream? = null
+        var bos: BufferedOutputStream? = null
+        try {
+            bis = BufferedInputStream(FileInputStream(sourceFilename))
+            bos = BufferedOutputStream(FileOutputStream(destinationFilename, false))
+            val buf = ByteArray(1024)
+            bis.read(buf)
+            do {
+                bos.write(buf)
+            } while (bis.read(buf) !== -1)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                if (bis != null) bis.close()
+                if (bos != null) bos.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+        getProject(
+            this@QuestionAnswerActivity,
+            surveyAnswer!!, "file://"+destinationFilename.toString()
+        ).execute()
+    }
+    inner class getProject(
+        var context: QuestionAnswerActivity,
+        var mySurveyAnswer: SurveyAnswer,
+        var result: String
+    ) : AsyncTask<Void, Void, Boolean>() {
+        override fun doInBackground(vararg params: Void?): Boolean {
+
+
+            var existAns: SurveyAnswer? = null
+            Companion.surveyAnswer!!.Image = result.toString()
+            existAns = appDatabase?.surveyAnswerDao()?.checkRecordExist(
+                Companion.surveyAnswer!!.SurveyID,
+                Companion.surveyAnswer!!.QuestionID.toString()
+            )
+
+            if (existAns == null) {
+                appDatabase!!.surveyAnswerDao().insert(Companion.surveyAnswer!!)
+
+            } else {
+                appDatabase!!.surveyAnswerDao().updateImage(
+                    Companion.surveyAnswer!!.SurveyID,
+                    Companion.surveyAnswer!!.QuestionID.toString(),
+                    result.toString()
+                )
+            }
+
+
+            return true
+
+        }
+
+        override fun onPostExecute(result: Boolean?) {
+
+
+        }
     }
 
 
@@ -354,15 +470,17 @@ class QuestionAnswerActivity : BaseActivity() {
         val mainLooper = Looper.getMainLooper()
         Thread(Runnable {
 
-            projectArray?.add(Project(-1,"Project Title","",
-                "","","","","","","",""))
-            projectArray?.addAll(appDatabase!!.projectDao().getAllProject())
+            projectArray?.add(
+                Project(
+                    -1, "Project Title", "","",
+                    "", "", "", "", "", "", "", ""
+                )
+            )
+            projectArray?.addAll(appDatabase!!.projectDao().getAllProject( session.getDataByKey(SessionManager.SPUserID, "").toString()))
 
 
             for (list in projectArray!!.indices) {
-                AddressArray?.add(
-                    projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString()
-                )
+                AddressArray?.add(projectArray!!.get(list).CompanyName.toString() + ", " + projectArray!!.get(list).Title.toString())
             }
 
             var myList: MutableList<SearchableItem> = mutableListOf()
@@ -373,87 +491,13 @@ class QuestionAnswerActivity : BaseActivity() {
 
 
 
-
             adapterSiteName = ArrayAdapter(this, R.layout.custom_spinner, AddressArray!!)
             spinner.setAdapter(adapterSiteName)
-            //  sp.setOnItemSelectedListener(mOnItemSelectedListener)
-
-            //  Handler(mainLooper).post {
-
-            /*  if (intent.hasExtra("PROJECT_NAME") != null) {
-                  Log.e(
-                      "TAG",
-                      "getProject: 123   " + intent.getStringExtra("PROJECT_NAME").toString()
-                  )
-                  val spinnerPosition: Int = adapterSiteName!!.getPosition(
-                      intent.getStringExtra("PROJECT_NAME").toString()
-                  )
-                  Log.d("myPos", ""+spinnerPosition)
-                  autoSiteName.setSelectedItem(spinnerPosition)
-              }*/
-
-            /* if (intent.hasExtra("PROJECT_ID")) {
-                 for (item in projectArray!!.indices) {
-                     if (projectArray!!.get(item).ProjectID.toString().equals(
-                             intent.getStringExtra(
-                                 "PROJECT_ID"
-                             )
-                         )
-                     ) {
-                         selectedPos = item
-                         break
-                     }
-                 }
-             }
-             autoSiteName.setSelectedItem = 2
-             autoSiteName.setSelectedItem(2)*/
-
-
-            //   }
 
         }).start()
 
     }
-//
-//    inner class getProject(var context: QuestionAnswerActivity) :
-//        AsyncTask<Void, Void, List<Project>>() {
-//        override fun doInBackground(vararg params: Void?): List<Project> {
-//
-//            return context.appDatabase!!.projectDao().getAllProject()
-//
-//        }
-//
-//        override fun onPostExecute(project: List<Project>?) {
-//
-//            if (project !== null) {
-//                projectArray?.addAll(project)
-//                for (list in project) {
-//                    AddressArray?.add(list.CompanyName.toString() + ", " + list.Title.toString())
-//                }
-//                Log.d("TAG", "onPostExecute: " + projectArray?.size)
-//                context.adapterSiteName?.notifyDataSetChanged()
-//
-//            }
-//        }
-//    }
 
-
-//    inner class AddSurvey(var context: QuestionAnswerActivity, var survey: Survey) :
-//        AsyncTask<Void, Void, Long>() {
-//        override fun doInBackground(vararg params: Void?): Long {
-//
-//            var surveyId = context.appDatabase!!.surveyDao().insertSurvey(survey)
-//
-//            context.appDatabase!!.surveyAnswerDao().updaterecord(surveyId.toInt())
-//
-//            return surveyId
-//        }
-//
-//        override fun onPostExecute(result: Long?) {
-//            Log.d("TAG", "onPostExecute: " + result.toString())
-//
-//        }
-//    }
 
 
 }

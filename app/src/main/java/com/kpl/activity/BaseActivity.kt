@@ -11,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.kpl.R
+import com.kpl.adapter.QuestionAnswerAdapter
 import com.kpl.database.AppDatabase
+import com.kpl.database.SurveyAnswer
 import com.kpl.dialog.ProgressDialog
 import com.kpl.extention.dismissAlertDialog
 import com.kpl.network.AutoDisposable
@@ -156,4 +158,5 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
     open fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {}
+    open fun onHolderDataItem(holder: QuestionAnswerAdapter.ItemHolder?, surveyAnswer: SurveyAnswer) {}
 }
